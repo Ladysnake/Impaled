@@ -13,7 +13,7 @@ public class ElderTridentEntity extends ImpaledTridentEntity {
     public void tick() {
         super.tick();
 
-        if (!this.dealtDamage) {
+        if (!this.hasDealtDamage()) {
         }
     }
 }
