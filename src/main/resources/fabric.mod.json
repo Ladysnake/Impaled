@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "impaled",
+  "version": "${version}",
+
+  "name": "Impaled",
+  "description": "Adds trident variants and a Sincere Loyalty enchantment upgrade for tridents.",
+  "authors": [
+    "doctor4t",
+    "ArathainFarqoe",
+    "Pyrofab"
+  ],
+  "contact": {
+    "sources": "https://github.com/Ladysnake/Impaled",
+    "issues": "https://github.com/Ladysnake/Impaled/issues"
+  },
+
+  "license": "Code: GNU GPLv3; Art: ARR",
+  "icon": "assets/impaled/impaled.png",
+
+  "environment": "client",
+  "entrypoints": {
+    "main": [
+      "ladysnake.impaled.common.Impaled"
+    ],
+    "client": [
+      "ladysnake.impaled.client.ImpaledClient"
+    ]
+  },
+  "mixins": [
+    "impaled.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.4.0",
+    "fabric": "*"
+  }
+}
