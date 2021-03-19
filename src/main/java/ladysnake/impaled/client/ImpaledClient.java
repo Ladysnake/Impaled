@@ -27,7 +27,7 @@ public class ImpaledClient implements ClientModInitializer {
             BuiltinItemRendererRegistry.INSTANCE.register(item, tridentItemRenderer);
             EntityRendererRegistry.INSTANCE.register(item.getEntityType(), ctx -> new ImpaledTridentEntityRenderer(ctx, texture));
             FabricModelPredicateProviderRegistry.register(item, new Identifier("throwing"), (stack, world, entity, seed) -> entity != null && entity.isUsingItem() && entity.getActiveItem() == stack ? 1.0F : 0.0F);
-            ModelLoadingRegistry.INSTANCE.registerModelProvider((manager, out) -> out.accept(new ModelIdentifier(tridentId + "_in_hand#inventory")));
+            ModelLoadingRegistry.INSTANCE.registerModelProvider((manager, out) -> out.accept(new ModelIdentifier(tridentId + "_in_inventory", "inventory")));
         }
     }
 }

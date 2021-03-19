@@ -3,7 +3,6 @@
   "package": "ladysnake.impaled.mixin",
   "compatibilityLevel": "JAVA_8",
   "client": [
-    "ItemRendererMixin"
   ],
   "mixins": [
     "TridentEntityAccessor"
