@@ -25,6 +25,10 @@ public class ImpaledTridentItem extends TridentItem {
         this.type = entityType;
     }
 
+    public EntityType<ImpaledTridentEntity> getEntityType() {
+        return type;
+    }
+
     @Override
     public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
         if (user instanceof PlayerEntity) {

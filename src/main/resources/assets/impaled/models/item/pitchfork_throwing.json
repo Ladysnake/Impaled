@@ -2,17 +2,17 @@
   "parent": "builtin/entity",
   "gui_light": "front",
   "textures": {
-    "particle": "impaled:item/hellfork"
+    "particle": "impaled:item/pitchfork"
   },
   "display": {
     "thirdperson_righthand": {
-      "rotation": [ 0, 60, 0 ],
-      "translation": [ 11, 17, -2 ],
+      "rotation": [ 0, 90, 180 ],
+      "translation": [ 8, -17, 9 ],
       "scale": [ 1, 1, 1 ]
     },
     "thirdperson_lefthand": {
-      "rotation": [ 0, 60, 0 ],
-      "translation": [ 3, 17, 12 ],
+      "rotation": [ 0, 90, 180 ],
+      "translation": [ 8, -17, -7 ],
       "scale": [ 1, 1, 1 ]
     },
     "firstperson_righthand": {
@@ -22,7 +22,7 @@
     },
     "firstperson_lefthand": {
       "rotation": [ 0, 90, -25 ],
-      "translation": [ 13, 17, 1],
+      "translation": [  13, 17, 1],
       "scale": [ 1, 1, 1 ]
     },
     "gui": {
@@ -40,13 +40,5 @@
       "translation": [ 4, 4, 2],
       "scale":[ 0.25, 0.25, 0.25]
     }
-  },
-  "overrides": [
-    {
-      "predicate": {
-        "throwing": 1
-      },
-      "model": "impaled:item/hellfork_throwing"
-    }
-  ]
+  }
 }

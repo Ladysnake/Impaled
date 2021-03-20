@@ -2,6 +2,8 @@
   "required": true,
   "package": "ladysnake.impaled.mixin",
   "compatibilityLevel": "JAVA_8",
+  "client": [
+  ],
   "mixins": [
     "TridentEntityAccessor"
   ],
