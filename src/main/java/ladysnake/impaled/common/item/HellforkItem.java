@@ -5,12 +5,10 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MovementType;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
+import net.minecraft.entity.projectile.TridentEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.TridentItem;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
@@ -21,16 +19,15 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-public class ImpaledTridentItem extends TridentItem {
-    EntityType<ImpaledTridentEntity> type;
-
-    public ImpaledTridentItem(Settings settings, EntityType<ImpaledTridentEntity> entityType) {
-        super(settings);
-        this.type = entityType;
+public class HellforkItem extends ImpaledTridentItem {
+    public HellforkItem(Settings settings, EntityType<ImpaledTridentEntity> entityType) {
+        super(settings, entityType);
     }
 
-    public EntityType<ImpaledTridentEntity> getEntityType() {
-        return type;
+    @Override
+    public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+        target.setOnFireFor(4 + attacker.getRandom().nextInt(4));
+        return super.postHit(stack, target, attacker);
     }
 
     @Override
@@ -40,7 +37,7 @@ public class ImpaledTridentItem extends TridentItem {
             int i = this.getMaxUseTime(stack) - remainingUseTicks;
             if (i >= 10) {
                 int j = EnchantmentHelper.getRiptide(stack);
-                if (j <= 0 || playerEntity.isTouchingWaterOrRain()) {
+                if (j <= 0 || playerEntity.isInLava() || playerEntity.isOnFire()) {
                     if (!world.isClient) {
                         stack.damage(1, (LivingEntity) playerEntity, livingEntity -> livingEntity.sendToolBreakStatus(user.getActiveHand()));
                         if (j == 0) {
@@ -55,7 +52,7 @@ public class ImpaledTridentItem extends TridentItem {
                             }
 
                             world.spawnEntity(impaledTridentEntity);
-                            world.playSoundFromEntity(null, impaledTridentEntity, SoundEvents.ITEM_TRIDENT_THROW, SoundCategory.PLAYERS, 1.0F, 1.0F);
+                            world.playSoundFromEntity((PlayerEntity) null, impaledTridentEntity, SoundEvents.ITEM_TRIDENT_THROW, SoundCategory.PLAYERS, 1.0F, 1.0F);
                             if (!playerEntity.getAbilities().creativeMode) {
                                 playerEntity.getInventory().removeOne(stack);
                             }
@@ -90,16 +87,23 @@ public class ImpaledTridentItem extends TridentItem {
                             soundEvent3 = SoundEvents.ITEM_TRIDENT_RIPTIDE_1;
                         }
 
-                        world.playSoundFromEntity(null, playerEntity, soundEvent3, SoundCategory.PLAYERS, 1.0F, 1.0F);
+                        world.playSoundFromEntity((PlayerEntity) null, playerEntity, soundEvent3, SoundCategory.PLAYERS, 1.0F, 1.0F);
                     }
-
                 }
             }
         }
     }
 
     @Override
-    public boolean damage(DamageSource source) {
-        return super.damage(source);
+    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+        ItemStack itemStack = user.getStackInHand(hand);
+        if (itemStack.getDamage() >= itemStack.getMaxDamage() - 1) {
+            return TypedActionResult.fail(itemStack);
+        } else if (EnchantmentHelper.getRiptide(itemStack) > 0 && !user.isInLava() && !user.isOnFire()) {
+            return TypedActionResult.fail(itemStack);
+        } else {
+            user.setCurrentHand(hand);
+            return TypedActionResult.consume(itemStack);
+        }
     }
 }
