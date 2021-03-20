@@ -16,4 +16,9 @@ public class ElderTridentEntity extends ImpaledTridentEntity {
         if (!this.hasDealtDamage()) {
         }
     }
+
+    @Override
+    protected float getDragInWater() {
+        return 1.01f;
+    }
 }

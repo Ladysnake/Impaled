@@ -22,7 +22,7 @@ public class ImpaledTridentEntity extends TridentEntity {
     }
 
     protected float getDragInWater() {
-        return 1.99f;
+        return 0.99f;
     }
 
     public void setTridentStack(ItemStack tridentStack) {
