@@ -5,9 +5,11 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MovementType;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.item.TridentItem;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -41,9 +43,11 @@ public class ImpaledTridentItem extends TridentItem {
                         stack.damage(1, (LivingEntity) playerEntity, livingEntity -> livingEntity.sendToolBreakStatus(user.getActiveHand()));
                         if (j == 0) {
                             ImpaledTridentEntity impaledTridentEntity = this.type.create(world);
+                            impaledTridentEntity.setTridentAttributes(world, playerEntity, stack);
                             impaledTridentEntity.setOwner(playerEntity);
                             impaledTridentEntity.setTridentStack(stack);
                             impaledTridentEntity.setProperties(playerEntity, playerEntity.pitch, playerEntity.yaw, 0.0F, 2.5F + (float) j * 0.5F, 1.0F);
+                            impaledTridentEntity.updatePosition(user.getX(), user.getEyeY() - 0.10000000149011612D, user.getZ());
                             if (playerEntity.getAbilities().creativeMode) {
                                 impaledTridentEntity.pickupType = PersistentProjectileEntity.PickupPermission.CREATIVE_ONLY;
                             }
@@ -92,4 +96,8 @@ public class ImpaledTridentItem extends TridentItem {
         }
     }
 
+    @Override
+    public boolean damage(DamageSource source) {
+        return super.damage(source);
+    }
 }

@@ -1,5 +1,6 @@
 package ladysnake.impaled.mixin;
 
+import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.projectile.TridentEntity;
 import net.minecraft.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,4 +19,14 @@ public interface TridentEntityAccessor {
 
     @Accessor("dealtDamage")
     void impaled$setDealtDamage(boolean dealtDamage);
+
+    @Accessor("LOYALTY")
+    static TrackedData<Byte> impaled$getLoyalty() {
+        return null;
+    }
+
+    @Accessor("ENCHANTED")
+    static TrackedData<Boolean> impaled$getEnchanted() {
+        return null;
+    }
 }

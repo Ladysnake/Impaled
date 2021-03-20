@@ -4,6 +4,7 @@ import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
 import ladysnake.impaled.common.Impaled;
 import ladysnake.impaled.common.entity.ImpaledTridentEntity;
 import ladysnake.impaled.common.item.ImpaledTridentItem;
+import ladysnake.impaled.common.item.PitchforkItem;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.dispenser.ProjectileDispenserBehavior;
 import net.minecraft.entity.projectile.ProjectileEntity;
@@ -24,8 +25,8 @@ public class ImpaledItems {
     public static final Set<ImpaledTridentItem> ALL_TRIDENTS = new ReferenceOpenHashSet<>();
 
     public static void init() {
-        PITCHFORK = registerTrident(new ImpaledTridentItem((new Item.Settings()).maxDamage(250).group(ItemGroup.COMBAT), ImpaledEntityTypes.PITCHFORK), "pitchfork", true);
-        HELLFORK = registerTrident(new ImpaledTridentItem((new Item.Settings()).maxDamage(250).group(ItemGroup.COMBAT), ImpaledEntityTypes.HELLFORK), "hellfork", true);
+        PITCHFORK = registerTrident(new PitchforkItem((new Item.Settings()).maxDamage(250).group(ItemGroup.COMBAT), ImpaledEntityTypes.PITCHFORK), "pitchfork", true);
+        HELLFORK = registerTrident(new ImpaledTridentItem((new Item.Settings()).maxDamage(325).group(ItemGroup.COMBAT), ImpaledEntityTypes.HELLFORK), "hellfork", true);
         ELDER_TRIDENT = registerTrident(new ImpaledTridentItem((new Item.Settings()).maxDamage(250).group(ItemGroup.COMBAT), ImpaledEntityTypes.ELDER_TRIDENT), "elder_trident", true);
     }
 
