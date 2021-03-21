@@ -27,7 +27,7 @@ public class ImpaledItems {
 
     public static void init() {
         PITCHFORK = registerTrident(new PitchforkItem((new Item.Settings()).maxDamage(250).group(ItemGroup.COMBAT), ImpaledEntityTypes.PITCHFORK), "pitchfork", true);
-        HELLFORK = registerTrident(new HellforkItem((new Item.Settings()).maxDamage(325).group(ItemGroup.COMBAT), ImpaledEntityTypes.HELLFORK), "hellfork", true);
+        HELLFORK = registerTrident(new HellforkItem((new Item.Settings()).maxDamage(325).fireproof().group(ItemGroup.COMBAT), ImpaledEntityTypes.HELLFORK), "hellfork", true);
         ELDER_TRIDENT = registerTrident(new ImpaledTridentItem((new Item.Settings()).maxDamage(250).group(ItemGroup.COMBAT), ImpaledEntityTypes.ELDER_TRIDENT), "elder_trident", true);
     }
 
