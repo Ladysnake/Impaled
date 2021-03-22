@@ -13,6 +13,16 @@ public class HellforkEntity extends ImpaledTridentEntity {
     @Override
     protected void onEntityHit(EntityHitResult entityHitResult) {
         super.onEntityHit(entityHitResult);
-        entityHitResult.getEntity().setOnFireFor(4 + random.nextInt(4));
+        entityHitResult.getEntity().setOnFireFor(4 + this.world.getRandom().nextInt(4));
+    }
+
+    @Override
+    public boolean isOnFire() {
+        return true;
+    }
+
+    @Override
+    public boolean doesRenderOnFire() {
+        return false;
     }
 }
