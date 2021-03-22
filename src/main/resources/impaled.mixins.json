@@ -6,7 +6,8 @@
   ],
   "mixins": [
     "TridentEntityAccessor",
-    "TridentRiptideFeatureRendererMixin"
+    "TridentRiptideFeatureRendererMixin",
+    "EntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1
