@@ -16,6 +16,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 public class ImpaledClient implements ClientModInitializer {
+    public static final Identifier HELLFORK_RIPTIDE_TEXTURE = new Identifier(Impaled.MODID, "textures/entity/hellfork_riptide.png");
 
     @Override
     public void onInitializeClient() {

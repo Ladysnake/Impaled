@@ -5,7 +5,8 @@
   "client": [
   ],
   "mixins": [
-    "TridentEntityAccessor"
+    "TridentEntityAccessor",
+    "TridentRiptideFeatureRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
