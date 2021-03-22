@@ -3,6 +3,7 @@ package ladysnake.impaled.common.item;
 import ladysnake.impaled.common.Impaled;
 import ladysnake.impaled.common.entity.ImpaledTridentEntity;
 import ladysnake.impaled.common.init.ImpaledItems;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
@@ -114,7 +115,7 @@ public class HellforkItem extends ImpaledTridentItem {
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         if (entity instanceof LivingEntity) {
-            if (((LivingEntity) entity).getMainHandStack().isOf(ImpaledItems.HELLFORK) || ((LivingEntity) entity).getOffHandStack().isOf(ImpaledItems.HELLFORK)) {
+            if (((LivingEntity) entity).getMainHandStack().isOf(ImpaledItems.HELLFORK) && EnchantmentHelper.getLevel(Impaled.HOTROD, ((LivingEntity) entity).getMainHandStack()) > 0 || ((LivingEntity) entity).getOffHandStack().isOf(ImpaledItems.HELLFORK) && EnchantmentHelper.getLevel(Impaled.HOTROD, ((LivingEntity) entity).getOffHandStack()) > 0) {
                 if (EnchantmentHelper.getLevel(Impaled.HOTROD, stack) > 0) {
                     entity.setOnFireFor(1);
                 }
