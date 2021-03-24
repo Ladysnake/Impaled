@@ -6,8 +6,8 @@ import net.minecraft.enchantment.EnchantmentTarget;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ItemStack;
 
-public class HotrodEnchantement extends Enchantment {
-    public HotrodEnchantement() {
+public class KindlingCurseEnchantement extends Enchantment {
+    public KindlingCurseEnchantement() {
         super(Rarity.RARE, EnchantmentTarget.WEAPON, new EquipmentSlot[] {EquipmentSlot.MAINHAND});
     }
 

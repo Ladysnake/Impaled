@@ -3,16 +3,13 @@ package ladysnake.impaled.common.item;
 import ladysnake.impaled.common.Impaled;
 import ladysnake.impaled.common.entity.ImpaledTridentEntity;
 import ladysnake.impaled.common.init.ImpaledItems;
-import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MovementType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
-import net.minecraft.entity.projectile.TridentEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -115,8 +112,8 @@ public class HellforkItem extends ImpaledTridentItem {
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         if (entity instanceof LivingEntity) {
-            if (((LivingEntity) entity).getMainHandStack().isOf(ImpaledItems.HELLFORK) && EnchantmentHelper.getLevel(Impaled.HOTROD, ((LivingEntity) entity).getMainHandStack()) > 0 || ((LivingEntity) entity).getOffHandStack().isOf(ImpaledItems.HELLFORK) && EnchantmentHelper.getLevel(Impaled.HOTROD, ((LivingEntity) entity).getOffHandStack()) > 0) {
-                if (EnchantmentHelper.getLevel(Impaled.HOTROD, stack) > 0) {
+            if (((LivingEntity) entity).getMainHandStack().isOf(ImpaledItems.HELLFORK) && EnchantmentHelper.getLevel(Impaled.KINDLING_CURSE, ((LivingEntity) entity).getMainHandStack()) > 0 || ((LivingEntity) entity).getOffHandStack().isOf(ImpaledItems.HELLFORK) && EnchantmentHelper.getLevel(Impaled.KINDLING_CURSE, ((LivingEntity) entity).getOffHandStack()) > 0) {
+                if (EnchantmentHelper.getLevel(Impaled.KINDLING_CURSE, stack) > 0) {
                     entity.setOnFireFor(1);
                 }
             }
