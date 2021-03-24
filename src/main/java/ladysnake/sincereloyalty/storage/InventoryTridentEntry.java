@@ -47,6 +47,12 @@ public class InventoryTridentEntry extends TridentEntry {
     }
 
     @Override
+    public void preloadTrident() {
+        // NO-OP players should load themselves
+        // TODO maybe load fake players ?
+    }
+
+    @Override
     public TridentEntity findTrident() {
         PlayerEntity player = this.world.getPlayerByUuid(this.playerUuid);
         if (player != null) {

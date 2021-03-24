@@ -17,16 +17,21 @@
  */
 package ladysnake.sincereloyalty.storage;
 
+import ladysnake.sincereloyalty.SincereLoyalty;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.projectile.TridentEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtHelper;
+import net.minecraft.server.world.ChunkTicketType;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 
 import java.util.UUID;
 
 public final class WorldTridentEntry extends TridentEntry {
+    public static final ChunkTicketType<UUID> TRIDENT_RECALL_TICKET = ChunkTicketType.create(SincereLoyalty.MOD_ID + ":trident_recall", UUID::compareTo, 10);
+
     private UUID tridentEntityUuid;
     private BlockPos lastPos;
 
@@ -56,9 +61,12 @@ public final class WorldTridentEntry extends TridentEntry {
     }
 
     @Override
+    public void preloadTrident() {
+        this.world.getChunkManager().addTicket(TRIDENT_RECALL_TICKET, new ChunkPos(this.lastPos), 0, this.tridentEntityUuid);
+    }
+
+    @Override
     public TridentEntity findTrident() {
-        // preload the chunk
-        this.world.getChunk(this.lastPos);
         Entity trident = this.world.getEntity(this.tridentEntityUuid);
         if (trident instanceof TridentEntity) {
             return (TridentEntity) trident;

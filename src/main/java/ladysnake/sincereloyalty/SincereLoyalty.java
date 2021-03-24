@@ -20,20 +20,22 @@ package ladysnake.sincereloyalty;
 import ladysnake.impaled.common.Impaled;
 import ladysnake.sincereloyalty.storage.LoyalTridentStorage;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.tag.TagRegistry;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.tag.Tag;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 
 public final class SincereLoyalty implements ModInitializer {
 
@@ -51,6 +53,25 @@ public final class SincereLoyalty implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        Set<UUID> recallingPlayers = new HashSet<>();
+        ServerTickEvents.START_SERVER_TICK.register(server -> {
+            recallingPlayers.removeIf(uuid -> {
+                ServerPlayerEntity player = server.getPlayerManager().getPlayer(uuid);
+                if (player != null) {
+                    LoyalTridentStorage loyalTridentStorage = LoyalTridentStorage.get(player.getServerWorld());
+                    TridentRecaller.RecallStatus newRecallStatus;
+                    if (loyalTridentStorage.recallTridents(player)) {
+                        newRecallStatus = TridentRecaller.RecallStatus.RECALLING;
+                    } else {
+                        player.sendMessage(new TranslatableText("impaled:trident_recall_fail"), true);
+                        // if there is no trident to recall, reset the player's animation
+                        newRecallStatus = TridentRecaller.RecallStatus.NONE;
+                    }
+                    ((TridentRecaller) player).updateRecallStatus(newRecallStatus);
+                }
+                return true;
+            });
+        });
         ServerPlayNetworking.registerGlobalReceiver(RECALL_TRIDENTS_MESSAGE_ID, (MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) -> {
             TridentRecaller.RecallStatus requested = buf.readEnumConstant(TridentRecaller.RecallStatus.class);
 
@@ -61,16 +82,9 @@ public final class SincereLoyalty implements ModInitializer {
 
                 if (loyalTridentStorage.hasTridents(player)) {
                     if (currentRecallStatus != requested && requested == TridentRecaller.RecallStatus.RECALLING) {
-                        // if there is no trident to recall, reset the player's animation
-                        if (loyalTridentStorage.recallTridents(player)) {
-                            newRecallStatus = TridentRecaller.RecallStatus.RECALLING;
-                        } else {
-                            player.sendMessage(new TranslatableText("impaled:trident_recall_fail"), true);
-                            newRecallStatus = TridentRecaller.RecallStatus.NONE;
-                        }
-                    } else {
-                        newRecallStatus = requested;
+                        loyalTridentStorage.loadTridents(player);
                     }
+                    newRecallStatus = requested;
                 } else {
                     newRecallStatus = TridentRecaller.RecallStatus.NONE;
                 }

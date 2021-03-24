@@ -55,6 +55,8 @@ public abstract class TridentEntry {
         return tridentUuid;
     }
 
+    public abstract void preloadTrident();
+
     @Nullable
     public abstract TridentEntity findTrident();
 
