@@ -42,7 +42,7 @@ public class ElderTridentEntity extends ImpaledTridentEntity {
         if (!this.hasSearchedTarget) {
             if (this.getOwner() != null) {
                 Vec3d rotationVec = this.getOwner().getRotationVector();
-                box = new Box(this.getX() - 1, this.getY() - 1, this.getZ() - 1, this.getX() + 1, this.getY() + 1, this.getZ() + 1).expand(200 * rotationVec.getX(), 200 * rotationVec.getY(), 200 * rotationVec.getZ());
+                box = new Box(this.getX() - 1, this.getY() - 1, this.getZ() - 1, this.getX() + 1, this.getY() + 1, this.getZ() + 1).expand(64 * rotationVec.getX(), 64 * rotationVec.getY(), 64 * rotationVec.getZ());
                 List<Entity> possibleTargets = world.getEntitiesByClass(Entity.class, box, (entity) -> entity.collides() && entity != this.getOwner() && !(entity instanceof TameableEntity && ((TameableEntity) entity).isTamed()));
 
                 double max = 0.5;
