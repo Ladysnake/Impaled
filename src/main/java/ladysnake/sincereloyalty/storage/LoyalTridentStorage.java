@@ -81,6 +81,12 @@ public final class LoyalTridentStorage extends PersistentState {
         this.tridents.getOrDefault(owner, OwnedTridents.EMPTY).clearTridentPosition(LoyalTrident.of(trident).loyaltrident_getTridentUuid());
     }
 
+    public void loadTridents(PlayerEntity player) {
+        for (TridentEntry entry : this.tridents.getOrDefault(player.getUuid(), OwnedTridents.EMPTY)) {
+            entry.preloadTrident();
+        }
+    }
+
     /**
      * @return {@code true} if at least one trident was recalled
      */
