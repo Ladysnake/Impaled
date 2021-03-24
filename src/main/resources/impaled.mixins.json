@@ -5,9 +5,13 @@
   "client": [
   ],
   "mixins": [
+    "EntityMixin",
     "TridentEntityAccessor",
     "TridentRiptideFeatureRendererMixin",
-    "EntityMixin"
+    "impaling.ImpalingEnchantmentMixin",
+    "impaling.MobEntityMixin",
+    "impaling.PlayerEntityMixin",
+    "impaling.TridentEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1
