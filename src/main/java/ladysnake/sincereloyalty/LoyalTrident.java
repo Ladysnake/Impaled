@@ -17,9 +17,12 @@
  */
 package ladysnake.sincereloyalty;
 
+import ladysnake.impaled.common.init.ImpaledItems;
+import ladysnake.impaled.common.item.ImpaledTridentItem;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.entity.projectile.TridentEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
@@ -93,7 +96,17 @@ public interface LoyalTrident {
             if (ownerUuid != null) {
                 PlayerEntity owner = thrower.world.getPlayerByUuid(ownerUuid);
                 if (owner != null) {
-                    TridentEntity trident = new TridentEntity(thrower.world, owner, tridentStack);
+                    TridentEntity trident;
+
+                    // Yes it is fine to call Set<TridentItem>#contains(Item)
+                    //noinspection SuspiciousMethodCalls
+                    if (ImpaledItems.ALL_TRIDENTS.contains(tridentStack.getItem())) {
+                        trident = ((ImpaledTridentItem) tridentStack.getItem()).createTrident(thrower.world, owner, tridentStack);
+                    } else {
+                        trident = new TridentEntity(thrower.world, owner, tridentStack);
+                    }
+
+                    trident.pickupType = PersistentProjectileEntity.PickupPermission.ALLOWED;
                     trident.setVelocity(thrower.getVelocity());
                     trident.copyPositionAndRotation(thrower);
                     thrower.world.spawnEntity(trident);
