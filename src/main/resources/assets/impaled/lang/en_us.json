@@ -2,5 +2,8 @@
   "item.impaled.pitchfork": "Pitchfork",
   "item.impaled.hellfork": "Hellfork",
   "item.impaled.elder_trident": "Elder Trident",
-  "enchantment.impaled.kindling_curse": "Curse of Kindling"
+  "enchantment.impaled.kindling_curse": "Curse of Kindling",
+
+  "impaled:tooltip.owned_by": "(to %s)",
+  "impaled:trident_recall_fail": "Failed to recall your tridents"
 }

@@ -21,14 +21,17 @@
   "environment": "client",
   "entrypoints": {
     "main": [
-      "ladysnake.impaled.common.Impaled"
+      "ladysnake.impaled.common.Impaled",
+      "ladysnake.sincereloyalty.SincereLoyalty"
     ],
     "client": [
-      "ladysnake.impaled.client.ImpaledClient"
+      "ladysnake.impaled.client.ImpaledClient",
+      "ladysnake.sincereloyalty.SincereLoyaltyClient::INSTANCE"
     ]
   },
   "mixins": [
-    "impaled.mixins.json"
+    "impaled.mixins.json",
+    "sincereloyalty.mixins.json"
   ],
 
   "depends": {

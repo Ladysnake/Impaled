@@ -9,17 +9,17 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.item.TridentItem;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
 
 public class ImpaledTridentItem extends TridentItem {
     EntityType<ImpaledTridentEntity> type;
@@ -44,12 +44,8 @@ public class ImpaledTridentItem extends TridentItem {
                     if (!world.isClient) {
                         stack.damage(1, (LivingEntity) playerEntity, livingEntity -> livingEntity.sendToolBreakStatus(user.getActiveHand()));
                         if (j == 0) {
-                            ImpaledTridentEntity impaledTridentEntity = this.type.create(world);
-                            impaledTridentEntity.setTridentAttributes(world, playerEntity, stack);
-                            impaledTridentEntity.setOwner(playerEntity);
-                            impaledTridentEntity.setTridentStack(stack);
-                            impaledTridentEntity.setProperties(playerEntity, playerEntity.pitch, playerEntity.yaw, 0.0F, 2.5F + (float) j * 0.5F, 1.0F);
-                            impaledTridentEntity.updatePosition(user.getX(), user.getEyeY() - 0.10000000149011612D, user.getZ());
+                            ImpaledTridentEntity impaledTridentEntity = createTrident(world, playerEntity, stack);
+
                             if (playerEntity.getAbilities().creativeMode) {
                                 impaledTridentEntity.pickupType = PersistentProjectileEntity.PickupPermission.CREATIVE_ONLY;
                             }
@@ -96,6 +92,16 @@ public class ImpaledTridentItem extends TridentItem {
                 }
             }
         }
+    }
+
+    public @NotNull ImpaledTridentEntity createTrident(World world, LivingEntity user, ItemStack stack) {
+        ImpaledTridentEntity impaledTridentEntity = Objects.requireNonNull(this.type.create(world));
+        impaledTridentEntity.setTridentAttributes(world, user, stack);
+        impaledTridentEntity.setOwner(user);
+        impaledTridentEntity.setTridentStack(stack);
+        impaledTridentEntity.setProperties(user, user.pitch, user.yaw, 0.0F, 2.5F, 1.0F);
+        impaledTridentEntity.updatePosition(user.getX(), user.getEyeY() - 0.1, user.getZ());
+        return impaledTridentEntity;
     }
 
     @Override
