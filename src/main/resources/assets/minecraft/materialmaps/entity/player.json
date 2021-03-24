@@ -1,0 +1,12 @@
+{
+  "map": [
+    {
+      "predicate": {
+        "materialPredicate": {
+          "texture": "impaled:textures/entity/hellfork_riptide.png"
+        }
+      },
+      "material": "canvas:emissive_transform"
+    }
+  ]
+}
