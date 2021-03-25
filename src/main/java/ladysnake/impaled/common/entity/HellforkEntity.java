@@ -1,13 +1,12 @@
 package ladysnake.impaled.common.entity;
 
-import ladysnake.impaled.common.init.ImpaledEntityTypes;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.world.World;
 
 public class HellforkEntity extends ImpaledTridentEntity {
-    public HellforkEntity(EntityType<? extends ImpaledTridentEntity> entityType, World world) {
-        super(ImpaledEntityTypes.HELLFORK, world);
+    public HellforkEntity(EntityType<? extends HellforkEntity> entityType, World world) {
+        super(entityType, world);
     }
 
     @Override

@@ -13,9 +13,9 @@ import net.minecraft.entity.SpawnGroup;
 import net.minecraft.util.registry.Registry;
 
 public class ImpaledEntityTypes {
-    public static EntityType<ImpaledTridentEntity> PITCHFORK;
-    public static EntityType<ImpaledTridentEntity> HELLFORK;
-    public static EntityType<ImpaledTridentEntity> ELDER_TRIDENT;
+    public static EntityType<PitchforkEntity> PITCHFORK;
+    public static EntityType<HellforkEntity> HELLFORK;
+    public static EntityType<ElderTridentEntity> ELDER_TRIDENT;
     public static EntityType<ImpaledTridentEntity> ATLAN;
 
     public static void init() {

@@ -1,29 +1,20 @@
 package ladysnake.impaled.common.entity;
 
-import ladysnake.impaled.common.init.ImpaledEntityTypes;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LightningEntity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.packet.s2c.play.GameStateChangeS2CPacket;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 
 public class ElderTridentEntity extends ImpaledTridentEntity {
@@ -31,8 +22,8 @@ public class ElderTridentEntity extends ImpaledTridentEntity {
     boolean hasSearchedTarget;
     Box box;
 
-    public ElderTridentEntity(EntityType<? extends ImpaledTridentEntity> entityType, World world) {
-        super(ImpaledEntityTypes.ELDER_TRIDENT, world);
+    public ElderTridentEntity(EntityType<? extends ElderTridentEntity> entityType, World world) {
+        super(entityType, world);
     }
 
     @Override

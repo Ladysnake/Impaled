@@ -22,7 +22,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class HellforkItem extends ImpaledTridentItem {
-    public HellforkItem(Settings settings, EntityType<ImpaledTridentEntity> entityType) {
+    public HellforkItem(Settings settings, EntityType<? extends ImpaledTridentEntity> entityType) {
         super(settings, entityType);
     }
 

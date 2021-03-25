@@ -22,14 +22,14 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 
 public class ImpaledTridentItem extends TridentItem {
-    EntityType<ImpaledTridentEntity> type;
+    EntityType<? extends ImpaledTridentEntity> type;
 
-    public ImpaledTridentItem(Settings settings, EntityType<ImpaledTridentEntity> entityType) {
+    public ImpaledTridentItem(Settings settings, EntityType<? extends ImpaledTridentEntity> entityType) {
         super(settings);
         this.type = entityType;
     }
 
-    public EntityType<ImpaledTridentEntity> getEntityType() {
+    public EntityType<? extends ImpaledTridentEntity> getEntityType() {
         return type;
     }
 
@@ -88,7 +88,6 @@ public class ImpaledTridentItem extends TridentItem {
 
                         world.playSoundFromEntity(null, playerEntity, soundEvent3, SoundCategory.PLAYERS, 1.0F, 1.0F);
                     }
-
                 }
             }
         }

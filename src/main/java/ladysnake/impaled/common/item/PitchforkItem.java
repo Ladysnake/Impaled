@@ -22,7 +22,7 @@ import java.util.Map;
 public class PitchforkItem extends ImpaledTridentItem {
     protected static final Map<Block, BlockState> TILLED_BLOCKS;
 
-    public PitchforkItem(Settings settings, EntityType<ImpaledTridentEntity> entityType) {
+    public PitchforkItem(Settings settings, EntityType<? extends ImpaledTridentEntity> entityType) {
         super(settings, entityType);
     }
 
