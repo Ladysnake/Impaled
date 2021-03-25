@@ -1,5 +1,6 @@
 package ladysnake.impaled.common.item;
 
+import ladysnake.sincereloyalty.SincereLoyalty;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.LivingEntity;
@@ -49,29 +50,27 @@ public class MaelstromItem extends RangedWeaponItem implements Vanishable {
     }
 
     @Override
-    public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
-        super.usageTick(world, user, stack, remainingUseTicks);
-        if (remainingUseTicks % (20-(3*EnchantmentHelper.getLevel(Enchantments.EFFICIENCY, stack))) == 0 && world instanceof ServerWorld) {
+    public void usageTick(World world, LivingEntity user, ItemStack maelstromStack, int remainingUseTicks) {
+        super.usageTick(world, user, maelstromStack, remainingUseTicks);
+        if (remainingUseTicks % (20-(3*EnchantmentHelper.getLevel(Enchantments.EFFICIENCY, maelstromStack))) == 0 && world instanceof ServerWorld) {
             if (user instanceof PlayerEntity) {
                 Inventory inventory = ((PlayerEntity) user).getInventory();
                 for (int i = 0; i < inventory.size(); i++) {
-                    ItemStack itemStack = ((PlayerEntity) user).getInventory().getStack(i);
-                    if (!itemStack.isEmpty() && EnchantmentHelper.getRiptide(itemStack) == 0) {
+                    ItemStack stackToThrow = ((PlayerEntity) user).getInventory().getStack(i);
+                    if (!stackToThrow.isEmpty() && EnchantmentHelper.getRiptide(stackToThrow) == 0 && SincereLoyalty.TRIDENTS.contains(stackToThrow.getItem())) {
                         TridentEntity trident = null;
                         PlayerEntity playerEntity = (PlayerEntity)user;
+                        stackToThrow.damage(1, (LivingEntity) playerEntity, livingEntity -> livingEntity.sendToolBreakStatus(user.getActiveHand()));
+                        maelstromStack.damage(1, (LivingEntity) playerEntity, livingEntity -> livingEntity.sendToolBreakStatus(user.getActiveHand()));
 
-                        if (itemStack.getItem() instanceof ImpaledTridentItem) {
-                            trident = ((ImpaledTridentItem) itemStack.getItem()).createTrident(world, user, itemStack);
-                        } else if (itemStack.getItem() instanceof TridentItem) {
-                            trident = new TridentEntity(world, user, itemStack);
+                        if (stackToThrow.getItem() instanceof ImpaledTridentItem) {
+                            trident = ((ImpaledTridentItem) stackToThrow.getItem()).createTrident(world, user, stackToThrow);
+                        } else if (stackToThrow.getItem() instanceof TridentItem) {
+                            trident = new TridentEntity(world, user, stackToThrow);
                             trident.setProperties(playerEntity, playerEntity.pitch, playerEntity.yaw, 0.0F, 2.5F, 1.0F);
                         }
 
                         if (trident != null) {
-                            itemStack.damage(1, (LivingEntity) playerEntity, livingEntity -> livingEntity.sendToolBreakStatus(user.getActiveHand()));
-                            stack.damage(1, (LivingEntity) playerEntity, livingEntity -> livingEntity.sendToolBreakStatus(user.getActiveHand()));
-
-
                             if (playerEntity.getAbilities().creativeMode) {
                                 trident.pickupType = PersistentProjectileEntity.PickupPermission.CREATIVE_ONLY;
                             }
@@ -79,7 +78,7 @@ public class MaelstromItem extends RangedWeaponItem implements Vanishable {
                             world.spawnEntity(trident);
                             world.playSoundFromEntity(null, playerEntity, SoundEvents.ITEM_TRIDENT_RETURN, SoundCategory.PLAYERS, 1.0F, 1.0F);
                             if (!playerEntity.getAbilities().creativeMode) {
-                                playerEntity.getInventory().removeOne(itemStack);
+                                playerEntity.getInventory().removeOne(stackToThrow);
                             }
 
                             playerEntity.incrementStat(Stats.USED.getOrCreateStat(this));
@@ -92,7 +91,7 @@ public class MaelstromItem extends RangedWeaponItem implements Vanishable {
     }
 
     public Predicate<ItemStack> getProjectiles() {
-        return itemStack -> itemStack.getItem() instanceof TridentItem;
+        return itemStack -> SincereLoyalty.TRIDENTS.contains(itemStack.getItem());
     }
 
     public int getRange() {
