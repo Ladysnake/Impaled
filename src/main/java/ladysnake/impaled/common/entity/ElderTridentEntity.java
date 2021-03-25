@@ -1,5 +1,6 @@
 package ladysnake.impaled.common.entity;
 
+import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.effect.StatusEffect;
@@ -7,6 +8,9 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.network.packet.s2c.play.GameStateChangeS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -15,15 +19,20 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ElderTridentEntity extends ImpaledTridentEntity {
-    Entity closestTarget;
-    boolean hasSearchedTarget;
-    Box box;
+    private Entity closestTarget;
+    private boolean hasSearchedTarget;
+    private final List<ItemStack> fetchedStacks = new ArrayList<>();
 
     public ElderTridentEntity(EntityType<? extends ElderTridentEntity> entityType, World world) {
         super(entityType, world);
+    }
+
+    public List<ItemStack> getFetchedStacks() {
+        return fetchedStacks;
     }
 
     @Override
@@ -33,7 +42,7 @@ public class ElderTridentEntity extends ImpaledTridentEntity {
         if (!this.hasSearchedTarget) {
             if (this.getOwner() != null) {
                 Vec3d rotationVec = this.getOwner().getRotationVector();
-                box = new Box(this.getX() - 1, this.getY() - 1, this.getZ() - 1, this.getX() + 1, this.getY() + 1, this.getZ() + 1).expand(64 * rotationVec.getX(), 64 * rotationVec.getY(), 64 * rotationVec.getZ());
+                Box box = new Box(this.getX() - 1, this.getY() - 1, this.getZ() - 1, this.getX() + 1, this.getY() + 1, this.getZ() + 1).expand(64 * rotationVec.getX(), 64 * rotationVec.getY(), 64 * rotationVec.getZ());
                 List<Entity> possibleTargets = world.getEntitiesByClass(Entity.class, box, (entity) -> entity.collides() && entity != this.getOwner() && !(entity instanceof TameableEntity && ((TameableEntity) entity).isTamed()));
 
                 double max = 0.5;
@@ -81,7 +90,42 @@ public class ElderTridentEntity extends ImpaledTridentEntity {
     }
 
     @Override
+    public void onPlayerCollision(PlayerEntity player) {
+        super.onPlayerCollision(player);
+        Entity entity = this.getOwner();
+        if (entity == null || entity.getUuid() == player.getUuid()) {
+            this.fetchedStacks.forEach(stack -> {
+                if (!player.getInventory().insertStack(stack)) {
+                    this.dropStack(stack);
+                }
+            });
+        }
+    }
+
+    @Override
     protected float getDragInWater() {
         return 1.0f;
+    }
+
+    @Override
+    public void readCustomDataFromNbt(CompoundTag tag) {
+        super.readCustomDataFromNbt(tag);
+        if (tag.contains("fetched_items", NbtType.LIST)) {
+            ListTag fetchedItems = tag.getList("fetched_items", NbtType.COMPOUND);
+            for (int i = 0; i < fetchedItems.size(); i++) {
+                CompoundTag fetchedItem = fetchedItems.getCompound(i);
+                this.fetchedStacks.add(ItemStack.fromNbt(fetchedItem));
+            }
+        }
+    }
+
+    @Override
+    public void writeCustomDataToNbt(CompoundTag tag) {
+        super.writeCustomDataToNbt(tag);
+        ListTag listTag = new ListTag();
+        for (ItemStack fetchedStack : this.fetchedStacks) {
+            listTag.add(fetchedStack.writeNbt(new CompoundTag()));
+        }
+        tag.put("fetched_stacks", listTag);
     }
 }
