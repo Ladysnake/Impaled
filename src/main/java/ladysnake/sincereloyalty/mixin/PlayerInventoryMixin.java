@@ -19,16 +19,19 @@ package ladysnake.sincereloyalty.mixin;
 
 import ladysnake.sincereloyalty.LoyalTrident;
 import ladysnake.sincereloyalty.TridentRecaller;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.collection.DefaultedList;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(PlayerInventory.class)
 public abstract class PlayerInventoryMixin {
@@ -40,14 +43,26 @@ public abstract class PlayerInventoryMixin {
     @Final
     public PlayerEntity player;
 
-    @ModifyArg(method = "insertStack(Lnet/minecraft/item/ItemStack;)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerInventory;insertStack(ILnet/minecraft/item/ItemStack;)Z"))
-    private int insertToPreferredSlot(int slot, ItemStack stack) {
+    @Shadow public abstract boolean insertStack(int slot, ItemStack stack);
+
+    @Shadow @Final public DefaultedList<ItemStack> offHand;
+
+    @Inject(method = "insertStack(Lnet/minecraft/item/ItemStack;)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerInventory;insertStack(ILnet/minecraft/item/ItemStack;)Z"), cancellable = true)
+    private void insertToPreferredSlot(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
         CompoundTag tag = stack.getSubTag(LoyalTrident.MOD_NBT_KEY);
         if (tag != null) {
             if (tag.contains(LoyalTrident.RETURN_SLOT_NBT_KEY)) {
                 int preferredSlot = tag.getInt(LoyalTrident.RETURN_SLOT_NBT_KEY);
-                if (this.getStack(preferredSlot).isEmpty()) {
-                    return preferredSlot;
+                tag.remove(LoyalTrident.RETURN_SLOT_NBT_KEY);
+                if (preferredSlot == -1) {
+                    if (this.player.getOffHandStack().isEmpty()) {
+                        this.player.equipStack(EquipmentSlot.OFFHAND, stack.copy());
+                        stack.setCount(0);
+                        cir.setReturnValue(true);
+                    }
+                } else if (this.getStack(preferredSlot).isEmpty()) {
+                    this.insertStack(preferredSlot, stack);
+                    cir.setReturnValue(true);
                 }
             }
 
@@ -57,6 +72,5 @@ public abstract class PlayerInventoryMixin {
             }
             caller.updateRecallStatus(TridentRecaller.RecallStatus.NONE);
         }
-        return slot;
     }
 }

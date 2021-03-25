@@ -59,22 +59,6 @@ public interface LoyalTrident {
         tridentStack.getOrCreateSubTag(LoyalTrident.MOD_NBT_KEY).putInt(LoyalTrident.RETURN_SLOT_NBT_KEY, slot);
     }
 
-    static boolean hasSittingFlag(ItemStack tridentStack) {
-        CompoundTag loyaltyData = tridentStack.getSubTag(LoyalTrident.MOD_NBT_KEY);
-        return loyaltyData != null && loyaltyData.getBoolean(LoyalTrident.TRIDENT_SIT_NBT_KEY);
-    }
-
-    static void addSittingFlag(ItemStack tridentStack) {
-        tridentStack.getOrCreateSubTag(LoyalTrident.MOD_NBT_KEY).putBoolean(LoyalTrident.TRIDENT_SIT_NBT_KEY, true);
-    }
-
-    static void clearSittingFlag(ItemStack tridentStack) {
-        CompoundTag loyaltyData = tridentStack.getSubTag(LoyalTrident.MOD_NBT_KEY);
-        if (loyaltyData != null) {
-            loyaltyData.remove(LoyalTrident.TRIDENT_SIT_NBT_KEY);
-        }
-    }
-
     static boolean hasTrueOwner(ItemStack tridentStack) {
         if (SincereLoyalty.TRIDENTS.contains(tridentStack.getItem()) && EnchantmentHelper.getLoyalty(tridentStack) > 0) {
             CompoundTag loyaltyNbt = tridentStack.getSubTag(MOD_NBT_KEY);
