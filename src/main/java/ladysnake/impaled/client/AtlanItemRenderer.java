@@ -49,7 +49,7 @@ public class AtlanItemRenderer implements BuiltinItemRendererRegistry.DynamicIte
     public void apply(ResourceManager manager) {
         MinecraftClient mc = MinecraftClient.getInstance();
         this.itemRenderer = mc.getItemRenderer();
-        this.tridentModel = new AtlanEntityModel(mc.getEntityModelLoader().getModelPart(EntityModelLayers.TRIDENT));
+        this.tridentModel = new AtlanEntityModel(mc.getEntityModelLoader().getModelPart(ImpaledClient.ATLAN));
         this.inventoryTridentModel = mc.getBakedModelManager().getModel(new ModelIdentifier(this.tridentId + "_in_inventory", "inventory"));
     }
 
