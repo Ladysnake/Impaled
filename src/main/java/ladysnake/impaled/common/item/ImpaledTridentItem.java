@@ -1,6 +1,7 @@
 package ladysnake.impaled.common.item;
 
 import ladysnake.impaled.common.entity.ImpaledTridentEntity;
+import ladysnake.sincereloyalty.LoyalTrident;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -14,6 +15,7 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -40,18 +42,19 @@ public class ImpaledTridentItem extends TridentItem {
             int i = this.getMaxUseTime(stack) - remainingUseTicks;
             if (i >= 10) {
                 int j = EnchantmentHelper.getRiptide(stack);
-                if (j <= 0 || playerEntity.isTouchingWaterOrRain()) {
+                if (j <= 0 || canRiptide(playerEntity)) {
                     if (!world.isClient) {
                         stack.damage(1, (LivingEntity) playerEntity, livingEntity -> livingEntity.sendToolBreakStatus(user.getActiveHand()));
                         if (j == 0) {
-                            ImpaledTridentEntity impaledTridentEntity = createTrident(world, playerEntity, stack);
+                            ImpaledTridentEntity trident = createTrident(world, playerEntity, stack);
+                            LoyalTrident.of(trident).loyaltrident_setReturnSlot(playerEntity.getActiveHand() == Hand.OFF_HAND ? -1 : playerEntity.getInventory().selectedSlot);
 
                             if (playerEntity.getAbilities().creativeMode) {
-                                impaledTridentEntity.pickupType = PersistentProjectileEntity.PickupPermission.CREATIVE_ONLY;
+                                trident.pickupType = PersistentProjectileEntity.PickupPermission.CREATIVE_ONLY;
                             }
 
-                            world.spawnEntity(impaledTridentEntity);
-                            world.playSoundFromEntity(null, impaledTridentEntity, SoundEvents.ITEM_TRIDENT_THROW, SoundCategory.PLAYERS, 1.0F, 1.0F);
+                            world.spawnEntity(trident);
+                            world.playSoundFromEntity(null, trident, SoundEvents.ITEM_TRIDENT_THROW, SoundCategory.PLAYERS, 1.0F, 1.0F);
                             if (!playerEntity.getAbilities().creativeMode) {
                                 playerEntity.getInventory().removeOne(stack);
                             }
@@ -91,6 +94,10 @@ public class ImpaledTridentItem extends TridentItem {
                 }
             }
         }
+    }
+
+    protected boolean canRiptide(PlayerEntity playerEntity) {
+        return playerEntity.isTouchingWaterOrRain();
     }
 
     public @NotNull ImpaledTridentEntity createTrident(World world, LivingEntity user, ItemStack stack) {
