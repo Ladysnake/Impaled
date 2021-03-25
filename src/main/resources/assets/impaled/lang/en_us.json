@@ -2,6 +2,8 @@
   "item.impaled.pitchfork": "Pitchfork",
   "item.impaled.hellfork": "Hellfork",
   "item.impaled.elder_trident": "Elder Trident",
+  "item.impaled.atlan": "Atlan",
+
   "enchantment.impaled.kindling_curse": "Curse of Kindling",
 
   "impaled:tooltip.owned_by": "(to %s)",

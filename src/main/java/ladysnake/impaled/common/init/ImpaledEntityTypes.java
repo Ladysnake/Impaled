@@ -16,11 +16,13 @@ public class ImpaledEntityTypes {
     public static EntityType<ImpaledTridentEntity> PITCHFORK;
     public static EntityType<ImpaledTridentEntity> HELLFORK;
     public static EntityType<ImpaledTridentEntity> ELDER_TRIDENT;
+    public static EntityType<ImpaledTridentEntity> ATLAN;
 
     public static void init() {
         PITCHFORK = register("pitchfork", createEntityType(PitchforkEntity::new));
         HELLFORK = register("hellfork", createEntityType(HellforkEntity::new));
         ELDER_TRIDENT = register("elder_trident", createEntityType(ElderTridentEntity::new));
+        ATLAN = register("atlan", createEntityType(ImpaledTridentEntity::new));
     }
 
     private static <T extends Entity> EntityType<T> register(String s, EntityType<T> bombEntityType) {

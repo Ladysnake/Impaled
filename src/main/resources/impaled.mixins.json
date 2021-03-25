@@ -5,6 +5,7 @@
   "client": [
   ],
   "mixins": [
+    "EnchantmentTargetMixin",
     "EntityMixin",
     "TridentEntityAccessor",
     "TridentRiptideFeatureRendererMixin",

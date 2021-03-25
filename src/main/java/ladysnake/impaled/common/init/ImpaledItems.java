@@ -3,6 +3,7 @@ package ladysnake.impaled.common.init;
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
 import ladysnake.impaled.common.Impaled;
 import ladysnake.impaled.common.entity.ImpaledTridentEntity;
+import ladysnake.impaled.common.item.AtlanItem;
 import ladysnake.impaled.common.item.HellforkItem;
 import ladysnake.impaled.common.item.ImpaledTridentItem;
 import ladysnake.impaled.common.item.MaelstromItem;
@@ -24,6 +25,7 @@ public class ImpaledItems {
     public static Item PITCHFORK;
     public static Item HELLFORK;
     public static Item ELDER_TRIDENT;
+    public static Item ATLAN;
     public static Item PHANTASM;
     public static final Set<ImpaledTridentItem> ALL_TRIDENTS = new ReferenceOpenHashSet<>();
 
@@ -31,6 +33,7 @@ public class ImpaledItems {
         PITCHFORK = registerTrident(new PitchforkItem((new Item.Settings()).maxDamage(250).group(ItemGroup.COMBAT), ImpaledEntityTypes.PITCHFORK), "pitchfork", true);
         HELLFORK = registerTrident(new HellforkItem((new Item.Settings()).maxDamage(325).fireproof().group(ItemGroup.COMBAT), ImpaledEntityTypes.HELLFORK), "hellfork", true);
         ELDER_TRIDENT = registerTrident(new ImpaledTridentItem((new Item.Settings()).maxDamage(250).group(ItemGroup.COMBAT), ImpaledEntityTypes.ELDER_TRIDENT), "elder_trident", true);
+        ATLAN = registerTrident(new AtlanItem((new Item.Settings()).maxDamage(250).group(ItemGroup.COMBAT), ImpaledEntityTypes.ATLAN), "atlan", true);
         PHANTASM = registerItem(new MaelstromItem((new Item.Settings()).maxDamage(80).group(ItemGroup.COMBAT)), "maelstrom");
     }
 
