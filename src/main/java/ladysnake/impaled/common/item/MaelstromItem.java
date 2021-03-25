@@ -51,7 +51,7 @@ public class MaelstromItem extends RangedWeaponItem implements Vanishable {
     @Override
     public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
         super.usageTick(world, user, stack, remainingUseTicks);
-        if (!user.isSneaking() && remainingUseTicks % (20-(3*EnchantmentHelper.getLevel(Enchantments.EFFICIENCY, stack))) == 0 && world instanceof ServerWorld) {
+        if (remainingUseTicks % (20-(3*EnchantmentHelper.getLevel(Enchantments.EFFICIENCY, stack))) == 0 && world instanceof ServerWorld) {
             if (user instanceof PlayerEntity) {
                 Inventory inventory = ((PlayerEntity) user).getInventory();
                 for (int i = 0; i < inventory.size(); i++) {
