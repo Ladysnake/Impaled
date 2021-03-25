@@ -62,7 +62,9 @@ public final class WorldTridentEntry extends TridentEntry {
 
     @Override
     public void preloadTrident() {
-        this.world.getChunkManager().addTicket(TRIDENT_RECALL_TICKET, new ChunkPos(this.lastPos), 0, this.tridentEntityUuid);
+        ChunkPos pos = new ChunkPos(this.lastPos);
+        this.world.getChunk(pos.x, pos.z);  // just loading it
+        this.world.getChunkManager().addTicket(TRIDENT_RECALL_TICKET, pos, 0, this.tridentEntityUuid);
     }
 
     @Override

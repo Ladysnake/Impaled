@@ -32,7 +32,7 @@ import org.jetbrains.annotations.Nullable;
 public final class SincereLoyaltyClient implements ClientModInitializer {
     public static final SincereLoyaltyClient INSTANCE = new SincereLoyaltyClient();
     public static final int RECALL_ANIMATION_START = 10;
-    public static final int RECALL_TIME = 40;
+    public static final int RECALL_TIME = 35;   // + count 5 forced ticks serverside to load chunks
 
     private int useTime = 0;
     private int failedUseCountdown = 0;
