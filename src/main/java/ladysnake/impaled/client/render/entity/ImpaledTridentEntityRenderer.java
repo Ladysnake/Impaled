@@ -1,9 +1,7 @@
 package ladysnake.impaled.client.render.entity;
 
 import ladysnake.impaled.client.render.entity.model.ImpaledTridentEntityModel;
-import ladysnake.impaled.common.Impaled;
 import ladysnake.impaled.common.entity.ImpaledTridentEntity;
-import ladysnake.impaled.common.entity.PitchforkEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.OverlayTexture;
@@ -11,7 +9,7 @@ import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.entity.model.EntityModelLayers;
+import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
@@ -23,9 +21,9 @@ public class ImpaledTridentEntityRenderer extends EntityRenderer<ImpaledTridentE
     private final ImpaledTridentEntityModel model;
     private final Identifier texture;
 
-    public ImpaledTridentEntityRenderer(EntityRendererFactory.Context context, Identifier texture) {
+    public ImpaledTridentEntityRenderer(EntityRendererFactory.Context context, Identifier texture, EntityModelLayer modelLayer) {
         super(context);
-        this.model = new ImpaledTridentEntityModel(context.getPart(EntityModelLayers.TRIDENT));
+        this.model = new ImpaledTridentEntityModel(context.getPart(modelLayer));
         this.texture = texture;
     }
 

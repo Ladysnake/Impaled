@@ -7,7 +7,7 @@ import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.model.EntityModelLayers;
+import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.json.ModelTransformation;
@@ -24,14 +24,16 @@ public class ImpaledTridentItemRenderer implements BuiltinItemRendererRegistry.D
     private final Identifier id;
     private final Identifier tridentId;
     private final Identifier texture;
+    private final EntityModelLayer modelLayer;
     private ItemRenderer itemRenderer;
     private ImpaledTridentEntityModel tridentModel;
     private BakedModel inventoryTridentModel;
 
-    public ImpaledTridentItemRenderer(Identifier tridentId, Identifier texture) {
+    public ImpaledTridentItemRenderer(Identifier tridentId, Identifier texture, EntityModelLayer modelLayer) {
         this.id = new Identifier(tridentId.getNamespace(), tridentId.getPath() + "_renderer");
         this.tridentId = tridentId;
         this.texture = texture;
+        this.modelLayer = modelLayer;
     }
 
     @Override
@@ -48,7 +50,7 @@ public class ImpaledTridentItemRenderer implements BuiltinItemRendererRegistry.D
     public void apply(ResourceManager manager) {
         MinecraftClient mc = MinecraftClient.getInstance();
         this.itemRenderer = mc.getItemRenderer();
-        this.tridentModel = new ImpaledTridentEntityModel(mc.getEntityModelLoader().getModelPart(EntityModelLayers.TRIDENT));
+        this.tridentModel = new ImpaledTridentEntityModel(mc.getEntityModelLoader().getModelPart(this.modelLayer));
         this.inventoryTridentModel = mc.getBakedModelManager().getModel(new ModelIdentifier(this.tridentId + "_in_inventory", "inventory"));
     }
 
