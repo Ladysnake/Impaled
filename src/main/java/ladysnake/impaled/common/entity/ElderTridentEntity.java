@@ -21,7 +21,9 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class ElderTridentEntity extends ImpaledTridentEntity {
     protected Entity closestTarget;
@@ -32,8 +34,8 @@ public class ElderTridentEntity extends ImpaledTridentEntity {
         super(entityType, world);
     }
 
-    public List<ItemStack> getFetchedStacks() {
-        return fetchedStacks;
+    public Consumer<ItemStack> getStackFetcher() {
+        return fetchedStacks::add;
     }
 
     @Override
@@ -98,17 +100,29 @@ public class ElderTridentEntity extends ImpaledTridentEntity {
         super.onPlayerCollision(player);
         Entity entity = this.getOwner();
         if (entity == null || entity.getUuid() == player.getUuid()) {
-            this.fetchedStacks.forEach(stack -> {
+            for (Iterator<ItemStack> iterator = this.fetchedStacks.iterator(); iterator.hasNext(); ) {
+                ItemStack stack = iterator.next();
                 if (!player.getInventory().insertStack(stack)) {
                     this.dropStack(stack);
                 }
-            });
+                iterator.remove();
+            }
         }
     }
 
     @Override
     protected float getDragInWater() {
         return 1.0f;
+    }
+
+    @Override
+    public void remove(RemovalReason reason) {
+        if (reason.shouldDestroy()) {
+            for (ItemStack fetchedStack : this.fetchedStacks) {
+                this.dropStack(fetchedStack);
+            }
+        }
+        super.remove(reason);
     }
 
     @Override
