@@ -8,6 +8,7 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.TridentEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -23,8 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ElderTridentEntity extends ImpaledTridentEntity {
-    private Entity closestTarget;
-    private boolean hasSearchedTarget;
+    protected Entity closestTarget;
+    protected boolean hasSearchedTarget;
     private final List<ItemStack> fetchedStacks = new ArrayList<>();
 
     public ElderTridentEntity(EntityType<? extends ElderTridentEntity> entityType, World world) {
@@ -39,13 +40,17 @@ public class ElderTridentEntity extends ImpaledTridentEntity {
     public void tick() {
         super.tick();
 
+        if (this.inGround) {
+            this.setDealtDamage(true);
+        }
+
         if (!this.hasSearchedTarget) {
             if (this.getOwner() != null) {
                 Vec3d rotationVec = this.getOwner().getRotationVector();
-                Box box = new Box(this.getX() - 1, this.getY() - 1, this.getZ() - 1, this.getX() + 1, this.getY() + 1, this.getZ() + 1).expand(64 * rotationVec.getX(), 64 * rotationVec.getY(), 64 * rotationVec.getZ());
-                List<Entity> possibleTargets = world.getEntitiesByClass(Entity.class, box, (entity) -> entity.collides() && entity != this.getOwner() && !(entity instanceof TameableEntity && ((TameableEntity) entity).isTamed()));
+                Box box = new Box(this.getX() - 1, this.getY() - 1, this.getZ() - 1, this.getX() + 1, this.getY() + 1, this.getZ() + 1).expand(96 * rotationVec.getX(), 96 * rotationVec.getY(), 96 * rotationVec.getZ());
+                List<Entity> possibleTargets = world.getEntitiesByClass(Entity.class, box, (entity) -> entity.collides() && entity != this.getOwner() && !(entity instanceof TameableEntity && ((TameableEntity) entity).isTamed()) && !(entity instanceof TridentEntity));
 
-                double max = 0.5;
+                double max = 0.3;
                 for (Entity possibleTarget : possibleTargets) {
                     Vec3d vecDist = possibleTarget.getPos().subtract(this.getOwner().getPos());
                     double dotProduct = vecDist.normalize().dotProduct(rotationVec);
@@ -66,7 +71,6 @@ public class ElderTridentEntity extends ImpaledTridentEntity {
                     if (this.world.isClient) {
                         this.lastRenderY = this.getY();
                     }
-
 
                     double d = 0.05D * (double) i;
                     this.setVelocity(this.getVelocity().multiply(0.95D).add(vec3d.normalize().multiply(d)));

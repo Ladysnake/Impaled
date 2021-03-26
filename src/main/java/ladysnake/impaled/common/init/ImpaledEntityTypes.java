@@ -2,6 +2,7 @@ package ladysnake.impaled.common.init;
 
 import ladysnake.impaled.common.Impaled;
 import ladysnake.impaled.common.entity.ElderTridentEntity;
+import ladysnake.impaled.common.entity.GuardianTridentEntity;
 import ladysnake.impaled.common.entity.HellforkEntity;
 import ladysnake.impaled.common.entity.ImpaledTridentEntity;
 import ladysnake.impaled.common.entity.PitchforkEntity;
@@ -23,7 +24,7 @@ public class ImpaledEntityTypes {
         PITCHFORK = register("pitchfork", createEntityType(PitchforkEntity::new));
         HELLFORK = register("hellfork", createEntityType(HellforkEntity::new));
         ELDER_TRIDENT = register("elder_trident", createEntityType(ElderTridentEntity::new));
-        GUARDIAN_TRIDENT = register("guardian_trident", createEntityType(ElderTridentEntity::new));
+        GUARDIAN_TRIDENT = register("guardian_trident", createEntityType(GuardianTridentEntity::new));
         ATLAN = register("atlan", createEntityType(ImpaledTridentEntity::new));
     }
 
