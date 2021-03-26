@@ -4,6 +4,7 @@ import ladysnake.impaled.client.render.entity.AtlanEntityRenderer;
 import ladysnake.impaled.client.render.entity.ImpaledTridentEntityRenderer;
 import ladysnake.impaled.client.render.entity.model.AtlanEntityModel;
 import ladysnake.impaled.common.Impaled;
+import ladysnake.impaled.common.init.ImpaledEntityTypes;
 import ladysnake.impaled.common.init.ImpaledItems;
 import ladysnake.impaled.common.item.AtlanItem;
 import ladysnake.impaled.common.item.ImpaledTridentItem;
@@ -47,5 +48,7 @@ public class ImpaledClient implements ClientModInitializer {
             FabricModelPredicateProviderRegistry.register(item, new Identifier("throwing"), (stack, world, entity, seed) -> entity != null && entity.isUsingItem() && entity.getActiveItem() == stack ? 1.0F : 0.0F);
             ModelLoadingRegistry.INSTANCE.registerModelProvider((manager, out) -> out.accept(new ModelIdentifier(tridentId + "_in_inventory", "inventory")));
         }
+
+        EntityRendererRegistry.INSTANCE.register(ImpaledEntityTypes.GUARDIAN_TRIDENT, ctx -> new ImpaledTridentEntityRenderer(ctx, new Identifier(Impaled.MODID, "textures/entity/guardian_trident.png")));
     }
 }

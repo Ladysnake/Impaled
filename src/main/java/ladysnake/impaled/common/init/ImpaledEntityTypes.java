@@ -16,12 +16,14 @@ public class ImpaledEntityTypes {
     public static EntityType<PitchforkEntity> PITCHFORK;
     public static EntityType<HellforkEntity> HELLFORK;
     public static EntityType<ElderTridentEntity> ELDER_TRIDENT;
+    public static EntityType<ElderTridentEntity> GUARDIAN_TRIDENT;
     public static EntityType<ImpaledTridentEntity> ATLAN;
 
     public static void init() {
         PITCHFORK = register("pitchfork", createEntityType(PitchforkEntity::new));
         HELLFORK = register("hellfork", createEntityType(HellforkEntity::new));
         ELDER_TRIDENT = register("elder_trident", createEntityType(ElderTridentEntity::new));
+        GUARDIAN_TRIDENT = register("guardian_trident", createEntityType(ElderTridentEntity::new));
         ATLAN = register("atlan", createEntityType(ImpaledTridentEntity::new));
     }
 
