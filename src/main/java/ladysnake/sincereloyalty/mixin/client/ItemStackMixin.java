@@ -20,6 +20,7 @@ package ladysnake.sincereloyalty.mixin.client;
 import ladysnake.sincereloyalty.LoyalTrident;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -49,13 +50,15 @@ public abstract class ItemStackMixin {
 
     @Nullable
     @Unique
-    private static String trueOwnerName;
+    private static String impaled$trueOwnerName;
+    private static boolean impaled$riptide;
 
     @Inject(method = "getTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;appendEnchantments(Ljava/util/List;Lnet/minecraft/nbt/ListTag;)V"))
     private void captureThis(PlayerEntity player, TooltipContext context, CallbackInfoReturnable<List<Text>> cir) {
         CompoundTag loyaltyNbt = this.getSubTag(LoyalTrident.MOD_NBT_KEY);
         if (loyaltyNbt != null && loyaltyNbt.contains(LoyalTrident.OWNER_NAME_NBT_KEY)) {
-            trueOwnerName = loyaltyNbt.getString(LoyalTrident.OWNER_NAME_NBT_KEY);
+            impaled$trueOwnerName = loyaltyNbt.getString(LoyalTrident.OWNER_NAME_NBT_KEY);
+            impaled$riptide = EnchantmentHelper.getRiptide((ItemStack) (Object) this) > 0;
         }
     }
 
@@ -63,11 +66,18 @@ public abstract class ItemStackMixin {
     @Dynamic("Lambda method")
     @Inject(method = "method_17869", at = @At("RETURN"))
     private static void editTooltip(List<Text> lines, CompoundTag enchantmentNbt, Enchantment enchantment, CallbackInfo info) {
-        if (enchantment == Enchantments.LOYALTY && trueOwnerName != null) {
+        if (enchantment == Enchantments.LOYALTY && impaled$trueOwnerName != null) {
             if (!lines.isEmpty()) {
-                ((MutableText) lines.get(lines.size() - 1)).append(new LiteralText(" ")).append(new TranslatableText("impaled:tooltip.owned_by", trueOwnerName).formatted(Formatting.DARK_GRAY));
+                if (impaled$riptide) {
+                    // If there is riptide, we present as if there was only one level possible
+                    lines.set(lines.size() - 1, new TranslatableText(enchantment.getTranslationKey()).formatted(Formatting.GRAY));
+                }
+
+                MutableText line = (MutableText) lines.get(lines.size() - 1);
+
+                line.append(new LiteralText(" ")).append(new TranslatableText("impaled:tooltip.owned_by", impaled$trueOwnerName).formatted(Formatting.DARK_GRAY));
             }
-            trueOwnerName = null;
+            impaled$trueOwnerName = null;
         }
     }
 }
