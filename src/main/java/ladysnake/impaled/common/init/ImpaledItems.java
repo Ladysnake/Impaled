@@ -27,7 +27,7 @@ public class ImpaledItems {
     public static Item HELLFORK;
     public static Item ELDER_TRIDENT;
     public static Item ATLAN;
-    public static Item PHANTASM;
+    public static Item MAELSTROM;
     public static final Set<ImpaledTridentItem> ALL_TRIDENTS = new ReferenceOpenHashSet<>();
 
     public static void init() {
@@ -35,7 +35,7 @@ public class ImpaledItems {
         HELLFORK = registerTrident(new HellforkItem((new Item.Settings()).maxDamage(325).fireproof().group(ItemGroup.COMBAT), ImpaledEntityTypes.HELLFORK), "hellfork", true);
         ELDER_TRIDENT = registerTrident(new ElderTridentItem((new Item.Settings()).maxDamage(250).group(ItemGroup.COMBAT), ImpaledEntityTypes.ELDER_TRIDENT), "elder_trident", true);
         ATLAN = registerTrident(new AtlanItem((new Item.Settings()).maxDamage(250).group(ItemGroup.COMBAT), ImpaledEntityTypes.ATLAN), "atlan", true);
-        PHANTASM = registerItem(new MaelstromItem((new Item.Settings()).maxDamage(80).group(ItemGroup.COMBAT)), "maelstrom");
+        MAELSTROM = registerItem(new MaelstromItem((new Item.Settings()).maxDamage(80).group(ItemGroup.COMBAT)), "maelstrom");
     }
 
     public static ImpaledTridentItem registerTrident(ImpaledTridentItem item, String name, boolean registerDispenserBehavior) {
