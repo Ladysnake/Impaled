@@ -20,6 +20,8 @@ public class ElderTridentItem extends ImpaledTridentItem {
 
     @Override
     public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
+        super.onStoppedUsing(stack, world, user, remainingUseTicks);
+
         int j = EnchantmentHelper.getLevel(Enchantments.RIPTIDE, stack);
         int useTime = this.getMaxUseTime(stack) - remainingUseTicks;
         if (useTime >= 10 && j > 0) {
@@ -31,7 +33,7 @@ public class ElderTridentItem extends ImpaledTridentItem {
                     trident.setOwner(user);
                     trident.setTridentStack(stack);
                     trident.setProperties(user, user.pitch, user.yaw, 0.0F, 2.5F, 1.0F);
-                    trident.updatePosition(user.getX(), user.getEyeY() - 0.1, user.getZ());
+                    trident.updatePosition(user.getX()+user.getRandom().nextGaussian(), user.getEyeY()+user.getRandom().nextGaussian(), user.getZ()+user.getRandom().nextGaussian());
                     trident.addVelocity(user.getRandom().nextGaussian()/10, 0, user.getRandom().nextGaussian()/10);
 
                     if (((PlayerEntity) user).getAbilities().creativeMode) {
@@ -46,8 +48,6 @@ public class ElderTridentItem extends ImpaledTridentItem {
                     }
                 }
             }
-        } else {
-            super.onStoppedUsing(stack, world, user, remainingUseTicks);
         }
     }
 }

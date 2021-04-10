@@ -2,12 +2,14 @@ package ladysnake.impaled.common.entity;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.TridentEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -79,6 +81,18 @@ public class GuardianTridentEntity extends ElderTridentEntity {
         } else {
             super.tick();
         }
+    }
+
+    @Override
+    protected void onEntityHit(EntityHitResult entityHitResult) {
+        if (!this.isOwner(entityHitResult.getEntity())) {
+            super.onEntityHit(entityHitResult);
+        }
+    }
+
+    @Override
+    public boolean collidesWith(Entity other) {
+        return super.collidesWith(other) && !this.isOwner(other);
     }
 
     @Override
