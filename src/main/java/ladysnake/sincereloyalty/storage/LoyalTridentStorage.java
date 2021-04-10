@@ -23,8 +23,8 @@ import ladysnake.sincereloyalty.SincereLoyalty;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.TridentEntity;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.network.packet.s2c.play.PlaySoundIdS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -117,12 +117,12 @@ public final class LoyalTridentStorage extends PersistentState {
         return foundAny;
     }
 
-    public static LoyalTridentStorage fromNbt(ServerWorld world, CompoundTag tag) {
+    public static LoyalTridentStorage fromNbt(ServerWorld world, NbtCompound tag) {
         LoyalTridentStorage ret = new LoyalTridentStorage(world);
-        ListTag ownersNbt = tag.getList("trident_owners", NbtType.COMPOUND);
+        NbtList ownersNbt = tag.getList("trident_owners", NbtType.COMPOUND);
         for (int i = 0; i < ownersNbt.size(); i++) {
             OwnedTridents tridents = new OwnedTridents(ret);
-            CompoundTag ownerNbt = ownersNbt.getCompound(i);
+            NbtCompound ownerNbt = ownersNbt.getCompound(i);
             UUID ownerUuid = ownerNbt.getUuid("owner_uuid");
             tridents.fromTag(ownerNbt);
             ret.tridents.put(ownerUuid, tridents);
@@ -132,12 +132,12 @@ public final class LoyalTridentStorage extends PersistentState {
 
     @NotNull
     @Override
-    public CompoundTag writeNbt(CompoundTag tag) {
+    public NbtCompound writeNbt(NbtCompound tag) {
         if (!this.tridents.isEmpty()) {
-            ListTag ownersNbt = new ListTag();
+            NbtList ownersNbt = new NbtList();
             this.tridents.forEach((ownerUuid, tridents) -> {
                 if (!tridents.isEmpty()) {
-                    CompoundTag ownerNbt = new CompoundTag();
+                    NbtCompound ownerNbt = new NbtCompound();
                     ownerNbt.putUuid("owner_uuid", ownerUuid);
                     tridents.toTag(ownerNbt);
                     ownersNbt.add(ownerNbt);

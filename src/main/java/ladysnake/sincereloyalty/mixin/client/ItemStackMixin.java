@@ -24,7 +24,7 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
@@ -46,16 +46,16 @@ import java.util.List;
 public abstract class ItemStackMixin {
 
     @Shadow
-    public abstract CompoundTag getSubTag(String key);
+    public abstract NbtCompound getSubTag(String key);
 
     @Nullable
     @Unique
     private static String impaled$trueOwnerName;
     private static boolean impaled$riptide;
 
-    @Inject(method = "getTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;appendEnchantments(Ljava/util/List;Lnet/minecraft/nbt/ListTag;)V"))
+    @Inject(method = "getTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;appendEnchantments(Ljava/util/List;Lnet/minecraft/nbt/NbtList;)V"))
     private void captureThis(PlayerEntity player, TooltipContext context, CallbackInfoReturnable<List<Text>> cir) {
-        CompoundTag loyaltyNbt = this.getSubTag(LoyalTrident.MOD_NBT_KEY);
+        NbtCompound loyaltyNbt = this.getSubTag(LoyalTrident.MOD_NBT_KEY);
         if (loyaltyNbt != null && loyaltyNbt.contains(LoyalTrident.OWNER_NAME_NBT_KEY)) {
             impaled$trueOwnerName = loyaltyNbt.getString(LoyalTrident.OWNER_NAME_NBT_KEY);
             impaled$riptide = EnchantmentHelper.getRiptide((ItemStack) (Object) this) > 0;
@@ -65,7 +65,7 @@ public abstract class ItemStackMixin {
     // inject into the lambda in appendEnchantments
     @Dynamic("Lambda method")
     @Inject(method = "method_17869", at = @At("RETURN"))
-    private static void editTooltip(List<Text> lines, CompoundTag enchantmentNbt, Enchantment enchantment, CallbackInfo info) {
+    private static void editTooltip(List<Text> lines, NbtCompound enchantmentNbt, Enchantment enchantment, CallbackInfo info) {
         if (enchantment == Enchantments.LOYALTY && impaled$trueOwnerName != null) {
             if (!lines.isEmpty()) {
                 if (impaled$riptide) {

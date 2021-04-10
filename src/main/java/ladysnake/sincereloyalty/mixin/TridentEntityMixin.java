@@ -26,7 +26,7 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.entity.projectile.TridentEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -136,14 +136,14 @@ public abstract class TridentEntityMixin extends PersistentProjectileEntity impl
     }
 
     @Inject(method = "writeCustomDataToNbt", at = @At("RETURN"))
-    private void writeCustomDataToNbt(CompoundTag tag, CallbackInfo ci) {
+    private void writeCustomDataToNbt(NbtCompound tag, CallbackInfo ci) {
         if (this.getDataTracker().get(sincereLoyalty$SITTING)) {
             tag.putBoolean(LoyalTrident.TRIDENT_SIT_NBT_KEY, true);
         }
     }
 
     @Inject(method = "readCustomDataFromNbt", at = @At("RETURN"))
-    private void readCustomDataFromNbt(CompoundTag tag, CallbackInfo ci) {
+    private void readCustomDataFromNbt(NbtCompound tag, CallbackInfo ci) {
         if (tag.contains(TRIDENT_SIT_NBT_KEY)) {
             this.getDataTracker().set(sincereLoyalty$SITTING, tag.getBoolean(TRIDENT_SIT_NBT_KEY));
         }

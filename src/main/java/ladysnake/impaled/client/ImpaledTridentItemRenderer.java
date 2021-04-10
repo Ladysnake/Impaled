@@ -47,7 +47,7 @@ public class ImpaledTridentItemRenderer implements BuiltinItemRendererRegistry.D
     }
 
     @Override
-    public void apply(ResourceManager manager) {
+    public void reload(ResourceManager manager) {
         MinecraftClient mc = MinecraftClient.getInstance();
         this.itemRenderer = mc.getItemRenderer();
         this.tridentModel = new ImpaledTridentEntityModel(mc.getEntityModelLoader().getModelPart(this.modelLayer));

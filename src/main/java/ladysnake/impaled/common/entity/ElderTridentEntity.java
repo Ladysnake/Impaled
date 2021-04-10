@@ -10,8 +10,8 @@ import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.TridentEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.network.packet.s2c.play.GameStateChangeS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -126,24 +126,24 @@ public class ElderTridentEntity extends ImpaledTridentEntity {
     }
 
     @Override
-    public void readCustomDataFromNbt(CompoundTag tag) {
+    public void readCustomDataFromNbt(NbtCompound tag) {
         super.readCustomDataFromNbt(tag);
         if (tag.contains("fetched_items", NbtType.LIST)) {
-            ListTag fetchedItems = tag.getList("fetched_items", NbtType.COMPOUND);
+            NbtList fetchedItems = tag.getList("fetched_items", NbtType.COMPOUND);
             for (int i = 0; i < fetchedItems.size(); i++) {
-                CompoundTag fetchedItem = fetchedItems.getCompound(i);
+                NbtCompound fetchedItem = fetchedItems.getCompound(i);
                 this.fetchedStacks.add(ItemStack.fromNbt(fetchedItem));
             }
         }
     }
 
     @Override
-    public void writeCustomDataToNbt(CompoundTag tag) {
+    public void writeCustomDataToNbt(NbtCompound tag) {
         super.writeCustomDataToNbt(tag);
-        ListTag listTag = new ListTag();
+        NbtList NbtList = new NbtList();
         for (ItemStack fetchedStack : this.fetchedStacks) {
-            listTag.add(fetchedStack.writeNbt(new CompoundTag()));
+            NbtList.add(fetchedStack.writeNbt(new NbtCompound()));
         }
-        tag.put("fetched_stacks", listTag);
+        tag.put("fetched_stacks", NbtList);
     }
 }

@@ -19,8 +19,8 @@ package ladysnake.sincereloyalty.storage;
 
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 
@@ -76,8 +76,8 @@ public final class OwnedTridents implements Iterable<TridentEntry> {
         return this.ownedTridents.isEmpty();
     }
 
-    public void fromTag(CompoundTag ownerNbt) {
-        ListTag tridentsNbt = ownerNbt.getList("tridents", NbtType.COMPOUND);
+    public void fromTag(NbtCompound ownerNbt) {
+        NbtList tridentsNbt = ownerNbt.getList("tridents", NbtType.COMPOUND);
         for (int j = 0; j < tridentsNbt.size(); j++) {
             TridentEntry trident = TridentEntry.fromNbt(this.parentStorage.world, tridentsNbt.getCompound(j));
             if (trident != null) {
@@ -86,10 +86,10 @@ public final class OwnedTridents implements Iterable<TridentEntry> {
         }
     }
 
-    public void toTag(CompoundTag ownerNbt) {
-        ListTag tridentsNbt = new ListTag();
+    public void toTag(NbtCompound ownerNbt) {
+        NbtList tridentsNbt = new NbtList();
         for (TridentEntry trident : this.ownedTridents.values()) {
-            tridentsNbt.add(trident.toNbt(new CompoundTag()));
+            tridentsNbt.add(trident.toNbt(new NbtCompound()));
         }
         ownerNbt.put("tridents", tridentsNbt);
     }

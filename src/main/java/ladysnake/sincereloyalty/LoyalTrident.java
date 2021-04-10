@@ -25,7 +25,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.entity.projectile.TridentEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -45,7 +45,7 @@ public interface LoyalTrident {
 
     @Nullable
     static UUID getTridentUuid(ItemStack stack) {
-        CompoundTag loyaltyData = stack.getSubTag(LoyalTrident.MOD_NBT_KEY);
+        NbtCompound loyaltyData = stack.getSubTag(LoyalTrident.MOD_NBT_KEY);
         if (loyaltyData == null || !loyaltyData.containsUuid(TRIDENT_OWNER_NBT_KEY)) {
             return null;
         }
@@ -61,7 +61,7 @@ public interface LoyalTrident {
 
     static boolean hasTrueOwner(ItemStack tridentStack) {
         if (SincereLoyalty.TRIDENTS.contains(tridentStack.getItem()) && EnchantmentHelper.getLoyalty(tridentStack) > 0) {
-            CompoundTag loyaltyNbt = tridentStack.getSubTag(MOD_NBT_KEY);
+            NbtCompound loyaltyNbt = tridentStack.getSubTag(MOD_NBT_KEY);
             return loyaltyNbt != null && loyaltyNbt.containsUuid(TRIDENT_OWNER_NBT_KEY);
         }
         return false;
@@ -74,7 +74,7 @@ public interface LoyalTrident {
 
     @Nullable
     static TridentEntity spawnTridentForStack(Entity thrower, ItemStack tridentStack) {
-        CompoundTag loyaltyData = tridentStack.getSubTag(MOD_NBT_KEY);
+        NbtCompound loyaltyData = tridentStack.getSubTag(MOD_NBT_KEY);
         if (loyaltyData != null) {
             UUID ownerUuid = loyaltyData.getUuid(TRIDENT_OWNER_NBT_KEY);
             if (ownerUuid != null) {

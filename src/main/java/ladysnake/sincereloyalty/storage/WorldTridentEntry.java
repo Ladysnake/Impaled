@@ -20,7 +20,7 @@ package ladysnake.sincereloyalty.storage;
 import ladysnake.sincereloyalty.SincereLoyalty;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.projectile.TridentEntity;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.server.world.ChunkTicketType;
 import net.minecraft.server.world.ServerWorld;
@@ -41,14 +41,14 @@ public final class WorldTridentEntry extends TridentEntry {
         this.lastPos = lastPos;
     }
 
-    public WorldTridentEntry(ServerWorld world, CompoundTag tag) {
+    public WorldTridentEntry(ServerWorld world, NbtCompound tag) {
         super(world, tag);
         this.tridentEntityUuid = tag.getUuid("trident_entity_uuid");
         this.lastPos = NbtHelper.toBlockPos(tag.getCompound("last_pos"));
     }
 
     @Override
-    public CompoundTag toNbt(CompoundTag nbt) {
+    public NbtCompound toNbt(NbtCompound nbt) {
         super.toNbt(nbt);
         nbt.putUuid("trident_entity_uuid", this.tridentEntityUuid);
         nbt.put("last_pos", NbtHelper.fromBlockPos(this.lastPos));

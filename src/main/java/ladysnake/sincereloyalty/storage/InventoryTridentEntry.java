@@ -21,7 +21,7 @@ import ladysnake.sincereloyalty.LoyalTrident;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.TridentEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 
 import java.util.UUID;
@@ -34,13 +34,13 @@ public class InventoryTridentEntry extends TridentEntry {
         this.playerUuid = playerUuid;
     }
 
-    InventoryTridentEntry(ServerWorld world, CompoundTag tag) {
+    InventoryTridentEntry(ServerWorld world, NbtCompound tag) {
         super(world, tag);
         this.playerUuid = tag.getUuid("player_uuid");
     }
 
     @Override
-    public CompoundTag toNbt(CompoundTag nbt) {
+    public NbtCompound toNbt(NbtCompound nbt) {
         super.toNbt(nbt);
         nbt.putUuid("player_uuid", this.playerUuid);
         return nbt;
@@ -58,7 +58,7 @@ public class InventoryTridentEntry extends TridentEntry {
         if (player != null) {
             for (int slot = 0; slot < player.getInventory().size(); slot++) {
                 ItemStack stack = player.getInventory().getStack(slot);
-                CompoundTag loyaltyData = stack.getSubTag(LoyalTrident.MOD_NBT_KEY);
+                NbtCompound loyaltyData = stack.getSubTag(LoyalTrident.MOD_NBT_KEY);
                 if (loyaltyData != null && loyaltyData.containsUuid(LoyalTrident.TRIDENT_UUID_NBT_KEY)) {
                     if (loyaltyData.getUuid(LoyalTrident.TRIDENT_UUID_NBT_KEY).equals(this.tridentUuid)) {
                         TridentEntity tridentEntity = LoyalTrident.spawnTridentForStack(player, stack);

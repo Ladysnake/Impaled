@@ -15,6 +15,7 @@ import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Rarity;
 import net.minecraft.util.math.Position;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
@@ -23,6 +24,9 @@ import java.util.Objects;
 import java.util.Set;
 
 public class ImpaledItems {
+    public static Item ELDER_GUARDIAN_EYE;
+    public static Item ANCIENT_TRIDENT;
+
     public static Item PITCHFORK;
     public static Item HELLFORK;
     public static Item ELDER_TRIDENT;
@@ -31,6 +35,9 @@ public class ImpaledItems {
     public static final Set<ImpaledTridentItem> ALL_TRIDENTS = new ReferenceOpenHashSet<>();
 
     public static void init() {
+        ELDER_GUARDIAN_EYE = registerItem(new Item((new Item.Settings()).group(ItemGroup.MATERIALS).rarity(Rarity.UNCOMMON)), "elder_guardian_eye");
+        ANCIENT_TRIDENT = registerItem(new Item((new Item.Settings()).group(ItemGroup.MATERIALS).rarity(Rarity.UNCOMMON)), "ancient_trident");
+
         PITCHFORK = registerTrident(new PitchforkItem((new Item.Settings()).maxDamage(250).group(ItemGroup.COMBAT), ImpaledEntityTypes.PITCHFORK), "pitchfork", true);
         HELLFORK = registerTrident(new HellforkItem((new Item.Settings()).maxDamage(325).fireproof().group(ItemGroup.COMBAT), ImpaledEntityTypes.HELLFORK), "hellfork", true);
         ELDER_TRIDENT = registerTrident(new ElderTridentItem((new Item.Settings()).maxDamage(250).group(ItemGroup.COMBAT), ImpaledEntityTypes.ELDER_TRIDENT), "elder_trident", true);

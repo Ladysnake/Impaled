@@ -18,7 +18,7 @@
 package ladysnake.sincereloyalty.storage;
 
 import net.minecraft.entity.projectile.TridentEntity;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,7 +26,7 @@ import java.util.UUID;
 
 public abstract class TridentEntry {
     @Nullable
-    public static TridentEntry fromNbt(ServerWorld world, CompoundTag tag) {
+    public static TridentEntry fromNbt(ServerWorld world, NbtCompound tag) {
         try {
             switch (tag.getString("type")) {
                 case "world": return new WorldTridentEntry(world, tag);
@@ -47,7 +47,7 @@ public abstract class TridentEntry {
         this.tridentUuid = tridentUuid;
     }
 
-    TridentEntry(ServerWorld world, CompoundTag nbt) {
+    TridentEntry(ServerWorld world, NbtCompound nbt) {
         this(world, nbt.getUuid("trident_uuid"));
     }
 
@@ -60,7 +60,7 @@ public abstract class TridentEntry {
     @Nullable
     public abstract TridentEntity findTrident();
 
-    public CompoundTag toNbt(CompoundTag nbt) {
+    public NbtCompound toNbt(NbtCompound nbt) {
         nbt.putUuid("trident_uuid", this.tridentUuid);
         return nbt;
     }

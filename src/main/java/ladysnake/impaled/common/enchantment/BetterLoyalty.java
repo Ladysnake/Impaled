@@ -5,12 +5,12 @@ import ladysnake.sincereloyalty.TridentRecaller;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundEvents;
 
 public final class BetterLoyalty {
     public static boolean tryInsertTrident(ItemStack stack, PlayerEntity player) {
-        CompoundTag tag = stack.getSubTag(LoyalTrident.MOD_NBT_KEY);
+        NbtCompound tag = stack.getSubTag(LoyalTrident.MOD_NBT_KEY);
         if (tag != null) {
             TridentRecaller caller = (TridentRecaller) player;
 

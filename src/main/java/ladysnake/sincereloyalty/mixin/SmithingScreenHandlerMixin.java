@@ -25,7 +25,7 @@ import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.ForgingScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.ScreenHandlerType;
@@ -74,7 +74,7 @@ public abstract class SmithingScreenHandlerMixin extends ForgingScreenHandler {
                     // we can mutate the map as it is recreated with every call to getEnchantments
                     enchantments.put(Enchantments.LOYALTY, Enchantments.LOYALTY.getMaxLevel() + 1);
                     EnchantmentHelper.set(enchantments, result);
-                    CompoundTag loyaltyData = result.getOrCreateSubTag(LoyalTrident.MOD_NBT_KEY);
+                    NbtCompound loyaltyData = result.getOrCreateSubTag(LoyalTrident.MOD_NBT_KEY);
                     loyaltyData.putUuid(LoyalTrident.TRIDENT_OWNER_NBT_KEY, this.player.getUuid());
                     loyaltyData.putString(LoyalTrident.OWNER_NAME_NBT_KEY, this.player.getEntityName());
                     return result;
