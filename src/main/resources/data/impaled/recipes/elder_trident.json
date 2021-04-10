@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:smithing",
+  "base": {
+    "item": "minecraft:trident"
+  },
+  "addition": {
+    "item": "impaled:elder_guardian_eye"
+  },
+  "result": {
+    "item": "impaled:elder_trident"
+  }
+}

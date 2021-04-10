@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:smithing",
+  "base": {
+    "item": "minecraft:trident"
+  },
+  "addition": {
+    "item": "minecraft:enchanted_golden_apple"
+  },
+  "result": {
+    "item": "impaled:atlan"
+  }
+}

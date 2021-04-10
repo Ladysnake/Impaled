@@ -18,5 +18,5 @@
 - A new level for the Loyalty Enchant, Loyalty IV (also known as Sincere Loyalty), that drops the Trident as an entity when tossing the item, allowing you to recall it whenever you want when right clicking with an empty hand
 - Total change to how Impaling work now dealing extra damage to entities in the rain or in water instead of aquatic creatures
     - Only adds 0.75 heart of damage per level instead of 1.25.
-- A new powerful item, the Maelstrom, that allows its user to throw tridents out of their inventory
+- (Creative Only) A new powerful item, the Maelstrom, that allows its user to throw tridents out of their inventory
     - Accepts Efficiency (reduces the time between each trident launch), Unbreaking and Mending

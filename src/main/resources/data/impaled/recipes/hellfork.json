@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:smithing",
+  "base": {
+    "item": "minecraft:trident"
+  },
+  "addition": {
+    "item": "impaled:ancient_trident"
+  },
+  "result": {
+    "item": "impaled:hellfork"
+  }
+}
