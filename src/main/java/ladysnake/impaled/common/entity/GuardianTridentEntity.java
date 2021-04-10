@@ -3,7 +3,9 @@ package ladysnake.impaled.common.entity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.passive.TameableEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.TridentEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.Box;
@@ -12,10 +14,28 @@ import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class GuardianTridentEntity extends ElderTridentEntity {
     public GuardianTridentEntity(EntityType<? extends ElderTridentEntity> entityType, World world) {
         super(entityType, world);
+    }
+
+    @Override
+    public Consumer<ItemStack> getStackFetcher() {
+        Entity owner = this.getOwner();
+        if (owner != null) {
+            return stack -> {
+                if (owner.isAlive()) {
+                    if (!(owner instanceof PlayerEntity) || !((PlayerEntity) owner).getInventory().insertStack(stack)) {
+                        owner.dropStack(stack);
+                    }
+                } else {
+                    this.dropStack(stack);
+                }
+            };
+        }
+        return super.getStackFetcher();
     }
 
     @Override
