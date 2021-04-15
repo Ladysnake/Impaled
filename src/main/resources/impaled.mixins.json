@@ -10,6 +10,7 @@
     "LivingEntityMixin",
     "TridentEntityAccessor",
     "TridentRiptideFeatureRendererMixin",
+    "EnchantmentTargetMixin",
     "impaling.ImpalingEnchantmentMixin",
     "impaling.MobEntityMixin",
     "impaling.PlayerEntityMixin",

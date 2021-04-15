@@ -24,7 +24,11 @@ import net.minecraft.nbt.NbtList;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.UUID;
 
 public final class OwnedTridents implements Iterable<TridentEntry> {
     static final OwnedTridents EMPTY = new OwnedTridents();

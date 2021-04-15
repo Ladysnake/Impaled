@@ -18,7 +18,7 @@
   "license": "Code: GNU GPLv3; Art: ARR",
   "icon": "assets/impaled/impaled.png",
 
-  "environment": "client",
+  "environment": "*",
   "entrypoints": {
     "main": [
       "ladysnake.impaled.common.Impaled",

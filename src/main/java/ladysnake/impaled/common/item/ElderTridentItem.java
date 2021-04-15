@@ -27,7 +27,6 @@ public class ElderTridentItem extends ImpaledTridentItem {
         if (useTime >= 10 && j > 0) {
             for (int i = 1; i <= j; i++) {
                 if (!world.isClient && user instanceof PlayerEntity) {
-                    stack.damage(1, user, livingEntity -> livingEntity.sendToolBreakStatus(user.getActiveHand()));
                     ImpaledTridentEntity trident = ImpaledEntityTypes.GUARDIAN_TRIDENT.create(world);
                     trident.setTridentAttributes(world, user, stack);
                     trident.setOwner(user);

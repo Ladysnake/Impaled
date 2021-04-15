@@ -1,7 +1,6 @@
 package ladysnake.impaled.common.entity;
 
 import net.minecraft.entity.EntityType;
-import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.world.World;
