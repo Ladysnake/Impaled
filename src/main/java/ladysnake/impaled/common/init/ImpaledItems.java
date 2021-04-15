@@ -36,10 +36,10 @@ public class ImpaledItems {
 
     public static void init() {
         ELDER_GUARDIAN_EYE = registerItem(new Item((new Item.Settings()).group(ItemGroup.MATERIALS).rarity(Rarity.UNCOMMON)), "elder_guardian_eye");
-        ANCIENT_TRIDENT = registerItem(new Item((new Item.Settings()).group(ItemGroup.MATERIALS).rarity(Rarity.UNCOMMON)), "ancient_trident");
+        ANCIENT_TRIDENT = registerItem(new Item((new Item.Settings()).group(ItemGroup.MATERIALS).rarity(Rarity.UNCOMMON).fireproof()), "ancient_trident");
 
         PITCHFORK = registerTrident(new PitchforkItem((new Item.Settings()).maxDamage(150).group(ItemGroup.COMBAT), ImpaledEntityTypes.PITCHFORK), "pitchfork", true);
-        HELLFORK = registerTrident(new HellforkItem((new Item.Settings()).maxDamage(325).fireproof().group(ItemGroup.COMBAT), ImpaledEntityTypes.HELLFORK), "hellfork", true);
+        HELLFORK = registerTrident(new HellforkItem((new Item.Settings()).maxDamage(325).fireproof().group(ItemGroup.COMBAT).fireproof(), ImpaledEntityTypes.HELLFORK), "hellfork", true);
         ELDER_TRIDENT = registerTrident(new ElderTridentItem((new Item.Settings()).maxDamage(250).group(ItemGroup.COMBAT), ImpaledEntityTypes.ELDER_TRIDENT), "elder_trident", true);
         ATLAN = registerTrident(new AtlanItem((new Item.Settings()).maxDamage(250).group(ItemGroup.COMBAT), ImpaledEntityTypes.ATLAN), "atlan", true);
         MAELSTROM = registerItem(new MaelstromItem((new Item.Settings()).maxDamage(80).group(ItemGroup.COMBAT)), "maelstrom");
