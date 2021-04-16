@@ -2,12 +2,14 @@ package ladysnake.impaled.mixin;
 
 import ladysnake.impaled.common.entity.ElderTridentEntity;
 import ladysnake.impaled.common.init.ImpaledItems;
+import ladysnake.sincereloyalty.SincereLoyalty;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.ElderGuardianEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.TridentEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundCategory;
@@ -33,7 +35,7 @@ public abstract class LivingEntityMixin extends EntityMixin {
             this.impaled$dropSink = ((ElderTridentEntity) directSource).getStackFetcher();
         }
 
-        if (((Object) this) instanceof ElderGuardianEntity && directSource instanceof TridentEntity && EnchantmentHelper.getLoyalty(((TridentEntityAccessor) directSource).impaled$getTridentStack()) > 0) {
+        if (((Object) this) instanceof ElderGuardianEntity && ((directSource instanceof PlayerEntity && SincereLoyalty.TRIDENTS.contains(((PlayerEntity) directSource).getMainHandStack().getItem()) || (directSource instanceof TridentEntity && EnchantmentHelper.getLoyalty(((TridentEntityAccessor) directSource).impaled$getTridentStack()) > 0)))) {
             this.dropStack(new ItemStack(ImpaledItems.ELDER_GUARDIAN_EYE));
             this.world.playSound(this.getX(), this.getY(), this.getZ(), SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.NEUTRAL, 1.0f, 1.0f, true);
         }
