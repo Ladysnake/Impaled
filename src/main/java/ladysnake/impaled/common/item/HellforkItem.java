@@ -14,6 +14,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
+import net.minecraft.particle.ParticleEffect;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
@@ -89,13 +91,19 @@ public class HellforkItem extends ImpaledTridentItem {
             context.getWorld().playSound(context.getPlayer().getX(), context.getPlayer().getY(), context.getPlayer().getZ(), SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.PLAYERS, 1.0f, 1.0f, false);
             context.getWorld().playSound(context.getPlayer().getX(), context.getPlayer().getY(), context.getPlayer().getZ(), SoundEvents.BLOCK_ENCHANTMENT_TABLE_USE, SoundCategory.PLAYERS, 1.0f, 1.0f, false);
             context.getWorld().setBlockState(context.getBlockPos(), Blocks.CAULDRON.getDefaultState());
-            return ActionResult.CONSUME;
+            for (int i = 0; i < 20; i++) {
+                context.getWorld().addParticle(ParticleTypes.LAVA, context.getBlockPos().getX()+.5+context.getWorld().getRandom().nextGaussian()/10, context.getBlockPos().getY()+.5+context.getWorld().getRandom().nextGaussian()/10, context.getBlockPos().getZ()+.5+context.getWorld().getRandom().nextGaussian()/10, 0, context.getWorld().getRandom().nextFloat()/10, 0);
+            }
+            return ActionResult.SUCCESS;
         } else if ((context.getWorld().getBlockState(context.getBlockPos()).getBlock() == Blocks.WATER_CAULDRON || context.getWorld().getBlockState(context.getBlockPos()).getBlock() == Blocks.POWDER_SNOW_CAULDRON) && context.getStack().getTag().getBoolean("Heated")) {
             context.getStack().getTag().putBoolean("Heated", false);
             context.getWorld().playSound(context.getPlayer().getX(), context.getPlayer().getY(), context.getPlayer().getZ(), SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE, SoundCategory.PLAYERS, 1.0f, 1.0f, false);
             context.getWorld().playSound(context.getPlayer().getX(), context.getPlayer().getY(), context.getPlayer().getZ(), SoundEvents.BLOCK_ENCHANTMENT_TABLE_USE, SoundCategory.PLAYERS, 1.0f, 1.0f, false);
             context.getWorld().setBlockState(context.getBlockPos(), Blocks.CAULDRON.getDefaultState());
-            return ActionResult.CONSUME;
+            for (int i = 0; i < 20; i++) {
+                context.getWorld().addParticle(ParticleTypes.SMOKE, context.getBlockPos().getX()+.5+context.getWorld().getRandom().nextGaussian()/10, context.getBlockPos().getY()+.5+context.getWorld().getRandom().nextGaussian()/10, context.getBlockPos().getZ()+.5+context.getWorld().getRandom().nextGaussian()/10, 0, context.getWorld().getRandom().nextGaussian()/5, 0);
+            }
+            return ActionResult.SUCCESS;
         }
 
         return super.useOnBlock(context);
