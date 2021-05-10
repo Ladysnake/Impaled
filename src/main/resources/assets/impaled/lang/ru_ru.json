@@ -1,0 +1,13 @@
+{
+  "item.impaled.ancient_trident": "Древний осколок адскил вил",
+  "item.impaled.elder_guardian_eye": "Глаз древнего стража",
+  "item.impaled.pitchfork": "Вилы",
+  "item.impaled.hellfork": "Адские вилы",
+  "item.impaled.elder_trident": "Трезубец древнего стража",
+  "item.impaled.atlan": "Атлант",
+
+  "tooltip.impaled.heated": "Раскалённый",
+
+  "impaled:tooltip.owned_by": "(%s)",
+  "impaled:trident_recall_fail": "Не удалось вернуть трезубцы"
+}
