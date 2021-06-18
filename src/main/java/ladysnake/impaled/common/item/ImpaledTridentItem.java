@@ -63,8 +63,8 @@ public class ImpaledTridentItem extends TridentItem {
 
                     playerEntity.incrementStat(Stats.USED.getOrCreateStat(this));
                     if (j > 0) {
-                        float f = playerEntity.yaw;
-                        float g = playerEntity.pitch;
+                        float f = playerEntity.getYaw();
+                        float g = playerEntity.getPitch();
                         float h = -MathHelper.sin(f * 0.017453292F) * MathHelper.cos(g * 0.017453292F);
                         float k = -MathHelper.sin(g * 0.017453292F);
                         float l = MathHelper.cos(f * 0.017453292F) * MathHelper.cos(g * 0.017453292F);
@@ -105,7 +105,7 @@ public class ImpaledTridentItem extends TridentItem {
         impaledTridentEntity.setTridentAttributes(world, user, stack);
         impaledTridentEntity.setOwner(user);
         impaledTridentEntity.setTridentStack(stack);
-        impaledTridentEntity.setProperties(user, user.pitch, user.yaw, 0.0F, 2.5F, 1.0F);
+        impaledTridentEntity.setProperties(user, user.getPitch(), user.getYaw(), 0.0F, 2.5F, 1.0F);
         impaledTridentEntity.updatePosition(user.getX(), user.getEyeY() - 0.1, user.getZ());
         return impaledTridentEntity;
     }

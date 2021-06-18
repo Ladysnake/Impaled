@@ -31,7 +31,7 @@ public class ElderTridentItem extends ImpaledTridentItem {
                     trident.setTridentAttributes(world, user, stack);
                     trident.setOwner(user);
                     trident.setTridentStack(stack);
-                    trident.setProperties(user, user.pitch, user.yaw, 0.0F, 2.5F, 1.0F);
+                    trident.setProperties(user, user.getPitch(), user.getYaw(), 0.0F, 2.5F, 1.0F);
                     trident.updatePosition(user.getX()+user.getRandom().nextGaussian(), user.getEyeY()+user.getRandom().nextGaussian(), user.getZ()+user.getRandom().nextGaussian());
                     trident.addVelocity(user.getRandom().nextGaussian()/10, 0, user.getRandom().nextGaussian()/10);
 

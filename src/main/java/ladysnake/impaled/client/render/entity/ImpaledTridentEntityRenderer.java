@@ -29,8 +29,8 @@ public class ImpaledTridentEntityRenderer extends EntityRenderer<ImpaledTridentE
 
     public void render(ImpaledTridentEntity impaledTridentEntity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
         matrixStack.push();
-        matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(MathHelper.lerp(g, impaledTridentEntity.prevYaw, impaledTridentEntity.yaw) - 90.0F));
-        matrixStack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(MathHelper.lerp(g, impaledTridentEntity.prevPitch, impaledTridentEntity.pitch) + 90.0F));
+        matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(MathHelper.lerp(g, impaledTridentEntity.prevYaw, impaledTridentEntity.getYaw()) - 90.0F));
+        matrixStack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(MathHelper.lerp(g, impaledTridentEntity.prevPitch, impaledTridentEntity.getPitch()) + 90.0F));
         VertexConsumer vertexConsumer = ItemRenderer.getDirectItemGlintConsumer(vertexConsumerProvider, this.model.getLayer(this.getTexture(impaledTridentEntity)), false, impaledTridentEntity.isEnchanted());
         this.model.render(matrixStack, vertexConsumer, i, OverlayTexture.DEFAULT_UV, 1.0F, 1.0F, 1.0F, 1.0F);
         matrixStack.pop();
