@@ -112,8 +112,8 @@ public class HellforkItem extends ImpaledTridentItem {
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(stack, world, tooltip, context);
-
-        if (stack.getTag().getBoolean("Heated")) {
+        
+        if (stack.getTag() != null && stack.getTag().getBoolean("Heated")) {
             tooltip.add(new TranslatableText("tooltip.impaled.heated").formatted(Formatting.GOLD));
         }
     }
