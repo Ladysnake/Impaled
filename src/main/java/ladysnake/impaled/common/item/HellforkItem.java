@@ -1,6 +1,5 @@
 package ladysnake.impaled.common.item;
 
-import ladysnake.impaled.common.Impaled;
 import ladysnake.impaled.common.entity.ImpaledTridentEntity;
 import ladysnake.impaled.common.init.ImpaledItems;
 import net.minecraft.block.Blocks;
@@ -9,12 +8,9 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.boss.BossBar;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
-import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -24,7 +20,6 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,7 +37,7 @@ public class HellforkItem extends ImpaledTridentItem {
     }
 
     @Override
-    protected boolean canRiptide(PlayerEntity playerEntity) {
+    public boolean canRiptide(LivingEntity playerEntity) {
         return playerEntity.isInLava() || playerEntity.isOnFire();
     }
 
