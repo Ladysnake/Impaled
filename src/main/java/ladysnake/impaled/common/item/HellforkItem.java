@@ -71,14 +71,14 @@ public class HellforkItem extends ImpaledTridentItem {
             }
 
             if (hellfork != null) {
-                if (hellfork.getTag() != null && hellfork.getTag().contains("Heated")) {
-                    if (hellfork.getTag().getBoolean("Heated")) {
+                if (hellfork.getNbt() != null && hellfork.getNbt().contains("Heated")) {
+                    if (hellfork.getNbt().getBoolean("Heated")) {
                         if (entity.getFireTicks() <= 0) {
                             entity.setFireTicks(35);
                         }
                     }
                 } else {
-                    hellfork.getTag().putBoolean("Heated", false);
+                    hellfork.getNbt().putBoolean("Heated", false);
                 }
             }
         }
@@ -86,8 +86,8 @@ public class HellforkItem extends ImpaledTridentItem {
 
     @Override
     public ActionResult useOnBlock(ItemUsageContext context) {
-        if (context.getWorld().getBlockState(context.getBlockPos()).getBlock() == Blocks.LAVA_CAULDRON && !context.getStack().getTag().getBoolean("Heated")) {
-            context.getStack().getTag().putBoolean("Heated", true);
+        if (context.getWorld().getBlockState(context.getBlockPos()).getBlock() == Blocks.LAVA_CAULDRON && !context.getStack().getNbt().getBoolean("Heated")) {
+            context.getStack().getNbt().putBoolean("Heated", true);
             context.getWorld().playSound(context.getPlayer().getX(), context.getPlayer().getY(), context.getPlayer().getZ(), SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.PLAYERS, 1.0f, 1.0f, false);
             context.getWorld().playSound(context.getPlayer().getX(), context.getPlayer().getY(), context.getPlayer().getZ(), SoundEvents.BLOCK_ENCHANTMENT_TABLE_USE, SoundCategory.PLAYERS, 1.0f, 1.0f, false);
             context.getWorld().setBlockState(context.getBlockPos(), Blocks.CAULDRON.getDefaultState());
@@ -95,8 +95,8 @@ public class HellforkItem extends ImpaledTridentItem {
                 context.getWorld().addParticle(ParticleTypes.LAVA, context.getBlockPos().getX()+.5+context.getWorld().getRandom().nextGaussian()/10, context.getBlockPos().getY()+.5+context.getWorld().getRandom().nextGaussian()/10, context.getBlockPos().getZ()+.5+context.getWorld().getRandom().nextGaussian()/10, 0, context.getWorld().getRandom().nextFloat()/10, 0);
             }
             return ActionResult.SUCCESS;
-        } else if ((context.getWorld().getBlockState(context.getBlockPos()).getBlock() == Blocks.WATER_CAULDRON || context.getWorld().getBlockState(context.getBlockPos()).getBlock() == Blocks.POWDER_SNOW_CAULDRON) && context.getStack().getTag().getBoolean("Heated")) {
-            context.getStack().getTag().putBoolean("Heated", false);
+        } else if ((context.getWorld().getBlockState(context.getBlockPos()).getBlock() == Blocks.WATER_CAULDRON || context.getWorld().getBlockState(context.getBlockPos()).getBlock() == Blocks.POWDER_SNOW_CAULDRON) && context.getStack().getNbt().getBoolean("Heated")) {
+            context.getStack().getNbt().putBoolean("Heated", false);
             context.getWorld().playSound(context.getPlayer().getX(), context.getPlayer().getY(), context.getPlayer().getZ(), SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE, SoundCategory.PLAYERS, 1.0f, 1.0f, false);
             context.getWorld().playSound(context.getPlayer().getX(), context.getPlayer().getY(), context.getPlayer().getZ(), SoundEvents.BLOCK_ENCHANTMENT_TABLE_USE, SoundCategory.PLAYERS, 1.0f, 1.0f, false);
             context.getWorld().setBlockState(context.getBlockPos(), Blocks.CAULDRON.getDefaultState());
@@ -113,7 +113,7 @@ public class HellforkItem extends ImpaledTridentItem {
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(stack, world, tooltip, context);
 
-        if (stack.getTag().getBoolean("Heated")) {
+        if (stack.getNbt().getBoolean("Heated")) {
             tooltip.add(new TranslatableText("tooltip.impaled.heated").formatted(Formatting.GOLD));
         }
     }

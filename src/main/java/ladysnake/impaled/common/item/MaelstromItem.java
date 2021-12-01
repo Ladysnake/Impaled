@@ -67,7 +67,7 @@ public class MaelstromItem extends RangedWeaponItem implements Vanishable {
                             trident = ((ImpaledTridentItem) stackToThrow.getItem()).createTrident(world, user, stackToThrow);
                         } else if (stackToThrow.getItem() instanceof TridentItem) {
                             trident = new TridentEntity(world, user, stackToThrow);
-                            trident.setProperties(playerEntity, playerEntity.getPitch(), playerEntity.getYaw(), 0.0F, 2.5F, 1.0F);
+                            trident.setVelocity(playerEntity, playerEntity.getPitch(), playerEntity.getYaw(), 0.0F, 2.5F, 1.0F);
                         }
 
                         if (trident != null) {

@@ -74,7 +74,7 @@ public abstract class SmithingScreenHandlerMixin extends ForgingScreenHandler {
                     // we can mutate the map as it is recreated with every call to getEnchantments
                     enchantments.put(Enchantments.LOYALTY, Enchantments.LOYALTY.getMaxLevel() + 1);
                     EnchantmentHelper.set(enchantments, result);
-                    NbtCompound loyaltyData = result.getOrCreateSubTag(LoyalTrident.MOD_NBT_KEY);
+                    NbtCompound loyaltyData = result.getOrCreateSubNbt(LoyalTrident.MOD_NBT_KEY);
                     loyaltyData.putUuid(LoyalTrident.TRIDENT_OWNER_NBT_KEY, this.player.getUuid());
                     loyaltyData.putString(LoyalTrident.OWNER_NAME_NBT_KEY, this.player.getEntityName());
                     return result;

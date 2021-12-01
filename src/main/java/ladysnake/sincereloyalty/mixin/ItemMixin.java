@@ -41,7 +41,7 @@ public abstract class ItemMixin {
         if (entity.age % 10 == 0 && !entity.world.isClient && entity instanceof PlayerEntity) {
             UUID trueOwner = LoyalTrident.getTrueOwner(stack);
             if (Objects.equals(trueOwner, entity.getUuid())) {
-                NbtCompound loyaltyData = Objects.requireNonNull(stack.getSubTag(LoyalTrident.MOD_NBT_KEY));
+                NbtCompound loyaltyData = Objects.requireNonNull(stack.getSubNbt(LoyalTrident.MOD_NBT_KEY));
                 if (!Objects.equals(entity.getEntityName(), loyaltyData.getString(LoyalTrident.OWNER_NAME_NBT_KEY))) {
                     loyaltyData.putString(LoyalTrident.OWNER_NAME_NBT_KEY, entity.getEntityName());
                 }

@@ -105,7 +105,7 @@ public class ImpaledTridentItem extends TridentItem {
         impaledTridentEntity.setTridentAttributes(world, user, stack);
         impaledTridentEntity.setOwner(user);
         impaledTridentEntity.setTridentStack(stack);
-        impaledTridentEntity.setProperties(user, user.getPitch(), user.getYaw(), 0.0F, 2.5F, 1.0F);
+        impaledTridentEntity.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, 2.5F, 1.0F);
         impaledTridentEntity.updatePosition(user.getX(), user.getEyeY() - 0.1, user.getZ());
         return impaledTridentEntity;
     }

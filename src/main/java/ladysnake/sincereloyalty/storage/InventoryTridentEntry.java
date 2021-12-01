@@ -58,7 +58,7 @@ public class InventoryTridentEntry extends TridentEntry {
         if (player != null) {
             for (int slot = 0; slot < player.getInventory().size(); slot++) {
                 ItemStack stack = player.getInventory().getStack(slot);
-                NbtCompound loyaltyData = stack.getSubTag(LoyalTrident.MOD_NBT_KEY);
+                NbtCompound loyaltyData = stack.getSubNbt(LoyalTrident.MOD_NBT_KEY);
                 if (loyaltyData != null && loyaltyData.containsUuid(LoyalTrident.TRIDENT_UUID_NBT_KEY)) {
                     if (loyaltyData.getUuid(LoyalTrident.TRIDENT_UUID_NBT_KEY).equals(this.tridentUuid)) {
                         TridentEntity tridentEntity = LoyalTrident.spawnTridentForStack(player, stack);

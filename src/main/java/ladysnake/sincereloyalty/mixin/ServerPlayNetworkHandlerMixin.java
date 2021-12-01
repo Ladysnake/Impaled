@@ -29,7 +29,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 public abstract class ServerPlayNetworkHandlerMixin {
     @ModifyVariable(method = "onCreativeInventoryAction", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/network/packet/c2s/play/CreativeInventoryActionC2SPacket;getItemStack()Lnet/minecraft/item/ItemStack;"))
     private ItemStack removeTridentUuid(ItemStack copiedStack) {
-        NbtCompound NbtCompound = copiedStack.getSubTag(LoyalTrident.MOD_NBT_KEY);
+        NbtCompound NbtCompound = copiedStack.getSubNbt(LoyalTrident.MOD_NBT_KEY);
         if (NbtCompound != null) {
             NbtCompound.remove(LoyalTrident.TRIDENT_UUID_NBT_KEY);  // prevent stupid copies of the exact same trident
         }
