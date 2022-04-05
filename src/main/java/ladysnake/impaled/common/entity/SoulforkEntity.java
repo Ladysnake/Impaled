@@ -5,8 +5,8 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.world.World;
 
-public class HellforkEntity extends ImpaledTridentEntity {
-    public HellforkEntity(EntityType<? extends HellforkEntity> entityType, World world) {
+public class SoulforkEntity extends ImpaledTridentEntity {
+    public SoulforkEntity(EntityType<? extends SoulforkEntity> entityType, World world) {
         super(entityType, world);
     }
 

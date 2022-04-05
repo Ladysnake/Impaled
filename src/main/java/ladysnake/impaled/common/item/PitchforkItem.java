@@ -22,6 +22,10 @@ import java.util.Map;
 public class PitchforkItem extends ImpaledTridentItem {
     protected static final Map<Block, BlockState> TILLED_BLOCKS;
 
+    static {
+        TILLED_BLOCKS = Maps.newHashMap(ImmutableMap.of(Blocks.GRASS_BLOCK, Blocks.FARMLAND.getDefaultState(), Blocks.DIRT_PATH, Blocks.FARMLAND.getDefaultState(), Blocks.DIRT, Blocks.FARMLAND.getDefaultState(), Blocks.COARSE_DIRT, Blocks.DIRT.getDefaultState()));
+    }
+
     public PitchforkItem(Settings settings, EntityType<? extends ImpaledTridentEntity> entityType) {
         super(settings, entityType);
     }
@@ -30,7 +34,7 @@ public class PitchforkItem extends ImpaledTridentItem {
         World world = context.getWorld();
         BlockPos blockPos = context.getBlockPos();
         if (context.getSide() != Direction.DOWN && world.getBlockState(blockPos.up()).isAir()) {
-            BlockState blockState = (BlockState)TILLED_BLOCKS.get(world.getBlockState(blockPos).getBlock());
+            BlockState blockState = (BlockState) TILLED_BLOCKS.get(world.getBlockState(blockPos).getBlock());
             if (blockState != null) {
                 PlayerEntity playerEntity = context.getPlayer();
                 world.playSound(playerEntity, blockPos, SoundEvents.ITEM_HOE_TILL, SoundCategory.BLOCKS, 1.0F, 1.0F);
@@ -46,9 +50,5 @@ public class PitchforkItem extends ImpaledTridentItem {
         }
 
         return ActionResult.PASS;
-    }
-
-    static {
-        TILLED_BLOCKS = Maps.newHashMap(ImmutableMap.of(Blocks.GRASS_BLOCK, Blocks.FARMLAND.getDefaultState(), Blocks.DIRT_PATH, Blocks.FARMLAND.getDefaultState(), Blocks.DIRT, Blocks.FARMLAND.getDefaultState(), Blocks.COARSE_DIRT, Blocks.DIRT.getDefaultState()));
     }
 }

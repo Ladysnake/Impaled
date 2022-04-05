@@ -1,0 +1,12 @@
+{
+  "map": [
+    {
+      "predicate": {
+        "materialPredicate": {
+          "texture": "impaled:textures/entity/soulfork.png"
+        }
+      },
+      "material": "canvas:emissive_transform"
+    }
+  ]
+}

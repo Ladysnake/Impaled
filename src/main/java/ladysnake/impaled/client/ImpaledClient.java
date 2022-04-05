@@ -22,6 +22,7 @@ import net.minecraft.util.registry.Registry;
 
 public class ImpaledClient implements ClientModInitializer {
     public static final Identifier HELLFORK_RIPTIDE_TEXTURE = new Identifier(Impaled.MODID, "textures/entity/hellfork_riptide.png");
+    public static final Identifier SOULFORK_RIPTIDE_TEXTURE = new Identifier(Impaled.MODID, "textures/entity/soulfork_riptide.png");
     public static final EntityModelLayer ATLAN = new EntityModelLayer(new Identifier(Impaled.MODID, "atlan"), "main");
 
     @Override

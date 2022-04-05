@@ -44,10 +44,9 @@ import java.util.UUID;
 
 @Mixin(TridentEntity.class)
 public abstract class TridentEntityMixin extends PersistentProjectileEntity implements LoyalTrident {
+    private static final TrackedData<Boolean> sincereLoyalty$SITTING = DataTracker.registerData(TridentEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     @Shadow
     private ItemStack tridentStack;
-    private static final TrackedData<Boolean> sincereLoyalty$SITTING = DataTracker.registerData(TridentEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-
     private @Nullable Optional<UUID> sincereLoyalty_trueOwner;
 
     protected TridentEntityMixin(EntityType<? extends PersistentProjectileEntity> entityType, World world) {
@@ -86,12 +85,12 @@ public abstract class TridentEntityMixin extends PersistentProjectileEntity impl
      * and preventing it from dropping if the owner dies.
      */
     @ModifyVariable(
-        method = "tick",
-        slice = @Slice(
-            from = @At(value = "FIELD", target = "Lnet/minecraft/entity/projectile/TridentEntity;LOYALTY:Lnet/minecraft/entity/data/TrackedData;"),
-            to = @At(value = "INVOKE", target = "Lnet/minecraft/entity/projectile/TridentEntity;isOwnerAlive()Z")
-        ),
-        at = @At("STORE")
+            method = "tick",
+            slice = @Slice(
+                    from = @At(value = "FIELD", target = "Lnet/minecraft/entity/projectile/TridentEntity;LOYALTY:Lnet/minecraft/entity/data/TrackedData;"),
+                    to = @At(value = "INVOKE", target = "Lnet/minecraft/entity/projectile/TridentEntity;isOwnerAlive()Z")
+            ),
+            at = @At("STORE")
     )
     private int sit(int loyaltyLevel) {
         // If your owner told you to sit, you sit (fake no loyalty)
@@ -107,7 +106,7 @@ public abstract class TridentEntityMixin extends PersistentProjectileEntity impl
             this.getTrueTridentOwner().ifPresent(trueOwnerUuid -> {
                 // Keep track of this trident's position at all time, in case the chunk goes unloaded
                 LoyalTridentStorage.get((ServerWorld) this.world)
-                    .memorizeTrident(trueOwnerUuid, ((TridentEntity) (Object) this));
+                        .memorizeTrident(trueOwnerUuid, ((TridentEntity) (Object) this));
             });
         }
     }
@@ -130,7 +129,7 @@ public abstract class TridentEntityMixin extends PersistentProjectileEntity impl
         super.remove(reason);
         if (!world.isClient && !reason.shouldSave()) {
             this.getTrueTridentOwner().ifPresent(uuid ->
-                LoyalTridentStorage.get(((ServerWorld) this.world)).forgetTrident(uuid, ((TridentEntity) (Object) this)));
+                    LoyalTridentStorage.get(((ServerWorld) this.world)).forgetTrident(uuid, ((TridentEntity) (Object) this)));
         }
     }
 

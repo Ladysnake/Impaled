@@ -5,7 +5,6 @@ import ladysnake.impaled.common.init.ImpaledItems;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.loot.v1.FabricLootPoolBuilder;
 import net.fabricmc.fabric.api.loot.v1.event.LootTableLoadingCallback;
-import net.minecraft.enchantment.Enchantment;
 import net.minecraft.loot.condition.LootCondition;
 import net.minecraft.loot.condition.RandomChanceLootCondition;
 import net.minecraft.loot.entry.ItemEntry;
@@ -35,6 +34,5 @@ public class Impaled implements ModInitializer {
                 supplier.withPool(poolBuilder.build());
             }
         });
-
     }
 }

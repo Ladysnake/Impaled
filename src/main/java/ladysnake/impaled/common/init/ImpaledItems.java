@@ -3,12 +3,7 @@ package ladysnake.impaled.common.init;
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
 import ladysnake.impaled.common.Impaled;
 import ladysnake.impaled.common.entity.ImpaledTridentEntity;
-import ladysnake.impaled.common.item.AtlanItem;
-import ladysnake.impaled.common.item.ElderTridentItem;
-import ladysnake.impaled.common.item.HellforkItem;
-import ladysnake.impaled.common.item.ImpaledTridentItem;
-import ladysnake.impaled.common.item.MaelstromItem;
-import ladysnake.impaled.common.item.PitchforkItem;
+import ladysnake.impaled.common.item.*;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.dispenser.ProjectileDispenserBehavior;
 import net.minecraft.entity.projectile.ProjectileEntity;
@@ -24,15 +19,15 @@ import java.util.Objects;
 import java.util.Set;
 
 public class ImpaledItems {
+    public static final Set<ImpaledTridentItem> ALL_TRIDENTS = new ReferenceOpenHashSet<>();
     public static Item ELDER_GUARDIAN_EYE;
     public static Item ANCIENT_TRIDENT;
-
     public static Item PITCHFORK;
     public static Item HELLFORK;
+    public static Item SOULFORK;
     public static Item ELDER_TRIDENT;
     public static Item ATLAN;
     public static Item MAELSTROM;
-    public static final Set<ImpaledTridentItem> ALL_TRIDENTS = new ReferenceOpenHashSet<>();
 
     public static void init() {
         ELDER_GUARDIAN_EYE = registerItem(new Item((new Item.Settings()).group(ItemGroup.MATERIALS).rarity(Rarity.UNCOMMON)), "elder_guardian_eye");
@@ -40,6 +35,7 @@ public class ImpaledItems {
 
         PITCHFORK = registerTrident(new PitchforkItem((new Item.Settings()).maxDamage(150).group(ItemGroup.COMBAT), ImpaledEntityTypes.PITCHFORK), "pitchfork", true);
         HELLFORK = registerTrident(new HellforkItem((new Item.Settings()).maxDamage(325).fireproof().group(ItemGroup.COMBAT).fireproof(), ImpaledEntityTypes.HELLFORK), "hellfork", true);
+        SOULFORK = registerTrident(new HellforkItem((new Item.Settings()).maxDamage(325).fireproof().group(ItemGroup.COMBAT).fireproof(), ImpaledEntityTypes.SOULFORK), "soulfork", true);
         ELDER_TRIDENT = registerTrident(new ElderTridentItem((new Item.Settings()).maxDamage(250).group(ItemGroup.COMBAT), ImpaledEntityTypes.ELDER_TRIDENT), "elder_trident", true);
         ATLAN = registerTrident(new AtlanItem((new Item.Settings()).maxDamage(250).group(ItemGroup.COMBAT), ImpaledEntityTypes.ATLAN), "atlan", true);
         MAELSTROM = registerItem(new MaelstromItem((new Item.Settings()).maxDamage(80).group(ItemGroup.COMBAT)), "maelstrom");

@@ -2,7 +2,7 @@
   "parent": "builtin/entity",
   "gui_light": "front",
   "textures": {
-    "particle": "impaled:item/guardian_trident"
+    "particle": "impaled:item/soulfork"
   },
   "display": {
     "thirdperson_righthand": {
@@ -130,7 +130,7 @@
       "predicate": {
         "throwing": 1
       },
-      "model": "impaled:item/elder_trident_throwing"
+      "model": "impaled:item/soulfork_throwing"
     }
   ]
 }

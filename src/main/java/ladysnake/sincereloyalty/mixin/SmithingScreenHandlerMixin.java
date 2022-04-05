@@ -56,12 +56,12 @@ public abstract class SmithingScreenHandlerMixin extends ForgingScreenHandler {
     }
 
     @ModifyArg(
-        method = "updateResult",
-        slice = @Slice(from = @At(value = "FIELD", target = "Lnet/minecraft/item/ItemStack;EMPTY:Lnet/minecraft/item/ItemStack;")),
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/inventory/CraftingResultInventory;setStack(ILnet/minecraft/item/ItemStack;)V"
-        )
+            method = "updateResult",
+            slice = @Slice(from = @At(value = "FIELD", target = "Lnet/minecraft/item/ItemStack;EMPTY:Lnet/minecraft/item/ItemStack;")),
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/inventory/CraftingResultInventory;setStack(ILnet/minecraft/item/ItemStack;)V"
+            )
     )
     private ItemStack updateResult(ItemStack initialResult) {
         if (initialResult.isEmpty()) {

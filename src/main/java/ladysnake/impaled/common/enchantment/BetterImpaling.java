@@ -1,6 +1,6 @@
 package ladysnake.impaled.common.enchantment;
 
-import ladysnake.impaled.common.init.ImpaledItems;
+import ladysnake.impaled.common.item.HellforkItem;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
@@ -13,7 +13,7 @@ public final class BetterImpaling {
         int impalingLevel = EnchantmentHelper.getLevel(Enchantments.IMPALING, stack);
 
         if (impalingLevel > 0) {
-            if (stack.getItem() == ImpaledItems.HELLFORK) {
+            if (stack.getItem() instanceof HellforkItem) {
                 if (isFireImmune(target)) {
                     return impalingLevel * 2F;
                 }

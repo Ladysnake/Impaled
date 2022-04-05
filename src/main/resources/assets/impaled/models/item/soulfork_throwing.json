@@ -2,19 +2,19 @@
   "parent": "builtin/entity",
   "gui_light": "front",
   "textures": {
-    "particle": "impaled:item/guardian_trident"
+    "particle": "impaled:item/soulfork"
   },
   "display": {
     "thirdperson_righthand": {
       "rotation": [
         0,
-        60,
-        0
+        90,
+        180
       ],
       "translation": [
-        11,
-        17,
-        -2
+        8,
+        -17,
+        9
       ],
       "scale": [
         1,
@@ -25,13 +25,13 @@
     "thirdperson_lefthand": {
       "rotation": [
         0,
-        60,
-        0
+        90,
+        180
       ],
       "translation": [
-        3,
-        17,
-        12
+        8,
+        -17,
+        -7
       ],
       "scale": [
         1,
@@ -124,13 +124,5 @@
         0.25
       ]
     }
-  },
-  "overrides": [
-    {
-      "predicate": {
-        "throwing": 1
-      },
-      "model": "impaled:item/elder_trident_throwing"
-    }
-  ]
+  }
 }

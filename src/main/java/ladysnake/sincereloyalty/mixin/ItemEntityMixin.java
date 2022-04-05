@@ -34,6 +34,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ItemEntity.class)
 public abstract class ItemEntityMixin extends Entity {
+    @Nullable
+    @Unique
+    private Boolean veryLoyalTrident;
+
     public ItemEntityMixin(EntityType<?> type, World world) {
         super(type, world);
     }
@@ -43,10 +47,6 @@ public abstract class ItemEntityMixin extends Entity {
 
     @Shadow
     public abstract boolean cannotPickup();
-
-    @Nullable
-    @Unique
-    private Boolean veryLoyalTrident;
 
     @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
     private void tickItem(CallbackInfo ci) {

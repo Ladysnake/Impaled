@@ -25,23 +25,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.UUID;
 
 public abstract class TridentEntry {
-    @Nullable
-    public static TridentEntry fromNbt(ServerWorld world, NbtCompound tag) {
-        try {
-            switch (tag.getString("type")) {
-                case "world": return new WorldTridentEntry(world, tag);
-                case "inventory": return new InventoryTridentEntry(world, tag);
-                default: // pass
-            }
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
     protected final ServerWorld world;
     protected final UUID tridentUuid;
-
     TridentEntry(ServerWorld world, UUID tridentUuid) {
         this.world = world;
         this.tridentUuid = tridentUuid;
@@ -49,6 +34,22 @@ public abstract class TridentEntry {
 
     TridentEntry(ServerWorld world, NbtCompound nbt) {
         this(world, nbt.getUuid("trident_uuid"));
+    }
+
+    @Nullable
+    public static TridentEntry fromNbt(ServerWorld world, NbtCompound tag) {
+        try {
+            switch (tag.getString("type")) {
+                case "world":
+                    return new WorldTridentEntry(world, tag);
+                case "inventory":
+                    return new InventoryTridentEntry(world, tag);
+                default: // pass
+            }
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public UUID getTridentUuid() {

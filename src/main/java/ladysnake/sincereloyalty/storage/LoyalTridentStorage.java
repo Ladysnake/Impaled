@@ -42,18 +42,32 @@ import java.util.UUID;
 
 public final class LoyalTridentStorage extends PersistentState {
 
+    final ServerWorld world;
+    /**
+     * Player UUID -> Trident UUID -> Trident Position
+     */
+    private final Map<UUID, OwnedTridents> tridents = new HashMap<>();
+    public LoyalTridentStorage(ServerWorld world) {
+        super();
+        this.world = world;
+    }
+
     public static LoyalTridentStorage get(ServerWorld world) {
         final String id = SincereLoyalty.MOD_ID + "_trident_storage";
         return world.getPersistentStateManager().getOrCreate(tag -> fromNbt(world, tag), () -> new LoyalTridentStorage(world), id);
     }
 
-    /** Player UUID -> Trident UUID -> Trident Position */
-    private final Map<UUID, OwnedTridents> tridents = new HashMap<>();
-    final ServerWorld world;
-
-    public LoyalTridentStorage(ServerWorld world) {
-        super();
-        this.world = world;
+    public static LoyalTridentStorage fromNbt(ServerWorld world, NbtCompound tag) {
+        LoyalTridentStorage ret = new LoyalTridentStorage(world);
+        NbtList ownersNbt = tag.getList("trident_owners", NbtType.COMPOUND);
+        for (int i = 0; i < ownersNbt.size(); i++) {
+            OwnedTridents tridents = new OwnedTridents(ret);
+            NbtCompound ownerNbt = ownersNbt.getCompound(i);
+            UUID ownerUuid = ownerNbt.getUuid("owner_uuid");
+            tridents.fromTag(ownerNbt);
+            ret.tridents.put(ownerUuid, tridents);
+        }
+        return ret;
     }
 
     public boolean hasTridents(PlayerEntity player) {
@@ -115,19 +129,6 @@ public final class LoyalTridentStorage extends PersistentState {
             foundAny = true;
         }
         return foundAny;
-    }
-
-    public static LoyalTridentStorage fromNbt(ServerWorld world, NbtCompound tag) {
-        LoyalTridentStorage ret = new LoyalTridentStorage(world);
-        NbtList ownersNbt = tag.getList("trident_owners", NbtType.COMPOUND);
-        for (int i = 0; i < ownersNbt.size(); i++) {
-            OwnedTridents tridents = new OwnedTridents(ret);
-            NbtCompound ownerNbt = ownersNbt.getCompound(i);
-            UUID ownerUuid = ownerNbt.getUuid("owner_uuid");
-            tridents.fromTag(ownerNbt);
-            ret.tridents.put(ownerUuid, tridents);
-        }
-        return ret;
     }
 
     @NotNull

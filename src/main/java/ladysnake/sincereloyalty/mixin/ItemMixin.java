@@ -45,7 +45,7 @@ public abstract class ItemMixin {
                 if (!Objects.equals(entity.getEntityName(), loyaltyData.getString(LoyalTrident.OWNER_NAME_NBT_KEY))) {
                     loyaltyData.putString(LoyalTrident.OWNER_NAME_NBT_KEY, entity.getEntityName());
                 }
-            } else if (trueOwner != null){
+            } else if (trueOwner != null) {
                 LoyalTridentStorage.get((ServerWorld) world).memorizeTrident(trueOwner, LoyalTrident.getTridentUuid(stack), (PlayerEntity) entity);
             }
         }

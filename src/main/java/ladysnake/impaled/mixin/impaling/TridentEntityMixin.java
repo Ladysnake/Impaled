@@ -12,7 +12,8 @@ import org.spongepowered.asm.mixin.injection.Slice;
 
 @Mixin(TridentEntity.class)
 public abstract class TridentEntityMixin {
-    @Shadow private ItemStack tridentStack;
+    @Shadow
+    private ItemStack tridentStack;
 
     @ModifyVariable(
             method = "onEntityHit",

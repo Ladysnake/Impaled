@@ -20,4 +20,5 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     private float getAttackDamage(float baseDamage, Entity target) {
         return baseDamage + BetterImpaling.getAttackDamage(this.getMainHandStack(), target);
     }
+
 }

@@ -45,22 +45,10 @@ import java.util.List;
 @Mixin(ItemStack.class)
 public abstract class ItemStackMixin {
 
-    @Shadow
-    public abstract NbtCompound getSubNbt(String key);
-
     @Nullable
     @Unique
     private static String impaled$trueOwnerName;
     private static boolean impaled$riptide;
-
-    @Inject(method = "getTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;appendEnchantments(Ljava/util/List;Lnet/minecraft/nbt/NbtList;)V"))
-    private void captureThis(PlayerEntity player, TooltipContext context, CallbackInfoReturnable<List<Text>> cir) {
-        NbtCompound loyaltyNbt = this.getSubNbt(LoyalTrident.MOD_NBT_KEY);
-        if (loyaltyNbt != null && loyaltyNbt.contains(LoyalTrident.OWNER_NAME_NBT_KEY)) {
-            impaled$trueOwnerName = loyaltyNbt.getString(LoyalTrident.OWNER_NAME_NBT_KEY);
-            impaled$riptide = EnchantmentHelper.getRiptide((ItemStack) (Object) this) > 0;
-        }
-    }
 
     // inject into the lambda in appendEnchantments
     @Dynamic("Lambda method")
@@ -78,6 +66,18 @@ public abstract class ItemStackMixin {
                 line.append(new LiteralText(" ")).append(new TranslatableText("impaled:tooltip.owned_by", impaled$trueOwnerName).formatted(Formatting.DARK_GRAY));
             }
             impaled$trueOwnerName = null;
+        }
+    }
+
+    @Shadow
+    public abstract NbtCompound getSubNbt(String key);
+
+    @Inject(method = "getTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;appendEnchantments(Ljava/util/List;Lnet/minecraft/nbt/NbtList;)V"))
+    private void captureThis(PlayerEntity player, TooltipContext context, CallbackInfoReturnable<List<Text>> cir) {
+        NbtCompound loyaltyNbt = this.getSubNbt(LoyalTrident.MOD_NBT_KEY);
+        if (loyaltyNbt != null && loyaltyNbt.contains(LoyalTrident.OWNER_NAME_NBT_KEY)) {
+            impaled$trueOwnerName = loyaltyNbt.getString(LoyalTrident.OWNER_NAME_NBT_KEY);
+            impaled$riptide = EnchantmentHelper.getRiptide((ItemStack) (Object) this) > 0;
         }
     }
 }

@@ -1,6 +1,6 @@
 package ladysnake.impaled.mixin;
 
-import ladysnake.impaled.common.init.ImpaledItems;
+import ladysnake.impaled.common.item.HellforkItem;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -16,21 +16,29 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Entity.class)
 public abstract class EntityMixin {
-    @Shadow @Nullable public abstract ItemEntity dropItem(ItemConvertible item);
+    @Shadow
+    public World world;
 
-    @Shadow @Nullable public abstract ItemEntity dropStack(ItemStack stack);
+    @Shadow
+    @Nullable
+    public abstract ItemEntity dropItem(ItemConvertible item);
 
-    @Shadow public World world;
+    @Shadow
+    @Nullable
+    public abstract ItemEntity dropStack(ItemStack stack);
 
-    @Shadow public abstract double getX();
+    @Shadow
+    public abstract double getX();
 
-    @Shadow public abstract double getY();
+    @Shadow
+    public abstract double getY();
 
-    @Shadow public abstract double getZ();
+    @Shadow
+    public abstract double getZ();
 
     @Inject(method = "doesRenderOnFire", at = @At(value = "RETURN"), cancellable = true)
     public void removePlayerFireRenderDuringHellforkRiptide(CallbackInfoReturnable<Boolean> cir) {
-        if (((Object)this) instanceof PlayerEntity && ((PlayerEntity)(Object)this).isUsingRiptide() && ((((PlayerEntity)(Object)this).getMainHandStack().getItem() == ImpaledItems.HELLFORK) || (((PlayerEntity)(Object)this).getOffHandStack().getItem() == ImpaledItems.HELLFORK))) {
+        if (((Object) this) instanceof PlayerEntity && ((PlayerEntity) (Object) this).isUsingRiptide() && ((((PlayerEntity) (Object) this).getMainHandStack().getItem() instanceof HellforkItem) || (((PlayerEntity) (Object) this).getOffHandStack().getItem() instanceof HellforkItem))) {
             cir.setReturnValue(false);
         }
     }
@@ -39,4 +47,12 @@ public abstract class EntityMixin {
     protected void impaled$dropStack(ItemStack stack, float yOffset, CallbackInfoReturnable<ItemEntity> cir) {
         // overridden in LivingEntityMixin
     }
+
+    @Inject(method = "isOnFire", at = @At(value = "RETURN"), cancellable = true)
+    public void isOnFire(CallbackInfoReturnable<Boolean> cir) {
+        if (((Object) this) instanceof PlayerEntity && ((PlayerEntity) (Object) this).isUsingRiptide() && ((((PlayerEntity) (Object) this).getMainHandStack().getItem() instanceof HellforkItem) || (((PlayerEntity) (Object) this).getOffHandStack().getItem() instanceof HellforkItem))) {
+            cir.setReturnValue(true);
+        }
+    }
+
 }

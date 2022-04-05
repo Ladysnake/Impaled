@@ -1,11 +1,7 @@
 package ladysnake.impaled.common.init;
 
 import ladysnake.impaled.common.Impaled;
-import ladysnake.impaled.common.entity.ElderTridentEntity;
-import ladysnake.impaled.common.entity.GuardianTridentEntity;
-import ladysnake.impaled.common.entity.HellforkEntity;
-import ladysnake.impaled.common.entity.ImpaledTridentEntity;
-import ladysnake.impaled.common.entity.PitchforkEntity;
+import ladysnake.impaled.common.entity.*;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityDimensions;
@@ -16,6 +12,7 @@ import net.minecraft.util.registry.Registry;
 public class ImpaledEntityTypes {
     public static EntityType<PitchforkEntity> PITCHFORK;
     public static EntityType<HellforkEntity> HELLFORK;
+    public static EntityType<SoulforkEntity> SOULFORK;
     public static EntityType<ElderTridentEntity> ELDER_TRIDENT;
     public static EntityType<ElderTridentEntity> GUARDIAN_TRIDENT;
     public static EntityType<ImpaledTridentEntity> ATLAN;
@@ -23,6 +20,7 @@ public class ImpaledEntityTypes {
     public static void init() {
         PITCHFORK = register("pitchfork", createEntityType(PitchforkEntity::new));
         HELLFORK = register("hellfork", createEntityType(HellforkEntity::new));
+        SOULFORK = register("soulfork", createEntityType(SoulforkEntity::new));
         ELDER_TRIDENT = register("elder_trident", createEntityType(ElderTridentEntity::new));
         GUARDIAN_TRIDENT = register("guardian_trident", createEntityType(GuardianTridentEntity::new));
         ATLAN = register("atlan", createEntityType(ImpaledTridentEntity::new));

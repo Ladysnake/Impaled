@@ -26,9 +26,9 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class ElderTridentEntity extends ImpaledTridentEntity {
+    private final List<ItemStack> fetchedStacks = new ArrayList<>();
     protected Entity closestTarget;
     protected boolean hasSearchedTarget;
-    private final List<ItemStack> fetchedStacks = new ArrayList<>();
 
     public ElderTridentEntity(EntityType<? extends ElderTridentEntity> entityType, World world) {
         super(entityType, world);
@@ -69,7 +69,7 @@ public class ElderTridentEntity extends ImpaledTridentEntity {
                 if (this.closestTarget != null && closestTarget.isAlive()) {
                     float i = 5f;
                     Vec3d vec3d = new Vec3d(closestTarget.getX() - this.getX(), closestTarget.getEyeY() - this.getY(), closestTarget.getZ() - this.getZ());
-                    this.setPos(this.getX(), this.getY() + vec3d.y * 0.015D * (double)i, this.getZ());
+                    this.setPos(this.getX(), this.getY() + vec3d.y * 0.015D * (double) i, this.getZ());
                     if (this.world.isClient) {
                         this.lastRenderY = this.getY();
                     }
