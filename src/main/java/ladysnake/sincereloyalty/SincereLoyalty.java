@@ -25,15 +25,15 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.fabric.api.tag.TagRegistry;
 import net.minecraft.item.Item;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.tag.Tag;
+import net.minecraft.tag.TagKey;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 
 import java.util.UUID;
 
@@ -41,8 +41,8 @@ public final class SincereLoyalty implements ModInitializer {
 
     public static final String MOD_ID = Impaled.MODID;
 
-    public static final Tag<Item> LOYALTY_CATALYSTS = TagRegistry.item(id("loyalty_catalysts"));
-    public static final Tag<Item> TRIDENTS = TagRegistry.item(id("tridents"));
+    public static final TagKey<Item> LOYALTY_CATALYSTS = TagKey.of(Registry.ITEM_KEY, id("loyalty_catalysts"));
+    public static final TagKey<Item> TRIDENTS = TagKey.of(Registry.ITEM_KEY, id("tridents"));
 
     public static final Identifier RECALL_TRIDENTS_MESSAGE_ID = id("recall_tridents");
     public static final Identifier RECALLING_MESSAGE_ID = id("recalling_tridents");

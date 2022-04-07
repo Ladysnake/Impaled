@@ -13,7 +13,7 @@
     "sources": "https://github.com/Ladysnake/Impaled",
     "issues": "https://github.com/Ladysnake/Impaled/issues"
   },
-  "license": "Code: GNU GPLv3; Art: ARR",
+  "license": "ARR",
   "icon": "assets/impaled/impaled.png",
   "environment": "*",
   "entrypoints": {
@@ -31,7 +31,9 @@
     "sincereloyalty.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.4.0",
-    "fabric": "*"
+    "fabricloader": ">=0.13.3",
+    "minecraft": "~1.18.2",
+    "java": ">=17",
+    "fabric": ">=0.48.0"
   }
 }

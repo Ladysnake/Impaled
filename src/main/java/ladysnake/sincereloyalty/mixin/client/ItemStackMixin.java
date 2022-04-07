@@ -48,6 +48,7 @@ public abstract class ItemStackMixin {
     @Nullable
     @Unique
     private static String impaled$trueOwnerName;
+    @Unique
     private static boolean impaled$riptide;
 
     // inject into the lambda in appendEnchantments

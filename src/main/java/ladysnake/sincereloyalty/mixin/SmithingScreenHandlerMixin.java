@@ -51,7 +51,7 @@ public abstract class SmithingScreenHandlerMixin extends ForgingScreenHandler {
         if (resultNonEmpty && !cir.getReturnValueZ()) {
             ItemStack item = this.input.getStack(0);
             ItemStack upgradeItem = this.input.getStack(1);
-            cir.setReturnValue(SincereLoyalty.TRIDENTS.contains(item.getItem()) && SincereLoyalty.LOYALTY_CATALYSTS.contains(upgradeItem.getItem()));
+            cir.setReturnValue(item.isIn(SincereLoyalty.TRIDENTS) && upgradeItem.isIn(SincereLoyalty.LOYALTY_CATALYSTS));
         }
     }
 
@@ -67,7 +67,7 @@ public abstract class SmithingScreenHandlerMixin extends ForgingScreenHandler {
         if (initialResult.isEmpty()) {
             ItemStack item = this.input.getStack(0);
             ItemStack upgradeItem = this.input.getStack(1);
-            if (SincereLoyalty.TRIDENTS.contains(item.getItem()) && SincereLoyalty.LOYALTY_CATALYSTS.contains(upgradeItem.getItem())) {
+            if (item.isIn(SincereLoyalty.TRIDENTS) && upgradeItem.isIn(SincereLoyalty.LOYALTY_CATALYSTS)) {
                 Map<Enchantment, Integer> enchantments = EnchantmentHelper.get(item);
                 if (enchantments.getOrDefault(Enchantments.LOYALTY, 0) == Enchantments.LOYALTY.getMaxLevel()) {
                     ItemStack result = item.copy();

@@ -4,7 +4,6 @@ import ladysnake.impaled.common.item.HellforkItem;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -18,10 +17,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class EntityMixin {
     @Shadow
     public World world;
-
-    @Shadow
-    @Nullable
-    public abstract ItemEntity dropItem(ItemConvertible item);
 
     @Shadow
     @Nullable

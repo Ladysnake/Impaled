@@ -20,9 +20,9 @@ import static ladysnake.impaled.client.ImpaledClient.SOULFORK_RIPTIDE_TEXTURE;
 public abstract class TridentRiptideFeatureRendererMixin {
     @ModifyVariable(method = "render", at = @At("STORE"))
     private VertexConsumer swapHotRiptide(VertexConsumer orig, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int light, LivingEntity livingEntity) {
-        if (livingEntity instanceof PlayerEntity && livingEntity.isUsingRiptide() && (livingEntity.getMainHandStack().getItem() == ImpaledItems.HELLFORK || (livingEntity.getOffHandStack().getItem() == ImpaledItems.HELLFORK) && !(SincereLoyalty.TRIDENTS.contains(livingEntity.getMainHandStack().getItem())))) {
+        if (livingEntity instanceof PlayerEntity && livingEntity.isUsingRiptide() && (livingEntity.getMainHandStack().getItem() == ImpaledItems.HELLFORK || (livingEntity.getOffHandStack().getItem() == ImpaledItems.HELLFORK) && !livingEntity.getMainHandStack().isIn(SincereLoyalty.TRIDENTS))) {
             return vertexConsumerProvider.getBuffer(RenderLayer.getEntityCutoutNoCull(HELLFORK_RIPTIDE_TEXTURE));
-        } else if (livingEntity instanceof PlayerEntity && livingEntity.isUsingRiptide() && (livingEntity.getMainHandStack().getItem() == ImpaledItems.SOULFORK || (livingEntity.getOffHandStack().getItem() == ImpaledItems.SOULFORK) && !(SincereLoyalty.TRIDENTS.contains(livingEntity.getMainHandStack().getItem())))) {
+        } else if (livingEntity instanceof PlayerEntity && livingEntity.isUsingRiptide() && (livingEntity.getMainHandStack().getItem() == ImpaledItems.SOULFORK || (livingEntity.getOffHandStack().getItem() == ImpaledItems.SOULFORK) && !livingEntity.getMainHandStack().isIn(SincereLoyalty.TRIDENTS))) {
             return vertexConsumerProvider.getBuffer(RenderLayer.getEntityCutoutNoCull(SOULFORK_RIPTIDE_TEXTURE));
         }
         return orig;

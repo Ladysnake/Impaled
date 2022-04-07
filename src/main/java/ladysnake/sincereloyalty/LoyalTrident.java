@@ -60,7 +60,7 @@ public interface LoyalTrident {
     }
 
     static boolean hasTrueOwner(ItemStack tridentStack) {
-        if (SincereLoyalty.TRIDENTS.contains(tridentStack.getItem()) && EnchantmentHelper.getLoyalty(tridentStack) > 0) {
+        if (tridentStack.isIn(SincereLoyalty.TRIDENTS) && EnchantmentHelper.getLoyalty(tridentStack) > 0) {
             NbtCompound loyaltyNbt = tridentStack.getSubNbt(MOD_NBT_KEY);
             return loyaltyNbt != null && loyaltyNbt.containsUuid(TRIDENT_OWNER_NBT_KEY);
         }

@@ -53,7 +53,7 @@ public class MaelstromItem extends RangedWeaponItem implements Vanishable {
                 Inventory inventory = ((PlayerEntity) user).getInventory();
                 for (int i = 0; i < inventory.size(); i++) {
                     ItemStack stackToThrow = ((PlayerEntity) user).getInventory().getStack(i);
-                    if (!stackToThrow.isEmpty() && EnchantmentHelper.getRiptide(stackToThrow) == 0 && SincereLoyalty.TRIDENTS.contains(stackToThrow.getItem())) {
+                    if (!stackToThrow.isEmpty() && EnchantmentHelper.getRiptide(stackToThrow) == 0 && stackToThrow.isIn(SincereLoyalty.TRIDENTS)) {
                         TridentEntity trident = null;
                         PlayerEntity playerEntity = (PlayerEntity) user;
                         stackToThrow.damage(1, (LivingEntity) playerEntity, livingEntity -> livingEntity.sendToolBreakStatus(user.getActiveHand()));
@@ -87,7 +87,7 @@ public class MaelstromItem extends RangedWeaponItem implements Vanishable {
     }
 
     public Predicate<ItemStack> getProjectiles() {
-        return itemStack -> SincereLoyalty.TRIDENTS.contains(itemStack.getItem());
+        return itemStack -> itemStack.isIn(SincereLoyalty.TRIDENTS);
     }
 
     public int getRange() {

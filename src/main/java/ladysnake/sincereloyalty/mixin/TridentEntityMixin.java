@@ -44,7 +44,9 @@ import java.util.UUID;
 
 @Mixin(TridentEntity.class)
 public abstract class TridentEntityMixin extends PersistentProjectileEntity implements LoyalTrident {
+    @Unique
     private static final TrackedData<Boolean> sincereLoyalty$SITTING = DataTracker.registerData(TridentEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+
     @Shadow
     private ItemStack tridentStack;
     private @Nullable Optional<UUID> sincereLoyalty_trueOwner;
