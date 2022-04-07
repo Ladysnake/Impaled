@@ -1,5 +1,8 @@
 # Impaled - Changelog:
 
+### Impaled 1.1.1 - 1.18.2
+- Updated to Minecraft 1.18.2
+
 ### Impaled 1.1 - 1.18.1
 - Removed the heated Hellfork
 - Introduced an alternative to it: the Soulfork
