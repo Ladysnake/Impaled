@@ -1,8 +1,5 @@
 # Impaled - Changelog:
 
-### Impaled 1.1.2 - 1.18.2
-
-
 ### Impaled 1.1.1 - 1.18.2
 - Updated to Minecraft 1.18.2
 

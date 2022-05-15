@@ -90,7 +90,7 @@ public class ElderTridentEntity extends ImpaledTridentEntity {
 
             if (!(serverPlayerEntity.hasStatusEffect(statusEffect) && serverPlayerEntity.getStatusEffect(statusEffect).getAmplifier() >= 2 && serverPlayerEntity.getStatusEffect(statusEffect).getDuration() >= 1200)) {
                 serverPlayerEntity.networkHandler.sendPacket(new GameStateChangeS2CPacket(GameStateChangeS2CPacket.ELDER_GUARDIAN_EFFECT, this.isSilent() ? 0.0F : 1.0F));
-                serverPlayerEntity.addStatusEffect(new StatusEffectInstance(statusEffect, 200, 2));
+                serverPlayerEntity.addStatusEffect(new StatusEffectInstance(statusEffect, 6000, 2));
             }
         }
     }
