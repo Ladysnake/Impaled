@@ -74,7 +74,7 @@ public class ImpaledTridentItem extends TridentItem {
                         k *= n / m;
                         l *= n / m;
                         playerEntity.addVelocity(h, k, l);
-                        playerEntity.useRiptide(20);
+                        playerEntity.setRiptideTicks(20);
                         if (playerEntity.isOnGround()) {
                             float o = 1.1999999F;
                             playerEntity.move(MovementType.SELF, new Vec3d(0.0D, 1.1999999284744263D, 0.0D));

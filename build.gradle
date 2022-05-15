@@ -16,6 +16,12 @@ archivesBaseName = project.archives_base_name
 version = project.mod_version
 group = project.maven_group
 
+repositories {
+	maven {
+		url "https://cursemaven.com"
+	}
+}
+
 dependencies {
 	//to change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
@@ -24,6 +30,8 @@ dependencies {
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+	modImplementation "curse.maven:enchancement-598056:${enchancement_version}"
 }
 
 processResources {
