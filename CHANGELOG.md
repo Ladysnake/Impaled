@@ -1,5 +1,8 @@
 # Impaled - Changelog:
 
+### Impaled 1.1.2 - 1.18.2
+- Reduced mining fatigue given by the channeling elder trident to 10s
+
 ### Impaled 1.1.1 - 1.18.2
 - Updated to Minecraft 1.18.2
 
