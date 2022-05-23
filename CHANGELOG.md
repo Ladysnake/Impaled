@@ -1,5 +1,9 @@
 # Impaled - Changelog:
 
+### Impaled 1.1.3 - 1.18.2
+- Fixed Hellfork and Soulforks setting targets on fire even if their shield were up
+- Hellforks and Soulforks will now set targets on fire for 8 seconds instead of a random time between 4 and 8 seconds
+
 ### Impaled 1.1.2 - 1.18.2
 - Reduced mining fatigue given by the channeling elder trident to 10s
 
