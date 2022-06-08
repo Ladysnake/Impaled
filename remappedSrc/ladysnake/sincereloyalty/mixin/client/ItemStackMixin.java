@@ -25,8 +25,10 @@ import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Dynamic;
@@ -57,12 +59,12 @@ public abstract class ItemStackMixin {
             if (!lines.isEmpty()) {
                 if (impaled$riptide) {
                     // If there is riptide, we present as if there was only one level possible
-                    lines.set(lines.size() - 1, Text.translatable(enchantment.getTranslationKey()).formatted(Formatting.GRAY));
+                    lines.set(lines.size() - 1, new TranslatableText(enchantment.getTranslationKey()).formatted(Formatting.GRAY));
                 }
 
                 MutableText line = (MutableText) lines.get(lines.size() - 1);
 
-                line.append(Text.literal(" ")).append(Text.translatable("impaled:tooltip.owned_by", impaled$trueOwnerName).formatted(Formatting.DARK_GRAY));
+                line.append(new LiteralText(" ")).append(new TranslatableText("impaled:tooltip.owned_by", impaled$trueOwnerName).formatted(Formatting.DARK_GRAY));
             }
             impaled$trueOwnerName = null;
         }

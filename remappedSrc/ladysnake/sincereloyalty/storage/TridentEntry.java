@@ -27,7 +27,6 @@ import java.util.UUID;
 public abstract class TridentEntry {
     protected final ServerWorld world;
     protected final UUID tridentUuid;
-
     TridentEntry(ServerWorld world, UUID tridentUuid) {
         this.world = world;
         this.tridentUuid = tridentUuid;

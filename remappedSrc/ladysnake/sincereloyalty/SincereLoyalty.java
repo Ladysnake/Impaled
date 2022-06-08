@@ -31,7 +31,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.tag.TagKey;
-import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -68,7 +68,7 @@ public final class SincereLoyalty implements ModInitializer {
             if (loyalTridentStorage.recallTridents(player)) {
                 newRecallStatus = TridentRecaller.RecallStatus.RECALLING;
             } else {
-                player.sendMessage(Text.translatable("impaled:trident_recall_fail"), true);
+                player.sendMessage(new TranslatableText("impaled:trident_recall_fail"), true);
                 // if there is no trident to recall, reset the player's animation
                 newRecallStatus = TridentRecaller.RecallStatus.NONE;
             }

@@ -3,6 +3,8 @@ package ladysnake.impaled.common.entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.util.hit.EntityHitResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.World;
 
 public class SoulforkEntity extends ImpaledTridentEntity {
