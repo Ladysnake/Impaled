@@ -1,5 +1,8 @@
 # Impaled - Changelog:
 
+### Impaled 1.1.4 - 1.19
+- Updated to Minecraft 1.19
+
 ### Impaled 1.1.3 - 1.18.2
 - Fixed Hellfork and Soulforks setting targets on fire even if their shield were up
 - Hellforks and Soulforks will now set targets on fire for 8 seconds instead of a random time between 4 and 8 seconds
