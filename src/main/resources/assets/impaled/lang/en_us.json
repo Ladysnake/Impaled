@@ -6,6 +6,7 @@
   "item.impaled.soulfork": "Soulfork",
   "item.impaled.elder_trident": "Elder Trident",
   "item.impaled.atlan": "Atlan",
+  "item.impaled.maelstrom": "Maelstrom",
   "death.attack.hellfork_heat": "%1$s came in too hot",
   "impaled:tooltip.owned_by": "(to %s)",
   "impaled:trident_recall_fail": "Failed to recall your tridents"
