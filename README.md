@@ -8,7 +8,11 @@
         - Ancient Trident and Hellfork are fireproof, similar to netherite scrap and netherite gear
         - Ignites entities upon hit, whether thrown or used as a melee weapon
         - Changed the Riptide use from water based to fire based, when the user is on fire or inside lava
-        - Can be heated to ignite the user whenever the trident is held; heat by using on a lava cauldron, cool by using on a water or powder snow cauldron
+    - Soulfork: Variant of the Hellfork
+        - Acquired by using a Hellfork on soul torches, lanterns or campfires
+        - Needs experience for Riptide to work, damages the user once all experience is used up
+        - Sets the user on fire for a short time upon Riptide being used. The fire does not damage the user as long as they were not on fire before
+        - Can be reverted back by using it on the normal variants of the mentioned soul blocks
     - Elder Trident: an improved trident with homing capabilities
         - Can be obtained by combining a Trident with an Elder Guardian Eye, dropped by Elder Guardians when killed by a melee trident attack or by a trident enchanted with Loyalty 3 or 4
         - Will home on entities and come back for them (if it hasn't hit anything or the ground)
