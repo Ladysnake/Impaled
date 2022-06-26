@@ -1,7 +1,7 @@
 # Impaled
 
 ## Features
-- Four new trident variants:
+- Five new trident variants:
     - Pitchfork: for early game, lower durability, normal projectile drag underwater, allows for farmland tiling
     - Hellfork: Nether variant of the Trident
         - Can be obtained by combining a Trident with an Ancient Trident, that has a 60% chance of appearing in treasure Bastion Remnants
