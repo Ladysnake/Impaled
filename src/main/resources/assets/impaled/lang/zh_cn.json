@@ -1,0 +1,14 @@
+{
+  "item.impaled.ancient_trident": "远古三叉戟",
+  "item.impaled.elder_guardian_eye": "远古守卫者之眼",
+  "item.impaled.pitchfork": "干草叉",
+  "item.impaled.hellfork": "烈焰三叉戟",
+  "item.impaled.elder_trident": "守卫之戟",
+  "item.impaled.atlan": "亚特兰之戟",
+
+  "tooltip.impaled.heated": "已点火",
+
+  "death.attack.hellfork_heat": "%1$s难当火焰炙烤",
+  "impaled:tooltip.owned_by": "（效忠于%s）",
+  "impaled:trident_recall_fail": "三叉戟召回失败"
+}
