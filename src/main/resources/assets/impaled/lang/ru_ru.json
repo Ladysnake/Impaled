@@ -1,0 +1,12 @@
+{
+  "item.impaled.ancient_trident": "Древний трезубец",
+  "item.impaled.elder_guardian_eye": "Око Древнего стража",
+  "item.impaled.pitchfork": "Вилы",
+  "item.impaled.hellfork": "Адские вилы",
+  "item.impaled.soulfork": "Трезубец души",
+  "item.impaled.elder_trident": "Трезубец стража",
+  "item.impaled.atlan": "Атлан",
+  "death.attack.hellfork_heat": "%1$s погарячился",
+  "impaled:tooltip.owned_by": "(Владелец: %s)",
+  "impaled:trident_recall_fail": "Невозможно призвать трезубцы"
+}
