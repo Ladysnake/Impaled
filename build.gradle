@@ -16,6 +16,13 @@ archivesBaseName = project.archives_base_name
 version = project.mod_version
 group = project.maven_group
 
+repositories {
+	// MixinExtras
+	maven { url "https://jitpack.io" }
+	// MialeeMisc
+	maven { url "https://maven.willbl.dev/releases" }
+}
+
 dependencies {
 	//to change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
@@ -24,6 +31,10 @@ dependencies {
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+	modImplementation include ("xyz.amymialee:mialeemisc:${project.mialeemisc_version}") {
+		exclude group: "dev.emi"
+	}
 }
 
 processResources {

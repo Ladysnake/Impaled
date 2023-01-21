@@ -4,6 +4,7 @@
   "package": "ladysnake.impaled.mixin",
   "compatibilityLevel": "JAVA_17",
   "client": [
+    "InGameHudMixin",
     "InGameOverlayRendererMixin",
     "impaling.EntityRendererMixin"
   ],

@@ -21,8 +21,8 @@ public class ImpaledEntityTypes {
         PITCHFORK = register("pitchfork", createEntityType(PitchforkEntity::new));
         HELLFORK = register("hellfork", createEntityType(HellforkEntity::new));
         SOULFORK = register("soulfork", createEntityType(SoulforkEntity::new));
-        ELDER_TRIDENT = register("elder_trident", createEntityType(ElderTridentEntity::new));
-        GUARDIAN_TRIDENT = register("guardian_trident", createEntityType(GuardianTridentEntity::new));
+        ELDER_TRIDENT = register("elder_trident", createDynamicEntityType(ElderTridentEntity::new));
+        GUARDIAN_TRIDENT = register("guardian_trident", createDynamicEntityType(GuardianTridentEntity::new));
         ATLAN = register("atlan", createEntityType(ImpaledTridentEntity::new));
     }
 
@@ -32,5 +32,9 @@ public class ImpaledEntityTypes {
 
     private static <T extends Entity> EntityType<T> createEntityType(EntityType.EntityFactory<T> factory) {
         return FabricEntityTypeBuilder.create(SpawnGroup.MISC, factory).dimensions(EntityDimensions.changing(0.5f, 0.5f)).trackRangeBlocks(4).trackedUpdateRate(20).build();
+    }
+
+    private static <T extends Entity> EntityType<T> createDynamicEntityType(EntityType.EntityFactory<T> factory) {
+        return FabricEntityTypeBuilder.create(SpawnGroup.MISC, factory).dimensions(EntityDimensions.changing(0.5f, 0.5f)).trackRangeBlocks(4).build();
     }
 }
