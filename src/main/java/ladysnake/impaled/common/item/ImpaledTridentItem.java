@@ -37,34 +37,33 @@ public class ImpaledTridentItem extends TridentItem {
 
     @Override
     public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
-        if (user instanceof PlayerEntity) {
-            PlayerEntity playerEntity = (PlayerEntity) user;
+        if (user instanceof PlayerEntity player) {
             int i = this.getMaxUseTime(stack) - remainingUseTicks;
             if (i >= 10) {
                 int j = EnchantmentHelper.getRiptide(stack);
-                if (j <= 0 || canRiptide(playerEntity)) {
+                if (j <= 0 || canRiptide(player)) {
                     if (!world.isClient) {
-                        stack.damage(1, (LivingEntity) playerEntity, livingEntity -> livingEntity.sendToolBreakStatus(user.getActiveHand()));
+                        stack.damage(1, player, livingEntity -> livingEntity.sendToolBreakStatus(user.getActiveHand()));
                         if (j == 0) {
-                            ImpaledTridentEntity trident = createTrident(world, playerEntity, stack);
-                            LoyalTrident.of(trident).loyaltrident_setReturnSlot(playerEntity.getActiveHand() == Hand.OFF_HAND ? -1 : playerEntity.getInventory().selectedSlot);
+                            ImpaledTridentEntity trident = createTrident(world, player, stack);
+                            LoyalTrident.of(trident).loyaltrident_setReturnSlot(player.getActiveHand() == Hand.OFF_HAND ? -1 : player.getInventory().selectedSlot);
 
-                            if (playerEntity.getAbilities().creativeMode) {
+                            if (player.getAbilities().creativeMode) {
                                 trident.pickupType = PersistentProjectileEntity.PickupPermission.CREATIVE_ONLY;
                             }
 
                             world.spawnEntity(trident);
                             world.playSoundFromEntity(null, trident, SoundEvents.ITEM_TRIDENT_THROW, SoundCategory.PLAYERS, 1.0F, 1.0F);
-                            if (!playerEntity.getAbilities().creativeMode) {
-                                playerEntity.getInventory().removeOne(stack);
+                            if (!player.getAbilities().creativeMode) {
+                                player.getInventory().removeOne(stack);
                             }
                         }
                     }
 
-                    playerEntity.incrementStat(Stats.USED.getOrCreateStat(this));
+                    player.incrementStat(Stats.USED.getOrCreateStat(this));
                     if (j > 0) {
-                        float f = playerEntity.getYaw();
-                        float g = playerEntity.getPitch();
+                        float f = player.getYaw();
+                        float g = player.getPitch();
                         float h = -MathHelper.sin(f * 0.017453292F) * MathHelper.cos(g * 0.017453292F);
                         float k = -MathHelper.sin(g * 0.017453292F);
                         float l = MathHelper.cos(f * 0.017453292F) * MathHelper.cos(g * 0.017453292F);
@@ -73,11 +72,10 @@ public class ImpaledTridentItem extends TridentItem {
                         h *= n / m;
                         k *= n / m;
                         l *= n / m;
-                        playerEntity.addVelocity(h, k, l);
-                        playerEntity.useRiptide(20);
-                        if (playerEntity.isOnGround()) {
-                            float o = 1.1999999F;
-                            playerEntity.move(MovementType.SELF, new Vec3d(0.0D, 1.1999999284744263D, 0.0D));
+                        player.addVelocity(h, k, l);
+                        player.useRiptide(20);
+                        if (player.isOnGround()) {
+                            player.move(MovementType.SELF, new Vec3d(0.0D, 1.1999999284744263D, 0.0D));
                         }
 
                         SoundEvent soundEvent3;
@@ -89,7 +87,7 @@ public class ImpaledTridentItem extends TridentItem {
                             soundEvent3 = SoundEvents.ITEM_TRIDENT_RIPTIDE_1;
                         }
 
-                        world.playSoundFromEntity(null, playerEntity, soundEvent3, SoundCategory.PLAYERS, 1.0F, 1.0F);
+                        world.playSoundFromEntity(null, player, soundEvent3, SoundCategory.PLAYERS, 1.0F, 1.0F);
                     }
                 }
             }
@@ -102,7 +100,7 @@ public class ImpaledTridentItem extends TridentItem {
 
     public @NotNull ImpaledTridentEntity createTrident(World world, LivingEntity user, ItemStack stack) {
         ImpaledTridentEntity impaledTridentEntity = Objects.requireNonNull(this.type.create(world));
-        impaledTridentEntity.setTridentAttributes(world, user, stack);
+        impaledTridentEntity.setTridentAttributes(stack);
         impaledTridentEntity.setOwner(user);
         impaledTridentEntity.setTridentStack(stack);
         impaledTridentEntity.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, 2.5F, 1.0F);
