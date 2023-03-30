@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import xyz.amymialee.mialeemisc.util.PlayerTargeting;
+import xyz.amymialee.mialeemisc.entities.IPlayerTargeting;
 
 @Mixin(InGameHud.class)
 public class InGameHudMixin extends DrawableHelper {
@@ -29,7 +29,7 @@ public class InGameHudMixin extends DrawableHelper {
     @Inject(method = "render", at = @At("TAIL"))
     private void impaled$renderCrosshair(MatrixStack matrices, float tickDelta, CallbackInfo ci) {
         PlayerEntity player = client.player;
-        if (!(player instanceof PlayerTargeting targeting)) {
+        if (!(player instanceof IPlayerTargeting targeting)) {
             return;
         }
         Entity target = targeting.mialeeMisc$getLastTarget();
