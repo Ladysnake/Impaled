@@ -19,7 +19,7 @@ import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import xyz.amymialee.mialeemisc.util.PlayerTargeting;
+import xyz.amymialee.mialeemisc.entities.IPlayerTargeting;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +35,7 @@ public class ElderTridentEntity extends ImpaledTridentEntity {
     }
 
     public Consumer<ItemStack> getStackFetcher() {
-        return fetchedStacks::add;
+        return this.fetchedStacks::add;
     }
 
     @Override
@@ -45,7 +45,7 @@ public class ElderTridentEntity extends ImpaledTridentEntity {
         }
         if (!this.hasSearchedTarget) {
             if (this.getOwner() != null) {
-                if (this.getOwner() instanceof PlayerTargeting targeting) {
+                if (this.getOwner() instanceof IPlayerTargeting targeting) {
                     this.tridentTarget = targeting.mialeeMisc$getLastTarget();
                 } else if (this.getOwner() instanceof MobEntity mob) {
                     this.tridentTarget = mob.getTarget();
@@ -54,11 +54,11 @@ public class ElderTridentEntity extends ImpaledTridentEntity {
             }
         } else {
             if (!this.hasDealtDamage()) {
-                if (this.tridentTarget != null && tridentTarget.isAlive()) {
-                    Vec3d vec3d = new Vec3d(tridentTarget.getX() - this.getX(), tridentTarget.getEyeY() - this.getY(), tridentTarget.getZ() - this.getZ());
+                if (this.tridentTarget != null && this.tridentTarget.isAlive()) {
+                    Vec3d vec3d = new Vec3d(this.tridentTarget.getX() - this.getX(), this.tridentTarget.getEyeY() - this.getY(), this.tridentTarget.getZ() - this.getZ());
                     this.setVelocity(this.getVelocity().multiply(0.9D).add(vec3d.normalize().multiply(0.25D)));
                 }
-                this.setNoGravity(this.tridentTarget != null && tridentTarget.isAlive());
+                this.setNoGravity(this.tridentTarget != null && this.tridentTarget.isAlive());
             } else {
                 this.setNoGravity(false);
             }
@@ -68,7 +68,7 @@ public class ElderTridentEntity extends ImpaledTridentEntity {
         List<Entity> list = this.world.getOtherEntities(this, box);
         for (Entity entity : list) {
             if (entity instanceof ItemEntity itemEntity) {
-                fetchedStacks.add(itemEntity.getStack());
+                this.fetchedStacks.add(itemEntity.getStack());
                 itemEntity.discard();
             }
         }
@@ -98,12 +98,12 @@ public class ElderTridentEntity extends ImpaledTridentEntity {
         super.onPlayerCollision(player);
         Entity entity = this.getOwner();
         if (entity == null || entity.getUuid() == player.getUuid()) {
-            for (ItemStack stack : fetchedStacks) {
+            for (ItemStack stack : this.fetchedStacks) {
                 if (!player.getInventory().insertStack(stack)) {
                     this.dropStack(stack);
                 }
             }
-            fetchedStacks.clear();
+            this.fetchedStacks.clear();
         }
     }
 

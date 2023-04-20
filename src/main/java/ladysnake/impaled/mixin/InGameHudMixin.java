@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import xyz.amymialee.mialeemisc.util.PlayerTargeting;
+import xyz.amymialee.mialeemisc.entities.IPlayerTargeting;
 
 @Mixin(InGameHud.class)
 public class InGameHudMixin extends DrawableHelper {
@@ -28,8 +28,8 @@ public class InGameHudMixin extends DrawableHelper {
 
     @Inject(method = "render", at = @At("TAIL"))
     private void impaled$renderCrosshair(MatrixStack matrices, float tickDelta, CallbackInfo ci) {
-        PlayerEntity player = client.player;
-        if (!(player instanceof PlayerTargeting targeting)) {
+        PlayerEntity player = this.client.player;
+        if (!(player instanceof IPlayerTargeting targeting)) {
             return;
         }
         Entity target = targeting.mialeeMisc$getLastTarget();
@@ -47,7 +47,7 @@ public class InGameHudMixin extends DrawableHelper {
         if (interactionManager == null || interactionManager.getCurrentGameMode() == GameMode.SPECTATOR) {
             return;
         }
-        if (client.world == null) {
+        if (this.client.world == null) {
             return;
         }
         for (int i = 0; i < 4; i++) {
@@ -55,7 +55,7 @@ public class InGameHudMixin extends DrawableHelper {
                     target.getX() + (MathHelper.sin((target.age + tickDelta) * 0.75f + i * 45) * target.getWidth() * 1.2),
                     target.getBodyY(0.5f),
                     target.getZ() + (MathHelper.cos((target.age + tickDelta) * 0.75f + i * 45) * target.getWidth() * 1.2));
-            client.world.addParticle(ParticleTypes.BUBBLE, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 0.0, 0.0, 0.0);
+            this.client.world.addParticle(ParticleTypes.BUBBLE, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 0.0, 0.0, 0.0);
         }
     }
 }
