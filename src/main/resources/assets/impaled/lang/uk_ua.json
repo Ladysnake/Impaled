@@ -7,7 +7,7 @@
   "item.impaled.elder_trident": "Стародавній тризубець",
   "item.impaled.atlan": "Тризубець Атлана",
   "item.impaled.maelstrom": "Вихор",
-  "death.attack.hellfork_heat": "%1$s став занадто гарячим",
+  "death.attack.hellfork_heat": "%1$s погарячився",
   "impaled:tooltip.owned_by": "(належить %s)",
-  "impaled:trident_recall_fail": "Помилки при виклику ваших тризубців"
+  "impaled:trident_recall_fail": "Помилка при виклику ваших тризубців"
 }
