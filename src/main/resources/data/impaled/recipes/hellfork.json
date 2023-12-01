@@ -1,12 +1,16 @@
 {
-  "type": "minecraft:smithing",
+  "type": "minecraft:smithing_transform",
   "base": {
     "item": "minecraft:trident"
   },
   "addition": {
     "item": "impaled:ancient_trident"
   },
+
   "result": {
-    "item": "impaled:hellfork"
+    "item": "imapled:hellfork"
+  },
+  "template": {
+    "item": "minecraft:netherite_upgrade_smithing_template"
   }
 }

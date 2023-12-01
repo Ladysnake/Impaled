@@ -31,8 +31,8 @@
     "sincereloyalty.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.13.3",
-    "java": ">=17",
+    "fabricloader": ">=0.15.0",
+    "java": ">=1.20",
     "fabric": ">=0.48.0"
   }
 }

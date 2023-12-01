@@ -8,5 +8,9 @@
   },
   "result": {
     "item": "impaled:atlan"
+  
+  },
+  "template": {
+    "item": "minecraft:netherite_upgrade_smithing_template"
   }
 }

@@ -1,0 +1,23 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+      "#B#",
+      "#S#",
+      "###"
+    ],
+    "key": {
+      "#": {
+        "item": "minecraft:gold_ingot"
+      },
+      "S": {
+        "item": "impaled:atlan_upgrade_smithing_template"
+      },
+       "B": {
+        "item": "minecraft:enchanted_golden_apple"
+      }
+    },
+    "result": {
+      "count":2, 
+      "item": "impaled:atlan_upgrade_smithing_template"
+    }
+}
