@@ -7,7 +7,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 
 public class ImpaledEntityTypes {
     public static EntityType<PitchforkEntity> PITCHFORK;
@@ -27,7 +28,7 @@ public class ImpaledEntityTypes {
     }
 
     private static <T extends Entity> EntityType<T> register(String s, EntityType<T> bombEntityType) {
-        return Registry.register(Registry.ENTITY_TYPE, Impaled.MODID + ":" + s, bombEntityType);
+        return Registry.register(Registries.ENTITY_TYPE, Impaled.MODID + ":" + s, bombEntityType);
     }
 
     private static <T extends Entity> EntityType<T> createEntityType(EntityType.EntityFactory<T> factory) {

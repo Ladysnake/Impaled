@@ -51,7 +51,7 @@ public class ImpaledTridentItemRenderer implements BuiltinItemRendererRegistry.D
         MinecraftClient mc = MinecraftClient.getInstance();
         this.itemRenderer = mc.getItemRenderer();
         this.tridentModel = new ImpaledTridentEntityModel(mc.getEntityModelLoader().getModelPart(this.modelLayer));
-        this.inventoryTridentModel = mc.getBakedModelManager().getModel(new ModelIdentifier(this.tridentId + "_in_inventory", "inventory"));
+        this.inventoryTridentModel = mc.getBakedModelManager().getModel(new ModelIdentifier(this.tridentId.getNamespace(), this.tridentId.getPath() + "_in_inventory", "inventory"));
     }
 
     @Override
