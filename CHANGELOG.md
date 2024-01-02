@@ -1,19 +1,38 @@
-# Impaled - Changelog:
+------------------------------------------------------
+Impaled 1.2.0 - 1.19.3
+------------------------------------------------------
+- Updated to Minecraft 1.19.3, courtesy of SzczurekYT
+- Reworked the Elder Trident, courtesy of AmyMialee
+- Fixed the Maelstrom's missing name
+- Added Chinese localization (thanks Rad233)
+- Added Turkish localization (thanks Hexasan)
+- Added Ukrainian localization (thanks unroman)
+- Added Russian localization (thanks Waifuri)
 
-### Impaled 1.1.4 - 1.19
+------------------------------------------------------
+Impaled 1.1.4 - 1.19
+------------------------------------------------------
 - Updated to Minecraft 1.19
 
-### Impaled 1.1.3 - 1.18.2
+------------------------------------------------------
+Impaled 1.1.3 - 1.18.2
+------------------------------------------------------
 - Fixed Hellfork and Soulforks setting targets on fire even if their shield were up
 - Hellforks and Soulforks will now set targets on fire for 8 seconds instead of a random time between 4 and 8 seconds
 
-### Impaled 1.1.2 - 1.18.2
+------------------------------------------------------
+Impaled 1.1.2 - 1.18.2
+------------------------------------------------------
 - Reduced mining fatigue given by the channeling elder trident to 10s
 
-### Impaled 1.1.1 - 1.18.2
+------------------------------------------------------
+Impaled 1.1.1 - 1.18.2
+------------------------------------------------------
 - Updated to Minecraft 1.18.2
 
-### Impaled 1.1 - 1.18.1
+------------------------------------------------------
+Impaled 1.1 - 1.18.1
+------------------------------------------------------
 - Removed the heated Hellfork
 - Introduced an alternative to it: the Soulfork
   - Use a Hellfork on a soul campfire, soul lantern or soul torch to turn the Hellfork in a Soulfork and the soul block used into its normal fire variant
@@ -32,5 +51,7 @@ Introduces heated Hellfork balance changes:
 ### Impaled 1.0.2 - 1.18
 - Updated to Minecraft 1.18
 
-### Impaled 1.0.1 - 1.17
+------------------------------------------------------
+Impaled 1.0.1 - 1.17
+------------------------------------------------------
 - Updated to Minecraft 1.17
