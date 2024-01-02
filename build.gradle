@@ -78,6 +78,7 @@ dependencies {
 		exclude group: "net.fabricmc"
 	}
 	modCompileOnly(libs.enchancement)
+	modCompileOnly(libs.cca.base)
 	modRuntimeOnly(libs.bundles.enchancement) {
 		exclude group: "net.fabricmc.fabric-api"
 	}

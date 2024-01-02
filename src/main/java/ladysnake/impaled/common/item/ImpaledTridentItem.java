@@ -1,6 +1,7 @@
 package ladysnake.impaled.common.item;
 
 import ladysnake.impaled.common.entity.ImpaledTridentEntity;
+import ladysnake.impaled.compat.EnchancementCompat;
 import ladysnake.sincereloyalty.LoyalTrident;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityType;
@@ -99,13 +100,14 @@ public class ImpaledTridentItem extends TridentItem {
     }
 
     public @NotNull ImpaledTridentEntity createTrident(World world, LivingEntity user, ItemStack stack) {
-        ImpaledTridentEntity impaledTridentEntity = Objects.requireNonNull(this.type.create(world));
-        impaledTridentEntity.setTridentAttributes(stack);
-        impaledTridentEntity.setOwner(user);
-        impaledTridentEntity.setTridentStack(stack);
-        impaledTridentEntity.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, 2.5F, 1.0F);
-        impaledTridentEntity.updatePosition(user.getX(), user.getEyeY() - 0.1, user.getZ());
-        return impaledTridentEntity;
+        ImpaledTridentEntity trident = Objects.requireNonNull(this.type.create(world));
+        trident.setTridentAttributes(stack);
+        trident.setOwner(user);
+        trident.setTridentStack(stack);
+        trident.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, 2.5F, 1.0F);
+        trident.updatePosition(user.getX(), user.getEyeY() - 0.1, user.getZ());
+        EnchancementCompat.tryEnableEnchantments(trident, user, stack);
+        return trident;
     }
 
     @Override

@@ -2,6 +2,7 @@ package ladysnake.impaled.client.render.entity;
 
 import ladysnake.impaled.client.render.entity.model.ImpaledTridentEntityModel;
 import ladysnake.impaled.common.entity.ImpaledTridentEntity;
+import ladysnake.impaled.compat.EnchancementCompat;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.OverlayTexture;
@@ -27,14 +28,24 @@ public class ImpaledTridentEntityRenderer extends EntityRenderer<ImpaledTridentE
         this.texture = texture;
     }
 
-    public void render(ImpaledTridentEntity impaledTridentEntity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
-        matrixStack.push();
-        matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(MathHelper.lerp(g, impaledTridentEntity.prevYaw, impaledTridentEntity.getYaw()) - 90.0F));
-        matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(MathHelper.lerp(g, impaledTridentEntity.prevPitch, impaledTridentEntity.getPitch()) + 90.0F));
-        VertexConsumer vertexConsumer = ItemRenderer.getDirectItemGlintConsumer(vertexConsumerProvider, this.model.getLayer(this.getTexture(impaledTridentEntity)), false, impaledTridentEntity.isEnchanted());
-        this.model.render(matrixStack, vertexConsumer, i, OverlayTexture.DEFAULT_UV, 1.0F, 1.0F, 1.0F, 1.0F);
-        matrixStack.pop();
-        super.render(impaledTridentEntity, f, g, matrixStack, vertexConsumerProvider, i);
+    public void render(ImpaledTridentEntity trident, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
+        if (EnchancementCompat.tryRenderLeechTrident(
+                trident,
+                matrices,
+                vertexConsumers,
+                model,
+                getTexture(trident),
+                light,
+                () -> super.render(trident, yaw, tickDelta, matrices, vertexConsumers, light)
+        )) return;
+
+        matrices.push();
+        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(MathHelper.lerp(tickDelta, trident.prevYaw, trident.getYaw()) - 90.0F));
+        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(MathHelper.lerp(tickDelta, trident.prevPitch, trident.getPitch()) + 90.0F));
+        VertexConsumer vertexConsumer = ItemRenderer.getDirectItemGlintConsumer(vertexConsumers, this.model.getLayer(this.getTexture(trident)), false, trident.isEnchanted());
+        this.model.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV, 1.0F, 1.0F, 1.0F, 1.0F);
+        matrices.pop();
+        super.render(trident, yaw, tickDelta, matrices, vertexConsumers, light);
     }
 
     public Identifier getTexture(ImpaledTridentEntity impaledTridentEntity) {
