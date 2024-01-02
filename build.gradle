@@ -11,6 +11,7 @@ version = project.mod_version
 group = project.maven_group
 
 chenille {
+	javaVersion = 17
 	configurePublishing {
 		withCurseforgeRelease()
 		withGithubRelease()
@@ -41,8 +42,22 @@ repositories {
 			includeGroupByRegex "com\\.github\\..*"
 		}
 	}
+	maven {
+		name "modrinth"
+		url "https://api.modrinth.com/maven"
+		content {
+			includeGroup('maven.modrinth')
+		}
+	}
+	// modmenu
+	maven {
+		name = 'TerraformersMC'
+		url = 'https://maven.terraformersmc.com/'
+	}
 	// MialeeMisc
 	maven { url "https://maven.willbl.dev/releases" }
+	// bookshelf
+	maven { url 'https://maven.blamejared.com' }
 }
 
 dependencies {
@@ -54,8 +69,17 @@ dependencies {
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-	modImplementation include ("xyz.amymialee:mialeemisc:${project.mialeemisc_version}") {
+	modImplementation(libs.mialeemisc) {
 		exclude group: "dev.emi"
+	}
+	include (libs.mialeemisc)
+
+	modRuntimeOnly(libs.modmenu) {
+		exclude group: "net.fabricmc"
+	}
+	modCompileOnly(libs.enchancement)
+	modRuntimeOnly(libs.bundles.enchancement) {
+		exclude group: "net.fabricmc.fabric-api"
 	}
 }
 

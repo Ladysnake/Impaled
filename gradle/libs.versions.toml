@@ -1,0 +1,30 @@
+[versions]
+cca = "5.2.2"
+enchancement = "1.20-8"
+mialeemisc = "1.0.39-SNAPSHOT"
+midnightLib = "1.4.1-fabric"
+modmenu = "7.2.2"
+stepHeightAttribute = "25dabcdad7"
+tooltipFix = "1.1.1-1.20"
+
+[libraries]
+cca-base = { module = "dev.onyxstudios.cardinal-components-api:cardinal-components-base", version.ref = "cca" }
+cca-entity = { module = "dev.onyxstudios.cardinal-components-api:cardinal-components-entity", version.ref = "cca" }
+cca-world = { module = "dev.onyxstudios.cardinal-components-api:cardinal-components-world", version.ref = "cca" }
+enchancement = { module = "maven.modrinth:enchancement", version.ref = "enchancement" }
+mialeemisc = { module = "xyz.amymialee:mialeemisc", version.ref = "mialeemisc" }
+midnightLib = { module = "maven.modrinth:midnightlib", version.ref = "midnightLib" }
+modmenu = { module = "com.terraformersmc:modmenu", version.ref = "modmenu"}
+stepHeightAttribute = { module = "com.github.emilyploszaj:step-height-entity-attribute", version.ref = "stepHeightAttribute" }
+tooltipFix = { module = "maven.modrinth:tooltipfix", version.ref = "tooltipFix" }
+
+[bundles]
+enchancement = [
+    "cca-base",
+    "cca-entity",
+    "cca-world",
+    "enchancement",
+    "midnightLib",
+    "stepHeightAttribute",
+    "tooltipFix"
+]
