@@ -15,7 +15,7 @@ public final class BetterLoyalty {
             TridentRecaller caller = (TridentRecaller) player;
 
             if (caller.getCurrentRecallStatus() == TridentRecaller.RecallStatus.RECALLING) {
-                player.world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ITEM_TRIDENT_RETURN, player.getSoundCategory(), 0.7f, 0.5f);
+                player.getWorld().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ITEM_TRIDENT_RETURN, player.getSoundCategory(), 0.7f, 0.5f);
             }
 
             caller.updateRecallStatus(TridentRecaller.RecallStatus.NONE);

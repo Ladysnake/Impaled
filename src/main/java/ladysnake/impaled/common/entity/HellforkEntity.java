@@ -30,8 +30,8 @@ public class HellforkEntity extends ImpaledTridentEntity {
     public void tick() {
         super.tick();
 
-        if (this.isSubmergedInWater() && this.world.isClient() && this.random.nextInt(5) == 0) {
-            this.world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, this.getX() + random.nextGaussian() / 10, this.getY() + random.nextGaussian() / 10, this.getZ() + random.nextGaussian() / 10, 0, this.random.nextFloat(), 0);
+        if (this.isSubmergedInWater() && this.getWorld().isClient() && this.random.nextInt(5) == 0) {
+            this.getWorld().addParticle(ParticleTypes.BUBBLE_COLUMN_UP, this.getX() + random.nextGaussian() / 10, this.getY() + random.nextGaussian() / 10, this.getZ() + random.nextGaussian() / 10, 0, this.random.nextFloat(), 0);
         }
     }
 }

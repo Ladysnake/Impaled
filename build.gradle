@@ -20,6 +20,20 @@ chenille {
 }
 
 repositories {
+	maven {
+		url "https://maven.ladysnake.org/releases"
+		content {
+			includeGroup("org.ladysnake")
+			includeGroupByRegex("dev\\.onyxstudios\\..*")
+		}
+	}
+	maven {
+		url "https://maven.ladysnake.org/snapshots"
+		content {
+			includeGroup("org.ladysnake")
+			includeGroup("xyz.amymialee")
+		}
+	}
 	// MixinExtras
 	maven {
 		url "https://jitpack.io"

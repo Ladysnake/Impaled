@@ -51,7 +51,7 @@ public abstract class ItemEntityMixin extends Entity {
     @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
     private void tickItem(CallbackInfo ci) {
         // Only spawn a trident if it has a pickup delay (usually sign of it being dropped by a player)
-        if (!this.world.isClient && this.cannotPickup()) {
+        if (!this.getWorld().isClient && this.cannotPickup()) {
             if (this.veryLoyalTrident == null) {
                 this.veryLoyalTrident = LoyalTrident.hasTrueOwner(this.getStack());
             }

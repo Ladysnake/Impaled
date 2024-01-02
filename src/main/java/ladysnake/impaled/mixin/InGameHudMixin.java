@@ -2,10 +2,9 @@ package ladysnake.impaled.mixin;
 
 import ladysnake.impaled.common.item.ElderTridentItem;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -23,11 +22,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import xyz.amymialee.mialeemisc.entities.IPlayerTargeting;
 
 @Mixin(InGameHud.class)
-public class InGameHudMixin extends DrawableHelper {
+public class InGameHudMixin {
     @Shadow @Final private MinecraftClient client;
 
     @Inject(method = "render", at = @At("TAIL"))
-    private void impaled$renderCrosshair(MatrixStack matrices, float tickDelta, CallbackInfo ci) {
+    private void impaled$renderCrosshair(DrawContext context, float tickDelta, CallbackInfo ci) {
         PlayerEntity player = this.client.player;
         if (!(player instanceof IPlayerTargeting targeting)) {
             return;

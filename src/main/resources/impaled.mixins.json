@@ -9,6 +9,7 @@
     "impaling.EntityRendererMixin"
   ],
   "mixins": [
+    "DamageSourcesMixin",
     "EnchantmentTargetMixin",
     "EntityMixin",
     "LivingEntityMixin",

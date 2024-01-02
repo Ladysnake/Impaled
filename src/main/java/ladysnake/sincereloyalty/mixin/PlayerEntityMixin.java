@@ -25,8 +25,8 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
@@ -52,7 +52,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements TridentR
     public void updateRecallStatus(RecallStatus recallingTrident) {
         if (this.recallingTrident != recallingTrident) {
             this.recallingTrident = recallingTrident;
-            if (!this.world.isClient) {
+            if (!this.getWorld().isClient) {
                 PacketByteBuf res = PacketByteBufs.create();
                 res.writeInt(this.getId());
                 res.writeEnumConstant(recallingTrident);

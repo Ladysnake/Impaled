@@ -76,7 +76,7 @@ public abstract class SmithingScreenHandlerMixin extends ForgingScreenHandler {
                     EnchantmentHelper.set(enchantments, result);
                     NbtCompound loyaltyData = result.getOrCreateSubNbt(LoyalTrident.MOD_NBT_KEY);
                     loyaltyData.putUuid(LoyalTrident.TRIDENT_OWNER_NBT_KEY, this.player.getUuid());
-                    loyaltyData.putString(LoyalTrident.OWNER_NAME_NBT_KEY, this.player.getEntityName());
+                    loyaltyData.putString(LoyalTrident.OWNER_NAME_NBT_KEY, this.player.getName().getString());
                     return result;
                 }
             }

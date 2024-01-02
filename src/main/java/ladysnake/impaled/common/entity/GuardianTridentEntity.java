@@ -51,7 +51,7 @@ public class GuardianTridentEntity extends ElderTridentEntity {
             }
 
             for (int i = 0; i < 20; i++) {
-                this.world.addParticle(ParticleTypes.BUBBLE_POP, this.getX() + this.random.nextGaussian() / 10, this.getY() + this.random.nextGaussian() / 10, this.getZ() + this.random.nextGaussian() / 10, this.random.nextGaussian() / 10, Math.abs(this.random.nextGaussian() / 10), this.random.nextGaussian() / 10);
+                this.getWorld().addParticle(ParticleTypes.BUBBLE_POP, this.getX() + this.random.nextGaussian() / 10, this.getY() + this.random.nextGaussian() / 10, this.getZ() + this.random.nextGaussian() / 10, this.random.nextGaussian() / 10, Math.abs(this.random.nextGaussian() / 10), this.random.nextGaussian() / 10);
             }
 
             this.setNoGravity(false);
@@ -65,7 +65,7 @@ public class GuardianTridentEntity extends ElderTridentEntity {
         if (timeSinceTracking >= 40) {
             Vec3d rotationVec = this.getVelocity().normalize();
             Box box = new Box(this.getX() - 1, this.getY() - 1, this.getZ() - 1, this.getX() + 1, this.getY() + 1, this.getZ() + 1).expand(96 * rotationVec.getX(), 96 * rotationVec.getY(), 96 * rotationVec.getZ());
-            List<LivingEntity> possibleTargets = world.getEntitiesByClass(LivingEntity.class, box, (entity) -> entity.canHit() && entity != this.getOwner() && !(entity instanceof TameableEntity && ((TameableEntity) entity).isTamed()));
+            List<LivingEntity> possibleTargets = getWorld().getEntitiesByClass(LivingEntity.class, box, (entity) -> entity.canHit() && entity != this.getOwner() && !(entity instanceof TameableEntity && ((TameableEntity) entity).isTamed()));
             List<LivingEntity> validTargets = new ArrayList<>();
 
             double max = 0.3;

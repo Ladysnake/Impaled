@@ -1,6 +1,5 @@
 package ladysnake.impaled.common.item;
 
-import ladysnake.impaled.common.damage.HellforkHeatDamageSource;
 import ladysnake.impaled.common.entity.ImpaledTridentEntity;
 import ladysnake.impaled.common.init.ImpaledItems;
 import net.minecraft.block.BlockState;
@@ -43,7 +42,7 @@ public class HellforkItem extends ImpaledTridentItem {
 
         if (user instanceof PlayerEntity player && user.isUsingRiptide() && stack.getItem() == ImpaledItems.SOULFORK) {
             if (player.experienceLevel <= 0) {
-                user.damage(HellforkHeatDamageSource.HELLFORK_HEAT, 2f);
+                user.damage(world.getDamageSources().impaledSources().hellforkHeat(), 2f);
                 user.playSound(SoundEvents.ENTITY_PLAYER_HURT, 1.0f, 1.0f);
             } else {
                 player.addExperienceLevels(-1);

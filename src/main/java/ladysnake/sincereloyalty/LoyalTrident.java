@@ -78,22 +78,22 @@ public interface LoyalTrident {
         if (loyaltyData != null) {
             UUID ownerUuid = loyaltyData.getUuid(TRIDENT_OWNER_NBT_KEY);
             if (ownerUuid != null) {
-                PlayerEntity owner = thrower.world.getPlayerByUuid(ownerUuid);
+                PlayerEntity owner = thrower.getWorld().getPlayerByUuid(ownerUuid);
                 if (owner != null) {
                     TridentEntity trident;
 
                     // Yes it is fine to call Set<TridentItem>#contains(Item)
                     //noinspection SuspiciousMethodCalls
                     if (ImpaledItems.ALL_TRIDENTS.contains(tridentStack.getItem())) {
-                        trident = ((ImpaledTridentItem) tridentStack.getItem()).createTrident(thrower.world, owner, tridentStack);
+                        trident = ((ImpaledTridentItem) tridentStack.getItem()).createTrident(thrower.getWorld(), owner, tridentStack);
                     } else {
-                        trident = new TridentEntity(thrower.world, owner, tridentStack);
+                        trident = new TridentEntity(thrower.getWorld(), owner, tridentStack);
                     }
 
                     trident.pickupType = PersistentProjectileEntity.PickupPermission.ALLOWED;
                     trident.setVelocity(thrower.getVelocity());
                     trident.copyPositionAndRotation(thrower);
-                    thrower.world.spawnEntity(trident);
+                    thrower.getWorld().spawnEntity(trident);
                     return trident;
                 }
             }

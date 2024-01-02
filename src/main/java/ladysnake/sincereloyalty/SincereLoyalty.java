@@ -63,7 +63,7 @@ public final class SincereLoyalty implements ModInitializer {
                 return false;
             }
 
-            LoyalTridentStorage loyalTridentStorage = LoyalTridentStorage.get(player.getWorld());
+            LoyalTridentStorage loyalTridentStorage = LoyalTridentStorage.get(player.getServerWorld());
             TridentRecaller.RecallStatus newRecallStatus;
             if (loyalTridentStorage.recallTridents(player)) {
                 newRecallStatus = TridentRecaller.RecallStatus.RECALLING;
@@ -79,7 +79,7 @@ public final class SincereLoyalty implements ModInitializer {
             TridentRecaller.RecallStatus requested = buf.readEnumConstant(TridentRecaller.RecallStatus.class);
 
             server.execute(() -> {
-                LoyalTridentStorage loyalTridentStorage = LoyalTridentStorage.get(player.getWorld());
+                LoyalTridentStorage loyalTridentStorage = LoyalTridentStorage.get(player.getServerWorld());
                 TridentRecaller.RecallStatus currentRecallStatus = ((TridentRecaller) player).getCurrentRecallStatus();
                 TridentRecaller.RecallStatus newRecallStatus;
 

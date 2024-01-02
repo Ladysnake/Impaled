@@ -34,5 +34,12 @@
     "fabricloader": ">=0.15.0",
     "java": ">=17",
     "fabric": ">=0.48.0"
+  },
+  "custom": {
+    "loom:injected_interfaces": {
+      "net/minecraft/class_8109": [
+        "ladysnake/impaled/common/damage/DamageSourcesExt"
+      ]
+    }
   }
 }
