@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#T#",
+    "#C#",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:diamond"
+    },
+    "C": {
+      "tag": "minecraft:coral_blocks"
+    },
+    "T": {
+      "item": "impaled:loyalty_upgrade_smithing_template"
+    }
+  },
+  "result": {
+    "item": "impaled:loyalty_upgrade_smithing_template",
+    "count": 2
+  }
+}

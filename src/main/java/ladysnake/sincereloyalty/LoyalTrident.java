@@ -19,7 +19,6 @@ package ladysnake.sincereloyalty;
 
 import ladysnake.impaled.common.init.ImpaledItems;
 import ladysnake.impaled.common.item.ImpaledTridentItem;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
@@ -60,7 +59,7 @@ public interface LoyalTrident {
     }
 
     static boolean hasTrueOwner(ItemStack tridentStack) {
-        if (tridentStack.isIn(SincereLoyalty.TRIDENTS) && EnchantmentHelper.getLoyalty(tridentStack) > 0) {
+        if (tridentStack.isIn(SincereLoyalty.TRIDENTS) && LoyaltyBindingRecipe.isLoyalEnough(tridentStack)) {
             NbtCompound loyaltyNbt = tridentStack.getSubNbt(MOD_NBT_KEY);
             return loyaltyNbt != null && loyaltyNbt.containsUuid(TRIDENT_OWNER_NBT_KEY);
         }

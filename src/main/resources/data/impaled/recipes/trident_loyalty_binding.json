@@ -1,0 +1,12 @@
+{
+  "type": "impaled:loyalty_binding",
+  "addition": {
+    "item": "minecraft:echo_shard"
+  },
+  "base": {
+    "tag": "impaled:tridents"
+  },
+  "template": {
+    "item": "impaled:loyalty_upgrade_smithing_template"
+  }
+}

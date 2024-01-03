@@ -17,6 +17,7 @@
  */
 package ladysnake.sincereloyalty.mixin.client;
 
+import ladysnake.impaled.compat.EnchancementCompat;
 import ladysnake.sincereloyalty.LoyalTrident;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.enchantment.Enchantment;
@@ -25,6 +26,7 @@ import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -64,6 +66,14 @@ public abstract class ItemStackMixin {
 
                 line.append(Text.literal(" ")).append(Text.translatable("impaled:tooltip.owned_by", impaled$trueOwnerName).formatted(Formatting.DARK_GRAY));
             }
+            impaled$trueOwnerName = null;
+        }
+    }
+
+    @Inject(method = "appendEnchantments", at = @At("RETURN"))
+    private static void appendEnchancementLoyalty(List<Text> tooltip, NbtList enchantments, CallbackInfo ci) {
+        if (EnchancementCompat.areTridentsLoyal() && impaled$trueOwnerName != null) {
+            tooltip.add(Text.translatable("impaled:tooltip.owned_by_full", impaled$trueOwnerName).formatted(Formatting.GOLD));
             impaled$trueOwnerName = null;
         }
     }

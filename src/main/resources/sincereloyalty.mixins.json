@@ -5,13 +5,14 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "AnvilScreenHandlerMixin",
+    "ForgingScreenHandlerAccessor",
+    "ForgingScreenHandlerInputInventoryAccessor",
     "ItemEntityMixin",
     "ItemMixin",
     "PlayerEntityMixin",
     "PlayerInventoryMixin",
     "ProjectileAccessor",
     "ServerPlayNetworkHandlerMixin",
-    "SmithingScreenHandlerMixin",
     "TridentEntityMixin",
     "TridentItemMixin"
   ],
