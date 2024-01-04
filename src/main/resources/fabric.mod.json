@@ -40,6 +40,12 @@
       "net/minecraft/class_8109": [
         "org/ladysnake/impaled/common/damage/DamageSourcesExt"
       ]
+    },
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.ladysnake.org",
+        "modmenu.wiki": "https://ladysnake.org/wiki/impaled"
+      }
     }
   }
 }
