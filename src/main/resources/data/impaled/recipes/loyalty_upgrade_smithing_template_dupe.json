@@ -10,7 +10,7 @@
       "item": "minecraft:diamond"
     },
     "C": {
-      "tag": "minecraft:coral_blocks"
+      "tag": "c:coral_blocks"
     },
     "T": {
       "item": "impaled:loyalty_upgrade_smithing_template"

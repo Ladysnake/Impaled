@@ -10,7 +10,7 @@
       "item": "minecraft:diamond"
     },
     "C": {
-      "tag": "minecraft:coral_blocks"
+      "tag": "c:coral_blocks"
     },
     "H": {
       "item": "minecraft:heart_of_the_sea"
