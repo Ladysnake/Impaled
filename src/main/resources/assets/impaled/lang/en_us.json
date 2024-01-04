@@ -15,5 +15,10 @@
   "item.impaled.smithing_template.loyalty_upgrade.applies_to": "Loyal Tridents",
   "item.impaled.smithing_template.loyalty_upgrade.base_slot_description": "Add a loyal trident",
   "item.impaled.smithing_template.loyalty_upgrade.ingredients": "Echo Shard",
-  "upgrade.impaled.loyalty_upgrade": "Loyalty Upgrade"
+  "upgrade.impaled.loyalty_upgrade": "Loyalty Upgrade",
+  "item.impaled.smithing_template.trident_upgrade.additions_slot_description": "Add enchanted apple, guardian eye, or ancient trident",
+  "item.impaled.smithing_template.trident_upgrade.applies_to": "Tridents",
+  "item.impaled.smithing_template.trident_upgrade.base_slot_description": "Add a trident",
+  "item.impaled.smithing_template.trident_upgrade.ingredients": "Enchanted Apple, Guardian Eye, or Ancient Trident",
+  "upgrade.impaled.trident_upgrade": "Trident Upgrade"
 }

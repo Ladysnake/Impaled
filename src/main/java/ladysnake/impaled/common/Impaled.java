@@ -16,6 +16,10 @@ public class Impaled implements ModInitializer {
 
     private static final Identifier BASTION_TREASURE_CHEST_LOOT_TABLE_ID = new Identifier("minecraft", "chests/bastion_treasure");
 
+    public static Identifier id(String path) {
+        return new Identifier(MODID, path);
+    }
+
     @Override
     public void onInitialize() {
         ImpaledEntityTypes.init();

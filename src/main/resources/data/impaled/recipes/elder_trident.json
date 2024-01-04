@@ -1,5 +1,8 @@
 {
-  "type": "minecraft:smithing",
+  "type": "minecraft:smithing_transform",
+  "template": {
+    "item": "impaled:trident_upgrade_smithing_template"
+  },
   "base": {
     "item": "minecraft:trident"
   },
