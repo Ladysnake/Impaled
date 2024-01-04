@@ -18,12 +18,12 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "ladysnake.impaled.common.Impaled",
-      "ladysnake.sincereloyalty.SincereLoyalty"
+      "org.ladysnake.impaled.common.Impaled",
+      "org.ladysnake.sincereloyalty.SincereLoyalty"
     ],
     "client": [
-      "ladysnake.impaled.client.ImpaledClient",
-      "ladysnake.sincereloyalty.SincereLoyaltyClient::INSTANCE"
+      "org.ladysnake.impaled.client.ImpaledClient",
+      "org.ladysnake.sincereloyalty.SincereLoyaltyClient::INSTANCE"
     ]
   },
   "mixins": [
@@ -38,7 +38,7 @@
   "custom": {
     "loom:injected_interfaces": {
       "net/minecraft/class_8109": [
-        "ladysnake/impaled/common/damage/DamageSourcesExt"
+        "org/ladysnake/impaled/common/damage/DamageSourcesExt"
       ]
     }
   }
