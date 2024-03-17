@@ -2,7 +2,7 @@ package org.ladysnake.impaled.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import ladysnake.impaled.common.item.MaelstromItem;
+import org.ladysnake.impaled.common.item.MaelstromItem;
 import net.minecraft.enchantment.EfficiencyEnchantment;
 import net.minecraft.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
