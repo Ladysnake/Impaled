@@ -10,6 +10,7 @@
   ],
   "mixins": [
     "DamageSourcesMixin",
+    "EfficiencyEnchantmentMixin",
     "EnchantmentTargetMixin",
     "EntityMixin",
     "LivingEntityMixin",
