@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 
 
 @Mixin(EfficiencyEnchantment.class)
-public class EfficiencyMixin {
+public class EfficiencyEnchantmentMixin {
 
     @WrapOperation(method = "isAcceptableItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/enchantment/Enchantment;isAcceptableItem(Lnet/minecraft/item/ItemStack;)Z"))
     private boolean maelstromAccept(EfficiencyEnchantment instance, ItemStack stack, Operation<Boolean> original){
