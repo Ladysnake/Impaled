@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "impaled:item/trident_upgrade_smithing_template"
+  }
+}
