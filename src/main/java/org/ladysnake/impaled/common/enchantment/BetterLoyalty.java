@@ -3,15 +3,14 @@ package org.ladysnake.impaled.common.enchantment;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundEvents;
-import org.ladysnake.sincereloyalty.LoyalTrident;
+import org.ladysnake.sincereloyalty.SLDataComponents;
 import org.ladysnake.sincereloyalty.TridentRecaller;
+
+import java.util.Objects;
 
 public final class BetterLoyalty {
     public static boolean tryInsertTrident(ItemStack stack, PlayerEntity player) {
-        NbtCompound tag = stack.getSubNbt(LoyalTrident.MOD_NBT_KEY);
-        if (tag != null) {
             TridentRecaller caller = (TridentRecaller) player;
 
             if (caller.getCurrentRecallStatus() == TridentRecaller.RecallStatus.RECALLING) {
@@ -20,9 +19,9 @@ public final class BetterLoyalty {
 
             caller.updateRecallStatus(TridentRecaller.RecallStatus.NONE);
 
-            if (tag.contains(LoyalTrident.RETURN_SLOT_NBT_KEY)) {
-                int preferredSlot = tag.getInt(LoyalTrident.RETURN_SLOT_NBT_KEY);
-                tag.remove(LoyalTrident.RETURN_SLOT_NBT_KEY);
+            if (stack.contains(SLDataComponents.RETURN_SLOT)) {
+                int preferredSlot = Objects.requireNonNull(stack.get(SLDataComponents.RETURN_SLOT));
+                stack.remove(SLDataComponents.RETURN_SLOT);
                 if (preferredSlot == -1) {
                     if (player.getOffHandStack().isEmpty()) {
                         player.equipStack(EquipmentSlot.OFFHAND, stack.copy());
@@ -34,7 +33,6 @@ public final class BetterLoyalty {
                     return true;
                 }
             }
-        }
         return false;
     }
 }

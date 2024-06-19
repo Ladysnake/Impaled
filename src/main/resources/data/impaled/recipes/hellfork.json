@@ -10,6 +10,6 @@
     "item": "impaled:ancient_trident"
   },
   "result": {
-    "item": "impaled:hellfork"
+    "id": "impaled:hellfork"
   }
 }

@@ -14,10 +14,11 @@
     "ProjectileAccessor",
     "ServerPlayNetworkHandlerMixin",
     "TridentEntityMixin",
-    "TridentItemMixin"
+    "TridentItemMixin",
+    "client.ItemStackMixin"
   ],
   "client": [
-    "client.ItemStackMixin",
+    "client.ItemEnchantmentsComponentMixin",
     "client.MinecraftClientMixin",
     "client.PlayerEntityRendererMixin"
   ],

@@ -18,12 +18,6 @@ public interface TridentEntityAccessor {
         return null;
     }
 
-    @Accessor("tridentStack")
-    ItemStack impaled$getTridentStack();
-
-    @Accessor("tridentStack")
-    void impaled$setTridentStack(ItemStack stack);
-
     @Accessor("dealtDamage")
     boolean impaled$hasDealtDamage();
 

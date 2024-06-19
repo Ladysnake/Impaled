@@ -21,17 +21,14 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.item.Item;
 import net.minecraft.item.SmithingTemplateItem;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -48,9 +45,6 @@ public final class SincereLoyalty implements ModInitializer {
     public static final String MOD_ID = Impaled.MODID;
 
     public static final TagKey<Item> TRIDENTS = TagKey.of(RegistryKeys.ITEM, id("tridents"));
-
-    public static final Identifier RECALL_TRIDENTS_MESSAGE_ID = id("recall_tridents");
-    public static final Identifier RECALLING_MESSAGE_ID = id("recalling_tridents");
     public static final Item LOYALTY_UPGRADE_SMITHING_TEMPLATE = new SmithingTemplateItem(
             Text.translatable(
                     Util.createTranslationKey("item", id("smithing_template.loyalty_upgrade.applies_to"))
@@ -77,6 +71,7 @@ public final class SincereLoyalty implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        SLDataComponents.init();
         Object2IntMap<UUID> recallingPlayers = new Object2IntOpenHashMap<>();
         ServerTickEvents.START_SERVER_TICK.register(server -> recallingPlayers.object2IntEntrySet().removeIf(entry -> {
             ServerPlayerEntity player = server.getPlayerManager().getPlayer(entry.getKey());
@@ -99,25 +94,26 @@ public final class SincereLoyalty implements ModInitializer {
             ((TridentRecaller) player).updateRecallStatus(newRecallStatus);
             return true;
         }));
-        ServerPlayNetworking.registerGlobalReceiver(RECALL_TRIDENTS_MESSAGE_ID, (MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) -> {
-            TridentRecaller.RecallStatus requested = buf.readEnumConstant(TridentRecaller.RecallStatus.class);
+        PayloadTypeRegistry.playC2S().register(SincereLoyaltyPackets.RecallTridentsPacket.ID, SincereLoyaltyPackets.RecallTridentsPacket.CODEC);
+        ServerPlayNetworking.registerGlobalReceiver(SincereLoyaltyPackets.RecallTridentsPacket.ID, (payload, context) -> {
+            TridentRecaller.RecallStatus requested = payload.status();
 
-            server.execute(() -> {
-                LoyalTridentStorage loyalTridentStorage = LoyalTridentStorage.get(player.getServerWorld());
-                TridentRecaller.RecallStatus currentRecallStatus = ((TridentRecaller) player).getCurrentRecallStatus();
+            context.player().getServer().execute(() -> {
+                LoyalTridentStorage loyalTridentStorage = LoyalTridentStorage.get(context.player().getServerWorld());
+                TridentRecaller.RecallStatus currentRecallStatus = ((TridentRecaller) context.player()).getCurrentRecallStatus();
                 TridentRecaller.RecallStatus newRecallStatus;
 
-                if (loyalTridentStorage.hasTridents(player)) {
+                if (loyalTridentStorage.hasTridents(context.player())) {
                     if (currentRecallStatus != requested && requested == TridentRecaller.RecallStatus.RECALLING) {
-                        loyalTridentStorage.loadTridents(player);
-                        recallingPlayers.put(player.getUuid(), 4);  // wait a few ticks to make sure the entity gets loaded
+                        loyalTridentStorage.loadTridents(context.player());
+                        recallingPlayers.put(context.player().getUuid(), 4);  // wait a few ticks to make sure the entity gets loaded
                     }
                     newRecallStatus = requested;
                 } else {
                     newRecallStatus = TridentRecaller.RecallStatus.NONE;
                 }
 
-                ((TridentRecaller) player).updateRecallStatus(newRecallStatus);
+                ((TridentRecaller) context.player()).updateRecallStatus(newRecallStatus);
             });
         });
         Registry.register(Registries.ITEM, id("loyalty_upgrade_smithing_template"), LOYALTY_UPGRADE_SMITHING_TEMPLATE);

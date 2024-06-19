@@ -1,19 +1,22 @@
 package org.ladysnake.impaled.mixin.impaling;
 
-import net.minecraft.enchantment.ImpalingEnchantment;
-import net.minecraft.entity.EntityGroup;
-import org.ladysnake.impaled.common.enchantment.BetterImpaling;
+import net.minecraft.enchantment.Enchantments;
+import net.minecraft.entity.EntityType;
+import net.minecraft.registry.tag.TagKey;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 
-@Mixin(ImpalingEnchantment.class)
-public abstract class ImpalingEnchantmentMixin {
-    /**
-     * @reason we are canceling the vanilla effect and replacing it with our own in {@link BetterImpaling}
-     * @author Pyrofab
-     */
-    @Overwrite
-    public float getAttackDamage(int level, EntityGroup group) {
-        return 0.0F;
+import java.util.Optional;
+
+@Mixin(Enchantments.class)
+public class ImpalingEnchantmentMixin {
+    @ModifyArg(method = "<clinit>", at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/enchantment/DamageEnchantment;<init>(Lnet/minecraft/enchantment/Enchantment$Properties;Ljava/util/Optional;)V",
+            ordinal = 3
+    ), index = 1)
+    private static Optional<TagKey<EntityType<?>>> createImpaling(Optional<TagKey<EntityType<?>>> applicableEntities) {
+        return Optional.empty();
     }
 }

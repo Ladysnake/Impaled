@@ -14,6 +14,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
 import net.minecraft.util.Util;
+import net.minecraft.util.math.BlockPointer;
 import net.minecraft.util.math.Position;
 import net.minecraft.world.World;
 import org.ladysnake.impaled.common.Impaled;
@@ -75,15 +76,7 @@ public class ImpaledItems {
         registerItem(item, name);
         ALL_TRIDENTS.add(item);
         if (registerDispenserBehavior) {
-            DispenserBlock.registerBehavior(item, new ProjectileDispenserBehavior() {
-                @Override
-                protected ProjectileEntity createProjectile(World world, Position position, ItemStack itemStack) {
-                    ImpaledTridentEntity tridentEntity = Objects.requireNonNull(item.getEntityType().create(world));
-                    tridentEntity.setPos(position.getX(), position.getY(), position.getZ());
-                    itemStack.decrement(1);
-                    return tridentEntity;
-                }
-            });
+            DispenserBlock.registerProjectileBehavior(item);
         }
     }
 

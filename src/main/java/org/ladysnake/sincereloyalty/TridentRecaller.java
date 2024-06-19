@@ -17,6 +17,9 @@
  */
 package org.ladysnake.sincereloyalty;
 
+import io.netty.buffer.ByteBuf;
+import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.codec.PacketCodecs;
 import org.jetbrains.annotations.Contract;
 
 public interface TridentRecaller {
@@ -32,4 +35,6 @@ public interface TridentRecaller {
     enum RecallStatus {
         CHARGING, NONE, RECALLING
     }
+
+    PacketCodec<ByteBuf, RecallStatus> NET_STATUS_CODEC = PacketCodecs.STRING.xmap(RecallStatus::valueOf, RecallStatus::name);
 }

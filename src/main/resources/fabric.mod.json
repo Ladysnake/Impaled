@@ -39,6 +39,9 @@
     "loom:injected_interfaces": {
       "net/minecraft/class_8109": [
         "org/ladysnake/impaled/common/damage/DamageSourcesExt"
+      ],
+      "net/minecraft/class_9304": [
+        "org/ladysnake/sincereloyalty/ExtendedEnchantmentsComponent"
       ]
     },
     "modmenu": {

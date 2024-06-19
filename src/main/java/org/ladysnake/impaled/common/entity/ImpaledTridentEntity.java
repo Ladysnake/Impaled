@@ -23,7 +23,7 @@ public class ImpaledTridentEntity extends TridentEntity {
     }
 
     public void setTridentStack(ItemStack tridentStack) {
-        ((TridentEntityAccessor) this).impaled$setTridentStack(tridentStack);
+        this.setStack(tridentStack);
     }
 
     protected void setDealtDamage() {

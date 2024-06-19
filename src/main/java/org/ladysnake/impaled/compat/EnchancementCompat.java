@@ -55,7 +55,7 @@ public final class EnchancementCompat {
 
     public static boolean areTridentsLoyal() {
         if (enabled) {
-            return ModConfig.allTridentsHaveLoyalty && !EnchancementUtil.isEnchantmentAllowed(Enchantments.LOYALTY);
+            return ModConfig.enchantedTridentsHaveLoyalty && !EnchancementUtil.isEnchantmentAllowed(Enchantments.LOYALTY);
         }
         return false;
     }

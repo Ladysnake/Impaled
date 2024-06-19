@@ -17,6 +17,8 @@
  */
 package org.ladysnake.sincereloyalty.mixin;
 
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.NbtComponent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -25,6 +27,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.World;
 import org.ladysnake.sincereloyalty.LoyalTrident;
+import org.ladysnake.sincereloyalty.SLDataComponents;
 import org.ladysnake.sincereloyalty.storage.LoyalTridentStorage;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -39,11 +42,35 @@ public abstract class ItemMixin {
     @Inject(method = "inventoryTick", at = @At("RETURN"))
     private void updateTridentInInventory(ItemStack stack, World world, Entity entity, int slot, boolean selected, CallbackInfo ci) {
         if (entity.age % 10 == 0 && !entity.getWorld().isClient && entity instanceof PlayerEntity) {
+            // Update from nbt
+            if (stack.contains(DataComponentTypes.CUSTOM_DATA)) {
+                NbtComponent nbtComponent = stack.get(DataComponentTypes.CUSTOM_DATA);
+                if (nbtComponent.contains(LoyalTrident.MOD_NBT_KEY)) {
+                    NbtCompound slData = nbtComponent.getNbt().getCompound(LoyalTrident.MOD_NBT_KEY);
+                    if (slData.contains(LoyalTrident.TRIDENT_UUID_NBT_KEY)) {
+                        stack.set(SLDataComponents.TRIDENT_UUID, slData.getUuid(LoyalTrident.TRIDENT_UUID_NBT_KEY));
+                    }
+                    if (slData.contains(LoyalTrident.OWNER_NAME_NBT_KEY)) {
+                        stack.set(SLDataComponents.OWNER_NAME, slData.getString(LoyalTrident.OWNER_NAME_NBT_KEY));
+                    }
+                    if (slData.contains(LoyalTrident.TRIDENT_OWNER_NBT_KEY)) {
+                        stack.set(SLDataComponents.TRIDENT_OWNER, Objects.requireNonNullElse(slData.getUuid(LoyalTrident.TRIDENT_OWNER_NBT_KEY), UUID.randomUUID()));
+                    }
+                    if (slData.contains(LoyalTrident.TRIDENT_SIT_NBT_KEY)) {
+                        stack.set(SLDataComponents.TRIDENT_SIT, slData.getBoolean(LoyalTrident.TRIDENT_SIT_NBT_KEY));
+                    }
+                    if (slData.contains(LoyalTrident.RETURN_SLOT_NBT_KEY)) {
+                        stack.set(SLDataComponents.RETURN_SLOT, slData.getInt(LoyalTrident.RETURN_SLOT_NBT_KEY));
+                    }
+                }
+                nbtComponent.getNbt().remove(LoyalTrident.MOD_NBT_KEY);
+                stack.set(DataComponentTypes.CUSTOM_DATA, nbtComponent);
+            }
+
             UUID trueOwner = LoyalTrident.getTrueOwner(stack);
             if (Objects.equals(trueOwner, entity.getUuid())) {
-                NbtCompound loyaltyData = Objects.requireNonNull(stack.getSubNbt(LoyalTrident.MOD_NBT_KEY));
-                if (!Objects.equals(entity.getName().getString(), loyaltyData.getString(LoyalTrident.OWNER_NAME_NBT_KEY))) {
-                    loyaltyData.putString(LoyalTrident.OWNER_NAME_NBT_KEY, entity.getName().getString());
+                if (!Objects.equals(entity.getName().getString(), stack.get(SLDataComponents.OWNER_NAME))) {
+                    stack.set(SLDataComponents.OWNER_NAME, entity.getName().getString());
                 }
             } else if (trueOwner != null) {
                 LoyalTridentStorage.get((ServerWorld) world).memorizeTrident(trueOwner, LoyalTrident.getTridentUuid(stack), (PlayerEntity) entity);

@@ -8,6 +8,7 @@ import net.minecraft.loot.condition.RandomChanceLootCondition;
 import net.minecraft.loot.entry.ItemEntry;
 import net.minecraft.loot.provider.number.UniformLootNumberProvider;
 import net.minecraft.util.Identifier;
+import org.ladysnake.impaled.common.entity.MialeeTargetingUtil;
 import org.ladysnake.impaled.common.init.ImpaledEntityTypes;
 import org.ladysnake.impaled.common.init.ImpaledItems;
 
@@ -24,18 +25,19 @@ public class Impaled implements ModInitializer {
     public void onInitialize() {
         ImpaledEntityTypes.init();
         ImpaledItems.init();
+        MialeeTargetingUtil.init();
 
         // add loot to dungeons, mineshafts, jungle temples, and stronghold libraries chests loot tables
         UniformLootNumberProvider lootTableRange = UniformLootNumberProvider.create(1, 1);
-        LootCondition chanceLootCondition = RandomChanceLootCondition.builder(60).build();
-        LootTableEvents.MODIFY.register((resourceManager, lootManager, id, supplier, setter) -> {
-            if (BASTION_TREASURE_CHEST_LOOT_TABLE_ID.equals(id)) {
-                LootPool lootPool = LootPool.builder()
+        LootCondition.Builder chanceLootCondition = RandomChanceLootCondition.builder(60);
+        LootTableEvents.MODIFY.register((tableRegKey, tableBuilder, tableSource) -> {
+            if (BASTION_TREASURE_CHEST_LOOT_TABLE_ID.equals(tableRegKey.getValue())) {
+                LootPool.Builder lootPool = LootPool.builder()
                         .rolls(lootTableRange)
                         .conditionally(chanceLootCondition)
-                        .with(ItemEntry.builder(ImpaledItems.ANCIENT_TRIDENT).build()).build();
+                        .with(ItemEntry.builder(ImpaledItems.ANCIENT_TRIDENT));
 
-                supplier.pool(lootPool);
+                tableBuilder.pool(lootPool);
             }
         });
     }
