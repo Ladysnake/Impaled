@@ -23,6 +23,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import org.ladysnake.sincereloyalty.LoyalTrident;
+import org.ladysnake.sincereloyalty.SLDataComponents;
 
 import java.util.UUID;
 
@@ -58,9 +59,8 @@ public class InventoryTridentEntry extends TridentEntry {
         if (player != null) {
             for (int slot = 0; slot < player.getInventory().size(); slot++) {
                 ItemStack stack = player.getInventory().getStack(slot);
-                NbtCompound loyaltyData = stack.getSubNbt(LoyalTrident.MOD_NBT_KEY);
-                if (loyaltyData != null && loyaltyData.containsUuid(LoyalTrident.TRIDENT_UUID_NBT_KEY)) {
-                    if (loyaltyData.getUuid(LoyalTrident.TRIDENT_UUID_NBT_KEY).equals(this.tridentUuid)) {
+                if (stack.contains(SLDataComponents.TRIDENT_UUID)) {
+                    if (stack.get(SLDataComponents.TRIDENT_UUID).equals(this.tridentUuid)) {
                         TridentEntity tridentEntity = LoyalTrident.spawnTridentForStack(player, stack);
                         if (tridentEntity != null) {
                             player.getInventory().removeStack(slot);

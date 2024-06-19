@@ -17,44 +17,41 @@
  */
 package org.ladysnake.sincereloyalty;
 
-import com.google.gson.JsonObject;
-import net.minecraft.enchantment.Enchantment;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.ItemEnchantmentsComponent;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.RegistryByteBuf;
+import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.SmithingRecipe;
-import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.JsonHelper;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.world.World;
 import org.ladysnake.impaled.compat.EnchancementCompat;
 import org.ladysnake.sincereloyalty.mixin.ForgingScreenHandlerAccessor;
 import org.ladysnake.sincereloyalty.mixin.ForgingScreenHandlerInputInventoryAccessor;
 
-import java.util.Map;
 import java.util.stream.Stream;
 
 public class LoyaltyBindingRecipe implements SmithingRecipe {
     public static void register() {
         Registry.register(Registries.RECIPE_SERIALIZER, SincereLoyalty.id("loyalty_binding"), Serializer.INSTANCE);
     }
-    
-    private final Identifier id;
+
     final Ingredient template;
     final Ingredient base;
     final Ingredient addition;
 
-    public LoyaltyBindingRecipe(Identifier id, Ingredient template, Ingredient base, Ingredient addition) {
-        this.id = id;
+    public LoyaltyBindingRecipe(Ingredient template, Ingredient base, Ingredient addition) {
         this.template = template;
         this.base = base;
         this.addition = addition;
@@ -76,11 +73,6 @@ public class LoyaltyBindingRecipe implements SmithingRecipe {
     }
 
     @Override
-    public Identifier getId() {
-        return this.id;
-    }
-
-    @Override
     public boolean matches(Inventory inventory, World world) {
         return this.template.test(inventory.getStack(0)) && this.base.test(inventory.getStack(1)) && this.addition.test(inventory.getStack(2)) && isLoyalEnough(inventory.getStack(1));
     }
@@ -91,22 +83,24 @@ public class LoyaltyBindingRecipe implements SmithingRecipe {
     }
 
     @Override
-    public ItemStack craft(Inventory inventory, DynamicRegistryManager registryManager) {
+    public ItemStack craft(Inventory inventory, RegistryWrapper.WrapperLookup lookup) {
         ItemStack item = inventory.getStack(1);
         if (this.base.test(item)) {
-            Map<Enchantment, Integer> enchantments = EnchantmentHelper.get(item);
+            ItemEnchantmentsComponent enchantments = EnchantmentHelper.getEnchantments(item);
             if (isLoyalEnough(enchantments)) {
                 ItemStack result = item.copy();
                 if (!EnchancementCompat.areTridentsLoyal()) {
                     // we can mutate the map as it is recreated with every call to getEnchantments
-                    enchantments.put(Enchantments.LOYALTY, Enchantments.LOYALTY.getMaxLevel() + 1);
+                    ItemEnchantmentsComponent.Builder builder =
+                            new ItemEnchantmentsComponent.Builder(enchantments);
+                    builder.set(Enchantments.LOYALTY, Enchantments.LOYALTY.getMaxLevel() + 1);
+                    enchantments = builder.build();
                 }
-                EnchantmentHelper.set(enchantments, result);
-                NbtCompound loyaltyData = result.getOrCreateSubNbt(LoyalTrident.MOD_NBT_KEY);
+                result.set(DataComponentTypes.ENCHANTMENTS, enchantments);
                 if (inventory instanceof ForgingScreenHandlerInputInventoryAccessor accessor) {
                     PlayerEntity player = ((ForgingScreenHandlerAccessor) accessor.impaled$screenHandler()).impaled$player();
-                    loyaltyData.putUuid(LoyalTrident.TRIDENT_OWNER_NBT_KEY, player.getUuid());
-                    loyaltyData.putString(LoyalTrident.OWNER_NAME_NBT_KEY, player.getName().getString());
+                    result.set(SLDataComponents.TRIDENT_OWNER, player.getUuid());
+                    result.set(SLDataComponents.OWNER_NAME, player.getName().getString());
                 }
                 return result;
             }
@@ -115,15 +109,15 @@ public class LoyaltyBindingRecipe implements SmithingRecipe {
     }
 
     public static boolean isLoyalEnough(ItemStack stack) {
-        return isLoyalEnough(EnchantmentHelper.get(stack));
+        return isLoyalEnough(EnchantmentHelper.getEnchantments(stack));
     }
 
-    private static boolean isLoyalEnough(Map<Enchantment, Integer> enchantments) {
-        return enchantments.getOrDefault(Enchantments.LOYALTY, 0) >= Enchantments.LOYALTY.getMaxLevel() || EnchancementCompat.areTridentsLoyal();
+    private static boolean isLoyalEnough(ItemEnchantmentsComponent enchantments) {
+        return enchantments.getLevel(Enchantments.LOYALTY) >= Enchantments.LOYALTY.getMaxLevel() || EnchancementCompat.areTridentsLoyal();
     }
 
     @Override
-    public ItemStack getOutput(DynamicRegistryManager registryManager) {
+    public ItemStack getResult(RegistryWrapper.WrapperLookup registriesLookup) {
         return new ItemStack(Items.TRIDENT);
     }
 
@@ -134,25 +128,39 @@ public class LoyaltyBindingRecipe implements SmithingRecipe {
 
     public static class Serializer implements RecipeSerializer<LoyaltyBindingRecipe> {
         public static final Serializer INSTANCE = new Serializer();
-        
-        public LoyaltyBindingRecipe read(Identifier identifier, JsonObject jsonObject) {
-            Ingredient template = Ingredient.fromJson(JsonHelper.getElement(jsonObject, "template"));
-            Ingredient base = Ingredient.fromJson(JsonHelper.getElement(jsonObject, "base"));
-            Ingredient addition = Ingredient.fromJson(JsonHelper.getElement(jsonObject, "addition"));
-            return new LoyaltyBindingRecipe(identifier, template, base, addition);
+        private static final MapCodec<LoyaltyBindingRecipe> CODEC = RecordCodecBuilder.mapCodec(
+                instance -> instance.group(
+                                Ingredient.ALLOW_EMPTY_CODEC.fieldOf("template").forGetter(recipe -> recipe.template),
+                                Ingredient.ALLOW_EMPTY_CODEC.fieldOf("base").forGetter(recipe -> recipe.base),
+                                Ingredient.ALLOW_EMPTY_CODEC.fieldOf("addition").forGetter(recipe -> recipe.addition)
+                        )
+                        .apply(instance, LoyaltyBindingRecipe::new)
+        );
+        public static final PacketCodec<RegistryByteBuf, LoyaltyBindingRecipe> PACKET_CODEC = PacketCodec.ofStatic(
+                LoyaltyBindingRecipe.Serializer::write, LoyaltyBindingRecipe.Serializer::read
+        );
+
+        @Override
+        public MapCodec<LoyaltyBindingRecipe> codec() {
+            return CODEC;
         }
 
-        public LoyaltyBindingRecipe read(Identifier identifier, PacketByteBuf packetByteBuf) {
-            Ingredient template = Ingredient.fromPacket(packetByteBuf);
-            Ingredient base = Ingredient.fromPacket(packetByteBuf);
-            Ingredient addition = Ingredient.fromPacket(packetByteBuf);
-            return new LoyaltyBindingRecipe(identifier, template, base, addition);
+        @Override
+        public PacketCodec<RegistryByteBuf, LoyaltyBindingRecipe> packetCodec() {
+            return PACKET_CODEC;
         }
 
-        public void write(PacketByteBuf packetByteBuf, LoyaltyBindingRecipe recipe) {
-            recipe.template.write(packetByteBuf);
-            recipe.base.write(packetByteBuf);
-            recipe.addition.write(packetByteBuf);
+        private static LoyaltyBindingRecipe read(RegistryByteBuf buf) {
+            Ingredient ingredient = Ingredient.PACKET_CODEC.decode(buf);
+            Ingredient ingredient2 = Ingredient.PACKET_CODEC.decode(buf);
+            Ingredient ingredient3 = Ingredient.PACKET_CODEC.decode(buf);
+            return new LoyaltyBindingRecipe(ingredient, ingredient2, ingredient3);
+        }
+
+        private static void write(RegistryByteBuf buf, LoyaltyBindingRecipe recipe) {
+            Ingredient.PACKET_CODEC.encode(buf, recipe.template);
+            Ingredient.PACKET_CODEC.encode(buf, recipe.base);
+            Ingredient.PACKET_CODEC.encode(buf, recipe.addition);
         }
     }
 }

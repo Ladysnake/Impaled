@@ -6,6 +6,7 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.particle.ParticleTypes;
@@ -21,7 +22,7 @@ import org.ladysnake.impaled.common.entity.ImpaledTridentEntity;
 import org.ladysnake.impaled.common.init.ImpaledItems;
 
 public class HellforkItem extends ImpaledTridentItem {
-    public HellforkItem(Settings settings, EntityType<? extends ImpaledTridentEntity> entityType) {
+    public HellforkItem(Item.Settings settings, EntityType<? extends ImpaledTridentEntity> entityType) {
         super(settings, entityType);
     }
 
@@ -59,7 +60,7 @@ public class HellforkItem extends ImpaledTridentItem {
         ItemStack itemStack = user.getStackInHand(hand);
         if (itemStack.getDamage() >= itemStack.getMaxDamage() - 1) {
             return TypedActionResult.fail(itemStack);
-        } else if (EnchantmentHelper.getRiptide(itemStack) > 0 && !user.isInLava() && !user.isOnFire() && !(itemStack.hasNbt() && itemStack.getItem() == ImpaledItems.SOULFORK)) {
+        } else if (EnchantmentHelper.getRiptide(itemStack) > 0 && !user.isInLava() && !user.isOnFire() && !(itemStack.getItem() == ImpaledItems.SOULFORK)) {
             return TypedActionResult.fail(itemStack);
         } else {
             user.setCurrentHand(hand);
@@ -70,8 +71,7 @@ public class HellforkItem extends ImpaledTridentItem {
     @Override
     public ActionResult useOnBlock(ItemUsageContext context) {
         if ((context.getWorld().getBlockState(context.getBlockPos()).getBlock() == Blocks.SOUL_CAMPFIRE || context.getWorld().getBlockState(context.getBlockPos()).getBlock() == Blocks.SOUL_LANTERN || context.getWorld().getBlockState(context.getBlockPos()).getBlock() == Blocks.SOUL_TORCH || context.getWorld().getBlockState(context.getBlockPos()).getBlock() == Blocks.SOUL_WALL_TORCH) && context.getStack().getItem() == ImpaledItems.HELLFORK) {
-            ItemStack soulfork = new ItemStack(ImpaledItems.SOULFORK, context.getStack().getCount());
-            soulfork.setNbt(context.getStack().getNbt());
+            ItemStack soulfork = context.getStack().copyComponentsToNewStack(ImpaledItems.SOULFORK, context.getStack().getCount());
             context.getWorld().playSound(context.getPlayer().getX(), context.getPlayer().getY(), context.getPlayer().getZ(), SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.PLAYERS, 1.0f, 1.0f, false);
             context.getWorld().playSound(context.getPlayer().getX(), context.getPlayer().getY(), context.getPlayer().getZ(), SoundEvents.PARTICLE_SOUL_ESCAPE, SoundCategory.PLAYERS, 1.0f, 1.0f, false);
             context.getWorld().playSound(context.getPlayer().getX(), context.getPlayer().getY(), context.getPlayer().getZ(), SoundEvents.BLOCK_ENCHANTMENT_TABLE_USE, SoundCategory.PLAYERS, 1.0f, 1.0f, false);
@@ -101,8 +101,7 @@ public class HellforkItem extends ImpaledTridentItem {
             }
             return ActionResult.SUCCESS;
         } else if ((context.getWorld().getBlockState(context.getBlockPos()).getBlock() == Blocks.CAMPFIRE || context.getWorld().getBlockState(context.getBlockPos()).getBlock() == Blocks.LANTERN || context.getWorld().getBlockState(context.getBlockPos()).getBlock() == Blocks.TORCH || context.getWorld().getBlockState(context.getBlockPos()).getBlock() == Blocks.WALL_TORCH) && context.getStack().getItem() == ImpaledItems.SOULFORK) {
-            ItemStack hellfork = new ItemStack(ImpaledItems.HELLFORK, context.getStack().getCount());
-            hellfork.setNbt(context.getStack().getNbt());
+            ItemStack hellfork = context.getStack().copyComponentsToNewStack(ImpaledItems.HELLFORK, context.getStack().getCount());
             context.getWorld().playSound(context.getPlayer().getX(), context.getPlayer().getY(), context.getPlayer().getZ(), SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.PLAYERS, 1.0f, 1.0f, false);
             context.getWorld().playSound(context.getPlayer().getX(), context.getPlayer().getY(), context.getPlayer().getZ(), SoundEvents.PARTICLE_SOUL_ESCAPE, SoundCategory.PLAYERS, 1.0f, 0.8f, false);
             context.getWorld().playSound(context.getPlayer().getX(), context.getPlayer().getY(), context.getPlayer().getZ(), SoundEvents.BLOCK_ENCHANTMENT_TABLE_USE, SoundCategory.PLAYERS, 1.0f, 0.8f, false);

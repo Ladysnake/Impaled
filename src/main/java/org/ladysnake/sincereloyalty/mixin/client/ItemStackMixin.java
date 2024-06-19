@@ -1,92 +1,40 @@
-/*
- * Sincere-Loyalty
- * Copyright (C) 2020 Ladysnake
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public License
- * along with this program; If not, see <https://www.gnu.org/licenses>.
- */
 package org.ladysnake.sincereloyalty.mixin.client;
 
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.enchantment.Enchantment;
+import net.minecraft.client.item.TooltipType;
+import net.minecraft.component.ComponentHolder;
+import net.minecraft.component.ComponentMapImpl;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.ItemEnchantmentsComponent;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import org.jetbrains.annotations.Nullable;
-import org.ladysnake.impaled.compat.EnchancementCompat;
-import org.ladysnake.sincereloyalty.LoyalTrident;
-import org.spongepowered.asm.mixin.Dynamic;
+import org.ladysnake.sincereloyalty.SLDataComponents;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
+import java.util.Objects;
 
 @Mixin(ItemStack.class)
-public abstract class ItemStackMixin {
+public abstract class ItemStackMixin implements ComponentHolder {
 
-    @Nullable
-    @Unique
-    private static String impaled$trueOwnerName;
-    @Unique
-    private static boolean impaled$riptide;
+    @Shadow @Final ComponentMapImpl components;
 
-    // inject into the lambda in appendEnchantments
-    @Dynamic("Lambda method")
-    @Inject(method = "method_17869", at = @At("RETURN"))
-    private static void editTooltip(List<Text> lines, NbtCompound enchantmentNbt, Enchantment enchantment, CallbackInfo info) {
-        if (enchantment == Enchantments.LOYALTY && impaled$trueOwnerName != null) {
-            if (!lines.isEmpty()) {
-                if (impaled$riptide) {
-                    // If there is riptide, we present as if there was only one level possible
-                    lines.set(lines.size() - 1, Text.translatable(enchantment.getTranslationKey()).formatted(Formatting.GRAY));
-                }
-
-                MutableText line = (MutableText) lines.get(lines.size() - 1);
-
-                line.append(Text.literal(" ")).append(Text.translatable("impaled:tooltip.owned_by", impaled$trueOwnerName).formatted(Formatting.DARK_GRAY));
-            }
-            impaled$trueOwnerName = null;
-        }
-    }
-
-    @Inject(method = "appendEnchantments", at = @At("RETURN"))
-    private static void appendEnchancementLoyalty(List<Text> tooltip, NbtList enchantments, CallbackInfo ci) {
-        if (EnchancementCompat.areTridentsLoyal() && impaled$trueOwnerName != null) {
-            tooltip.add(Text.translatable("impaled:tooltip.owned_by_full", impaled$trueOwnerName).formatted(Formatting.GOLD));
-            impaled$trueOwnerName = null;
-        }
-    }
-
-    @Shadow
-    public abstract NbtCompound getSubNbt(String key);
-
-    @Inject(method = "getTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;appendEnchantments(Ljava/util/List;Lnet/minecraft/nbt/NbtList;)V"))
-    private void captureThis(PlayerEntity player, TooltipContext context, CallbackInfoReturnable<List<Text>> cir) {
-        NbtCompound loyaltyNbt = this.getSubNbt(LoyalTrident.MOD_NBT_KEY);
-        if (loyaltyNbt != null && loyaltyNbt.contains(LoyalTrident.OWNER_NAME_NBT_KEY)) {
-            impaled$trueOwnerName = loyaltyNbt.getString(LoyalTrident.OWNER_NAME_NBT_KEY);
-            impaled$riptide = EnchantmentHelper.getRiptide((ItemStack) (Object) this) > 0;
+    @Inject(method = "getTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;appendTooltip(Lnet/minecraft/component/DataComponentType;Lnet/minecraft/item/Item$TooltipContext;Ljava/util/function/Consumer;Lnet/minecraft/client/item/TooltipType;)V", ordinal = 1))
+    private void captureThis(Item.TooltipContext context, PlayerEntity player, TooltipType type, CallbackInfoReturnable<List<Text>> cir) {
+        if (this.contains(SLDataComponents.OWNER_NAME) && this.contains(DataComponentTypes.ENCHANTMENTS)) {
+            ItemEnchantmentsComponent enchants = Objects.requireNonNull(this.get(DataComponentTypes.ENCHANTMENTS));
+            enchants.impaled$setTrueOwner(this.get(SLDataComponents.OWNER_NAME));
+            enchants.impaled$setRiptide(EnchantmentHelper.getRiptide((ItemStack) (Object) this) > 0);
+            // No IntelliJ, we are not returning anything.
+            //noinspection UnreachableCode
+            this.components.set(DataComponentTypes.ENCHANTMENTS, enchants);
         }
     }
 }

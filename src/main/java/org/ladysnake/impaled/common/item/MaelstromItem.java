@@ -2,16 +2,17 @@ package org.ladysnake.impaled.common.item;
 
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
+import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.entity.projectile.TridentEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.RangedWeaponItem;
 import net.minecraft.item.TridentItem;
-import net.minecraft.item.Vanishable;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -20,11 +21,12 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.UseAction;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 import org.ladysnake.sincereloyalty.SincereLoyalty;
 
 import java.util.function.Predicate;
 
-public class MaelstromItem extends RangedWeaponItem implements Vanishable {
+public class MaelstromItem extends RangedWeaponItem {
     public MaelstromItem(Item.Settings settings) {
         super(settings);
     }
@@ -60,8 +62,8 @@ public class MaelstromItem extends RangedWeaponItem implements Vanishable {
                     if (!stackToThrow.isEmpty() && EnchantmentHelper.getRiptide(stackToThrow) == 0 && stackToThrow.isIn(SincereLoyalty.TRIDENTS)) {
                         TridentEntity trident = null;
                         PlayerEntity playerEntity = (PlayerEntity) user;
-                        stackToThrow.damage(1, (LivingEntity) playerEntity, livingEntity -> livingEntity.sendToolBreakStatus(user.getActiveHand()));
-                        maelstromStack.damage(1, (LivingEntity) playerEntity, livingEntity -> livingEntity.sendToolBreakStatus(user.getActiveHand()));
+                        stackToThrow.damage(1, playerEntity, user.getActiveHand() == Hand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
+                        maelstromStack.damage(1, playerEntity, user.getActiveHand() == Hand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
 
                         if (stackToThrow.getItem() instanceof ImpaledTridentItem) {
                             trident = ((ImpaledTridentItem) stackToThrow.getItem()).createTrident(world, user, stackToThrow);
@@ -96,5 +98,9 @@ public class MaelstromItem extends RangedWeaponItem implements Vanishable {
 
     public int getRange() {
         return 15;
+    }
+
+    @Override
+    protected void shoot(LivingEntity shooter, ProjectileEntity projectile, int index, float speed, float divergence, float yaw, @Nullable LivingEntity target) {
     }
 }

@@ -1,12 +1,12 @@
 package org.ladysnake.impaled.common.item;
 
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MovementType;
+import net.minecraft.entity.*;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
+import net.minecraft.entity.projectile.ProjectileEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.TridentItem;
 import net.minecraft.sound.SoundCategory;
@@ -14,7 +14,9 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
 import net.minecraft.util.Hand;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Position;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
@@ -27,7 +29,7 @@ import java.util.Objects;
 public class ImpaledTridentItem extends TridentItem {
     EntityType<? extends ImpaledTridentEntity> type;
 
-    public ImpaledTridentItem(Settings settings, EntityType<? extends ImpaledTridentEntity> entityType) {
+    public ImpaledTridentItem(Item.Settings settings, EntityType<? extends ImpaledTridentEntity> entityType) {
         super(settings);
         this.type = entityType;
     }
@@ -44,7 +46,7 @@ public class ImpaledTridentItem extends TridentItem {
                 int j = EnchantmentHelper.getRiptide(stack);
                 if (j <= 0 || canRiptide(player)) {
                     if (!world.isClient) {
-                        stack.damage(1, player, livingEntity -> livingEntity.sendToolBreakStatus(user.getActiveHand()));
+                        stack.damage(1, player, player.getActiveHand() == Hand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
                         if (j == 0) {
                             ImpaledTridentEntity trident = createTrident(world, player, stack);
                             LoyalTrident.of(trident).loyaltrident_setReturnSlot(player.getActiveHand() == Hand.OFF_HAND ? -1 : player.getInventory().selectedSlot);
@@ -111,7 +113,11 @@ public class ImpaledTridentItem extends TridentItem {
     }
 
     @Override
-    public boolean damage(DamageSource source) {
-        return super.damage(source);
+    public ProjectileEntity createEntity(World world, Position position, ItemStack stack, Direction direction) {
+        if (stack.getItem() instanceof ImpaledTridentItem item) {
+            ImpaledTridentEntity tridentEntity = Objects.requireNonNull(item.getEntityType().create(world));
+            tridentEntity.setPos(position.getX(), position.getY(), position.getZ());
+            return tridentEntity;
+        } else return super.createEntity(world, position, stack, direction);
     }
 }

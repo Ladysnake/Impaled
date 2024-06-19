@@ -12,17 +12,19 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.packet.s2c.play.GameStateChangeS2CPacket;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import xyz.amymialee.mialeemisc.entities.IPlayerTargeting;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public class ElderTridentEntity extends ImpaledTridentEntity {
@@ -129,7 +131,7 @@ public class ElderTridentEntity extends ImpaledTridentEntity {
             NbtList fetchedItems = tag.getList("fetched_items", NbtElement.COMPOUND_TYPE);
             for (int i = 0; i < fetchedItems.size(); i++) {
                 NbtCompound fetchedItem = fetchedItems.getCompound(i);
-                this.fetchedStacks.add(ItemStack.fromNbt(fetchedItem));
+                ItemStack.fromNbt(this.getRegistryManager(), fetchedItem).ifPresent(this.fetchedStacks::add);
             }
         }
     }
@@ -139,7 +141,7 @@ public class ElderTridentEntity extends ImpaledTridentEntity {
         super.writeCustomDataToNbt(tag);
         NbtList NbtList = new NbtList();
         for (ItemStack fetchedStack : this.fetchedStacks) {
-            NbtList.add(fetchedStack.writeNbt(new NbtCompound()));
+            NbtList.add(fetchedStack.encode(this.getRegistryManager()));
         }
         tag.put("fetched_stacks", NbtList);
     }

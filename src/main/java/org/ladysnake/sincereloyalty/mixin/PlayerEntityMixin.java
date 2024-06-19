@@ -29,6 +29,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.ladysnake.sincereloyalty.SincereLoyalty;
+import org.ladysnake.sincereloyalty.SincereLoyaltyPackets;
 import org.ladysnake.sincereloyalty.TridentRecaller;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -53,10 +54,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements TridentR
         if (this.recallingTrident != recallingTrident) {
             this.recallingTrident = recallingTrident;
             if (!this.getWorld().isClient) {
-                PacketByteBuf res = PacketByteBufs.create();
-                res.writeInt(this.getId());
-                res.writeEnumConstant(recallingTrident);
-                Packet<?> packet = ServerPlayNetworking.createS2CPacket(SincereLoyalty.RECALLING_MESSAGE_ID, res);
+                SincereLoyaltyPackets.RecallingTridentsPacket payload = new SincereLoyaltyPackets.RecallingTridentsPacket(recallingTrident, this.getId());
+                Packet<?> packet = ServerPlayNetworking.createS2CPacket(payload);
                 ((ServerPlayerEntity) (Object) this).networkHandler.sendPacket(packet);
                 for (ServerPlayerEntity player : PlayerLookup.tracking(this)) {
                     player.networkHandler.sendPacket(packet);

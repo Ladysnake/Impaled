@@ -1,5 +1,7 @@
 package org.ladysnake.impaled.mixin.impaling;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -8,8 +10,6 @@ import net.minecraft.world.World;
 import org.ladysnake.impaled.common.enchantment.BetterImpaling;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
-import org.spongepowered.asm.mixin.injection.Slice;
 
 @Mixin(MobEntity.class)
 public abstract class MobEntityMixin extends LivingEntity {
@@ -17,16 +17,11 @@ public abstract class MobEntityMixin extends LivingEntity {
         super(entityType, world);
     }
 
-    @ModifyVariable(
+    @ModifyExpressionValue(
             method = "tryAttack",
-            slice = @Slice(
-                    from = @At("HEAD"),
-                    to = @At(value = "FIELD", target = "Lnet/minecraft/entity/attribute/EntityAttributes;GENERIC_ATTACK_KNOCKBACK:Lnet/minecraft/entity/attribute/EntityAttribute;")
-            ),
-            at = @At(value = "STORE", ordinal = 0),
-            ordinal = 0
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/mob/MobEntity;getAttributeValue(Lnet/minecraft/registry/entry/RegistryEntry;)D", ordinal = 0)
     )
-    private float getAttackDamage(float baseDamage, Entity target) {
-        return baseDamage + BetterImpaling.getAttackDamage(this.getMainHandStack(), target);
+    private double getAttackDamage(double original, @Local(argsOnly = true) Entity target) {
+        return original + (double) BetterImpaling.getAttackDamage(this.getMainHandStack(), target);
     }
 }

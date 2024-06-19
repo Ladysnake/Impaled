@@ -20,14 +20,13 @@ package org.ladysnake.sincereloyalty;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.PacketByteBuf;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
 
 public final class SincereLoyaltyClient implements ClientModInitializer {
     public static final SincereLoyaltyClient INSTANCE = new SincereLoyaltyClient();
@@ -46,19 +45,18 @@ public final class SincereLoyaltyClient implements ClientModInitializer {
         ClientTickEvents.END_CLIENT_TICK.register(mc -> {
             TridentRecaller.RecallStatus recalling = tickTridentRecalling(mc);
             if (recalling != null) {
-                PacketByteBuf buf = PacketByteBufs.create();
-                buf.writeEnumConstant(recalling);
-                ClientPlayNetworking.send(SincereLoyalty.RECALL_TRIDENTS_MESSAGE_ID, buf);
+                ClientPlayNetworking.send(
+                        new SincereLoyaltyPackets.RecallTridentsPacket(recalling)
+                );
             }
         });
-        ClientPlayNetworking.registerGlobalReceiver(SincereLoyalty.RECALLING_MESSAGE_ID, (MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) -> {
-            int playerId = buf.readInt();
-            TridentRecaller.RecallStatus recalling = buf.readEnumConstant(TridentRecaller.RecallStatus.class);
-            client.execute(() -> {
-                Entity player = client.world.getEntityById(playerId);
-                if (player instanceof TridentRecaller) {
-                    ((TridentRecaller) player).updateRecallStatus(recalling);
-                }
+        PayloadTypeRegistry.playS2C().register(SincereLoyaltyPackets.RecallingTridentsPacket.ID, SincereLoyaltyPackets.RecallingTridentsPacket.CODEC);
+        ClientPlayNetworking.registerGlobalReceiver(SincereLoyaltyPackets.RecallingTridentsPacket.ID, (payload, context) -> {
+            int playerId = Objects.requireNonNull(payload.playerId());
+            TridentRecaller.RecallStatus recalling = payload.status();
+            context.client().execute(() -> {
+                Entity player = context.client().world.getEntityById(playerId);
+                ((TridentRecaller) player).updateRecallStatus(recalling);
             });
         });
     }

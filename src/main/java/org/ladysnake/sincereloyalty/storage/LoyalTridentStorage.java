@@ -19,12 +19,15 @@ package org.ladysnake.sincereloyalty.storage;
 
 import com.google.common.base.Preconditions;
 import net.fabricmc.fabric.api.util.NbtType;
+import net.minecraft.datafixer.DataFixTypes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.TridentEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
@@ -53,14 +56,22 @@ public final class LoyalTridentStorage extends PersistentState {
         this.world = world;
     }
 
+    public static Type<LoyalTridentStorage> getType(ServerWorld world) {
+        return new Type<>(
+                () -> new LoyalTridentStorage(world),
+                (nbt, lookup) -> fromNbt(world, nbt),
+                null
+        );
+    }
+
     public static LoyalTridentStorage get(ServerWorld world) {
         final String id = SincereLoyalty.MOD_ID + "_trident_storage";
-        return world.getPersistentStateManager().getOrCreate(tag -> fromNbt(world, tag), () -> new LoyalTridentStorage(world), id);
+        return world.getPersistentStateManager().getOrCreate(getType(world), id);
     }
 
     public static LoyalTridentStorage fromNbt(ServerWorld world, NbtCompound tag) {
         LoyalTridentStorage ret = new LoyalTridentStorage(world);
-        NbtList ownersNbt = tag.getList("trident_owners", NbtType.COMPOUND);
+        NbtList ownersNbt = tag.getList("trident_owners", NbtElement.COMPOUND_TYPE);
         for (int i = 0; i < ownersNbt.size(); i++) {
             OwnedTridents tridents = new OwnedTridents(ret);
             NbtCompound ownerNbt = ownersNbt.getCompound(i);
@@ -143,7 +154,7 @@ public final class LoyalTridentStorage extends PersistentState {
 
     @NotNull
     @Override
-    public NbtCompound writeNbt(NbtCompound tag) {
+    public NbtCompound writeNbt(NbtCompound tag, RegistryWrapper.WrapperLookup wrapperLookup) {
         if (!this.tridents.isEmpty()) {
             NbtList ownersNbt = new NbtList();
             this.tridents.forEach((ownerUuid, tridents) -> {

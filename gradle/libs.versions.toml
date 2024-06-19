@@ -1,21 +1,20 @@
 [versions]
-cca = "5.2.2"
-enchancement = "1.20-8"
-mialeemisc = "1.0.39-SNAPSHOT.1"
-midnightLib = "1.4.1-fabric"
-modmenu = "7.2.2"
-stepHeightAttribute = "25dabcdad7"
+cca = "6.0.0-beta.3"
+enchancement = "1.20.6-r7"
+mialib = "1.0.92+1.20.6"
+midnightLib = "1.5.5-fabric"
+modmenu = "10.0.0-beta.1"
 tooltipFix = "1.1.1-1.20"
 
 [libraries]
-cca-base = { module = "dev.onyxstudios.cardinal-components-api:cardinal-components-base", version.ref = "cca" }
-cca-entity = { module = "dev.onyxstudios.cardinal-components-api:cardinal-components-entity", version.ref = "cca" }
-cca-world = { module = "dev.onyxstudios.cardinal-components-api:cardinal-components-world", version.ref = "cca" }
+cca-base = { module = "org.ladysnake.cardinal-components-api:cardinal-components-base", version.ref = "cca" }
+cca-entity = { module = "org.ladysnake.cardinal-components-api:cardinal-components-entity", version.ref = "cca" }
+cca-world = { module = "org.ladysnake.cardinal-components-api:cardinal-components-world", version.ref = "cca" }
+cca-scoreboard = { module = "org.ladysnake.cardinal-components-api:cardinal-components-scoreboard", version.ref = "cca" }
 enchancement = { module = "maven.modrinth:enchancement", version.ref = "enchancement" }
-mialeemisc = { module = "xyz.amymialee:mialeemisc", version.ref = "mialeemisc" }
+mialib = { module = "xyz.amymialee:mialib", version.ref = "mialib" }
 midnightLib = { module = "maven.modrinth:midnightlib", version.ref = "midnightLib" }
 modmenu = { module = "com.terraformersmc:modmenu", version.ref = "modmenu"}
-stepHeightAttribute = { module = "com.github.emilyploszaj:step-height-entity-attribute", version.ref = "stepHeightAttribute" }
 tooltipFix = { module = "maven.modrinth:tooltipfix", version.ref = "tooltipFix" }
 
 [bundles]
@@ -25,6 +24,5 @@ enchancement = [
     "cca-world",
     "enchancement",
     "midnightLib",
-    "stepHeightAttribute",
     "tooltipFix"
 ]

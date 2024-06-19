@@ -17,26 +17,24 @@
  */
 package org.ladysnake.sincereloyalty.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.entity.projectile.TridentEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.ladysnake.sincereloyalty.LoyalTrident;
+import org.ladysnake.sincereloyalty.SLDataComponents;
 import org.ladysnake.sincereloyalty.storage.LoyalTridentStorage;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
-import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Optional;
@@ -47,8 +45,6 @@ public abstract class TridentEntityMixin extends PersistentProjectileEntity impl
     @Unique
     private static final TrackedData<Boolean> sincereLoyalty$SITTING = DataTracker.registerData(TridentEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
-    @Shadow
-    private ItemStack tridentStack;
     private @Nullable Optional<UUID> sincereLoyalty_trueOwner;
 
     protected TridentEntityMixin(EntityType<? extends PersistentProjectileEntity> entityType, World world) {
@@ -56,13 +52,13 @@ public abstract class TridentEntityMixin extends PersistentProjectileEntity impl
     }
 
     @Inject(method = "initDataTracker", at = @At("RETURN"))
-    private void initDataTracker(CallbackInfo ci) {
-        this.getDataTracker().startTracking(sincereLoyalty$SITTING, false);
+    private void initDataTracker(DataTracker.Builder builder, CallbackInfo ci) {
+        builder.add(sincereLoyalty$SITTING, false);
     }
 
     @Override
     public UUID loyaltrident_getTridentUuid() {
-        return LoyalTrident.getTridentUuid(this.tridentStack);
+        return LoyalTrident.getTridentUuid(this.getItemStack());
     }
 
     @Override
@@ -77,7 +73,7 @@ public abstract class TridentEntityMixin extends PersistentProjectileEntity impl
 
     @Override
     public void loyaltrident_setReturnSlot(int slot) {
-        LoyalTrident.setPreferredSlot(this.tridentStack, slot);
+        this.getItemStack().set(SLDataComponents.RETURN_SLOT, slot);
     }
 
     /**
@@ -86,20 +82,19 @@ public abstract class TridentEntityMixin extends PersistentProjectileEntity impl
      * <p> This redirects the loyalty check, preventing the trident from going back after it hits something,
      * and preventing it from dropping if the owner dies.
      */
-    @ModifyVariable(
+    @ModifyExpressionValue(
             method = "tick",
-            slice = @Slice(
-                    from = @At(value = "FIELD", target = "Lnet/minecraft/entity/projectile/TridentEntity;LOYALTY:Lnet/minecraft/entity/data/TrackedData;"),
-                    to = @At(value = "INVOKE", target = "Lnet/minecraft/entity/projectile/TridentEntity;isOwnerAlive()Z")
-            ),
-            at = @At("STORE")
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/entity/data/DataTracker;get(Lnet/minecraft/entity/data/TrackedData;)Ljava/lang/Object;"
+            )
     )
-    private int sit(int loyaltyLevel) {
+    private <T> T sit(T original) {
         // If your owner told you to sit, you sit (fake no loyalty)
         if (this.getDataTracker().get(sincereLoyalty$SITTING)) {
-            return 0;
+            return (T)Byte.valueOf("0");
         }
-        return loyaltyLevel;
+        return original;
     }
 
     @Inject(method = "tick", at = @At("RETURN"))
@@ -117,7 +112,7 @@ public abstract class TridentEntityMixin extends PersistentProjectileEntity impl
     private Optional<UUID> getTrueTridentOwner() {
         //noinspection OptionalAssignedToNull
         if (this.sincereLoyalty_trueOwner == null) {
-            this.sincereLoyalty_trueOwner = Optional.ofNullable(LoyalTrident.getTrueOwner(this.tridentStack));
+            this.sincereLoyalty_trueOwner = Optional.ofNullable(LoyalTrident.getTrueOwner(this.getItemStack()));
             // Not the owner == no loyalty
             if (this.sincereLoyalty_trueOwner.isPresent() && !sincereLoyalty_trueOwner.get().equals(((ProjectileAccessor) this).getOwnerUuid())) {
                 this.loyaltrident_sit();

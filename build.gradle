@@ -1,6 +1,6 @@
 plugins {
-	id 'fabric-loom' version "1.4-SNAPSHOT"
-	id 'io.github.ladysnake.chenille' version '0.11.3'
+	id 'fabric-loom' version "1.6-SNAPSHOT"
+	id 'io.github.ladysnake.chenille' version '0.13.1'
 }
 
 sourceCompatibility = JavaVersion.VERSION_17
@@ -25,7 +25,7 @@ repositories {
 		url "https://maven.ladysnake.org/releases"
 		content {
 			includeGroup("org.ladysnake")
-			includeGroupByRegex("dev\\.onyxstudios\\..*")
+			includeGroupByRegex("org\\.ladysnake\\..*")
 		}
 	}
 	maven {
@@ -69,10 +69,13 @@ dependencies {
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-	modImplementation(libs.mialeemisc) {
+	modImplementation(libs.mialib) {
 		exclude group: "dev.emi"
+		exclude group: "dev.onyxstudios.cardinal-components-api"
 	}
-	include (libs.mialeemisc)
+	include (libs.mialib) { exclude group: "dev.onyxstudios.cardinal-components-api" }
+	modImplementation(libs.cca.scoreboard)
+	include(libs.cca.scoreboard)
 
 	modRuntimeOnly(libs.modmenu) {
 		exclude group: "net.fabricmc"

@@ -4,8 +4,10 @@
   "package": "org.ladysnake.impaled.mixin",
   "compatibilityLevel": "JAVA_17",
   "client": [
+    "ClientPlayerEntityMixin",
     "InGameHudMixin",
     "InGameOverlayRendererMixin",
+    "MinecraftClientMixin",
     "impaling.EntityRendererMixin"
   ],
   "mixins": [
@@ -13,6 +15,7 @@
     "EnchantmentTargetMixin",
     "EntityMixin",
     "LivingEntityMixin",
+    "ServerPlayerEntityMixin",
     "TridentEntityAccessor",
     "TridentRiptideFeatureRendererMixin",
     "impaling.ImpalingEnchantmentMixin",
