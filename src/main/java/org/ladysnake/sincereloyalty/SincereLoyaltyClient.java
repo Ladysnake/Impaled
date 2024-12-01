@@ -65,10 +65,14 @@ public final class SincereLoyaltyClient implements ClientModInitializer {
 
     @Nullable
     private TridentRecaller.RecallStatus tickTridentRecalling(MinecraftClient mc) {
-        if (this.failedUseCountdown > 0) {
+        if (mc.player == null) {
+            this.failedUseCountdown = 0;
+            this.useTime = 0;
+            return null;
+        } else if (this.failedUseCountdown > 0) {
             PlayerEntity player = mc.player;
 
-            if (player != null && player.getMainHandStack().isEmpty()) {
+            if (player.getMainHandStack().isEmpty()) {
                 ++this.useTime;
 
                 if (this.useTime == RECALL_ANIMATION_START) {
