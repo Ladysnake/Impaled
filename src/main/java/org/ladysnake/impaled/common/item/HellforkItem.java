@@ -1,5 +1,6 @@
 package org.ladysnake.impaled.common.item;
 
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -17,6 +18,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
+import org.ladysnake.impaled.compat.SoulFired;
 import org.ladysnake.impaled.common.entity.ImpaledTridentEntity;
 import org.ladysnake.impaled.common.init.ImpaledItems;
 
@@ -27,7 +29,12 @@ public class HellforkItem extends ImpaledTridentItem {
 
     @Override
     public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        target.setOnFireFor(4 + attacker.getRandom().nextInt(4));
+        int seconds = 4 + attacker.getRandom().nextInt(4);
+        if (this == ImpaledItems.SOULFORK && FabricLoader.getInstance().isModLoaded("soul_fire_d")) {
+            SoulFired.setOnSoulFireFor(target, seconds);
+        } else {
+            target.setOnFireFor(seconds);
+        }
         return super.postHit(stack, target, attacker);
     }
 

@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version "1.4-SNAPSHOT"
+	id 'fabric-loom' version "1.5-SNAPSHOT"
 	id 'io.github.ladysnake.chenille' version '0.11.3'
 }
 
@@ -58,6 +58,16 @@ repositories {
 	maven { url "https://maven.willbl.dev/releases" }
 	// bookshelf
 	maven { url 'https://maven.blamejared.com' }
+  // Soul Fire'd
+  maven {
+    name = "Crystal Nest"
+    url = "https://maven.crystalnest.it"
+  }
+  // FCAP for Soul Fire'd.
+  maven {
+    name = "Fuzs Mod Resources"
+    url = "https://raw.githubusercontent.com/Fuzss/modresources/main/maven/"
+  }
 }
 
 dependencies {
@@ -82,6 +92,8 @@ dependencies {
 	modRuntimeOnly(libs.bundles.enchancement) {
 		exclude group: "net.fabricmc.fabric-api"
 	}
+
+  modImplementation "it.crystalnest:soul-fire-d-fabric:${project.minecraft_version}-${soul_fire_d_version}"
 }
 
 processResources {

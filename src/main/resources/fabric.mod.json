@@ -35,6 +35,9 @@
     "java": ">=17",
     "fabric": ">=0.48.0"
   },
+  "suggests": {
+    "soul_fire_d": "^4.0.0"
+  },
   "custom": {
     "loom:injected_interfaces": {
       "net/minecraft/class_8109": [
