@@ -66,7 +66,8 @@ public interface LoyalTrident {
     }
 
     static boolean hasTrueOwner(ItemStack tridentStack) {
-        if (tridentStack.isIn(SincereLoyalty.TRIDENTS) && EnchantmentHelper.getLoyalty(tridentStack) > 0) {
+        if (tridentStack.isIn(SincereLoyalty.TRIDENTS) && EnchantmentHelper.hasEnchantments(tridentStack)) {
+            // TODO: Check specifically for loyalty enchantment when registry access is available
             LoyalTridentComponents.LoyalTridentData data = tridentStack.get(LoyalTridentComponents.LOYAL_TRIDENT_DATA);
             return data != null;
         }

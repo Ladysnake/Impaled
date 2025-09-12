@@ -43,7 +43,7 @@ public class ImpaledClient implements ClientModInitializer {
 
             FabricModelPredicateProviderRegistry.register(item, Identifier.of("throwing"), (stack, world, entity, seed) -> entity != null && entity.isUsingItem() && entity.getActiveItem() == stack ? 1.0F : 0.0F);
             ModelLoadingPlugin.register(pluginContext -> {
-                pluginContext.addModels(new ModelIdentifier(tridentId.getNamespace(), tridentId.getPath() + "_in_inventory", "inventory"));
+                pluginContext.addModels(new ModelIdentifier(Identifier.of(tridentId.getNamespace(), tridentId.getPath() + "_in_inventory"), "inventory"));
             });
         }
 

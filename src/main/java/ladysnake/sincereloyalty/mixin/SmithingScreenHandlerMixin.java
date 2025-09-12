@@ -22,6 +22,8 @@ import ladysnake.sincereloyalty.SincereLoyalty;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
@@ -68,16 +70,21 @@ public abstract class SmithingScreenHandlerMixin extends ForgingScreenHandler {
             ItemStack item = this.input.getStack(0);
             ItemStack upgradeItem = this.input.getStack(1);
             if (item.isIn(SincereLoyalty.TRIDENTS) && upgradeItem.isIn(SincereLoyalty.LOYALTY_CATALYSTS)) {
-                Map<Enchantment, Integer> enchantments = EnchantmentHelper.get(item);
-                if (enchantments.getOrDefault(Enchantments.LOYALTY, 0) == Enchantments.LOYALTY.getMaxLevel()) {
-                    ItemStack result = item.copy();
-                    // we can mutate the map as it is recreated with every call to getEnchantments
-                    enchantments.put(Enchantments.LOYALTY, Enchantments.LOYALTY.getMaxLevel() + 1);
-                    EnchantmentHelper.set(enchantments, result);
-                    NbtCompound loyaltyData = result.getOrCreateSubNbt(LoyalTrident.MOD_NBT_KEY);
-                    loyaltyData.putUuid(LoyalTrident.TRIDENT_OWNER_NBT_KEY, this.player.getUuid());
-                    loyaltyData.putString(LoyalTrident.OWNER_NAME_NBT_KEY, this.player.getEntityName());
-                    return result;
+                // Get current loyalty level
+                RegistryEntry<Enchantment> loyaltyEnchantment = this.player.getServerWorld().getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntry(Enchantments.LOYALTY).orElse(null);
+                if (loyaltyEnchantment != null) {
+                    int currentLevel = EnchantmentHelper.getLevel(loyaltyEnchantment, item);
+                    // Check if at max level (3)
+                    if (currentLevel == 3) {
+                        ItemStack result = item.copy();
+                        // Apply level 4 loyalty
+                        EnchantmentHelper.apply(result, builder -> {
+                            builder.set(loyaltyEnchantment, 4);
+                        });
+                        // Set trident owner using component system
+                        LoyalTrident.setTridentOwner(result, this.player.getUuid(), this.player.getName().getString());
+                        return result;
+                    }
                 }
             }
         }

@@ -54,7 +54,7 @@ public class ImpaledTridentItem extends TridentItem {
                             }
 
                             world.spawnEntity(trident);
-                            world.playSoundFromEntity(null, trident, SoundEvents.ITEM_TRIDENT_THROW, SoundCategory.PLAYERS, 1.0F, 1.0F);
+                            world.playSoundFromEntity(null, trident, SoundEvents.ITEM_TRIDENT_THROW.value(), SoundCategory.PLAYERS, 1.0F, 1.0F);
                             if (!player.getAbilities().creativeMode) {
                                 player.getInventory().removeOne(stack);
                             }
@@ -81,11 +81,11 @@ public class ImpaledTridentItem extends TridentItem {
 
                         SoundEvent soundEvent3;
                         if (j >= 3) {
-                            soundEvent3 = SoundEvents.ITEM_TRIDENT_RIPTIDE_3;
+                            soundEvent3 = SoundEvents.ITEM_TRIDENT_RIPTIDE_3.value();
                         } else if (j == 2) {
-                            soundEvent3 = SoundEvents.ITEM_TRIDENT_RIPTIDE_2;
+                            soundEvent3 = SoundEvents.ITEM_TRIDENT_RIPTIDE_2.value();
                         } else {
-                            soundEvent3 = SoundEvents.ITEM_TRIDENT_RIPTIDE_1;
+                            soundEvent3 = SoundEvents.ITEM_TRIDENT_RIPTIDE_1.value();
                         }
 
                         world.playSoundFromEntity(null, player, soundEvent3, SoundCategory.PLAYERS, 1.0F, 1.0F);
