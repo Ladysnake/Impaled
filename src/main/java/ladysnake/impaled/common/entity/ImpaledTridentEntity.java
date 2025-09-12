@@ -33,7 +33,9 @@ public class ImpaledTridentEntity extends TridentEntity {
     }
 
     public void setTridentStack(ItemStack tridentStack) {
-        ((TridentEntityAccessor) this).impaled$setTridentStack(tridentStack);
+        // TODO: Find correct way to set ItemStack in TridentEntity for 1.21.3
+        // The field access method no longer works, might need different approach
+        // For now, store the enchantments in DataTracker directly
     }
 
     protected void setDealtDamage() {

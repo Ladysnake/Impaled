@@ -22,6 +22,8 @@ import net.minecraft.registry.Registries;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
 
+import java.util.List;
+
 public class ImpaledClient implements ClientModInitializer {
     public static final Identifier HELLFORK_RIPTIDE_TEXTURE = Identifier.of(Impaled.MODID, "textures/entity/hellfork_riptide.png");
     public static final Identifier SOULFORK_RIPTIDE_TEXTURE = Identifier.of(Impaled.MODID, "textures/entity/soulfork_riptide.png");

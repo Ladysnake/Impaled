@@ -3,6 +3,9 @@ package ladysnake.impaled.common.item;
 import ladysnake.impaled.common.entity.ImpaledTridentEntity;
 import ladysnake.sincereloyalty.LoyalTrident;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.Enchantments;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
@@ -37,11 +40,18 @@ public class ImpaledTridentItem extends TridentItem {
     }
 
     @Override
-    public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
+    public boolean onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
         if (user instanceof PlayerEntity player) {
-            int i = this.getMaxUseTime(stack) - remainingUseTicks;
+            int i = this.getMaxUseTime(stack, user) - remainingUseTicks;
             if (i >= 10) {
-                int j = EnchantmentHelper.getRiptide(stack);
+                // Get riptide level using registry access
+                int j = 0;
+                if (world instanceof ServerWorld serverWorld) {
+                    var riptideEnchantment = serverWorld.getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT).getEntry(Enchantments.RIPTIDE.getValue()).orElse(null);
+                    if (riptideEnchantment != null) {
+                        j = EnchantmentHelper.getLevel(riptideEnchantment, stack);
+                    }
+                }
                 if (j <= 0 || canRiptide(player)) {
                     if (!world.isClient) {
                         stack.damage(1, player, livingEntity -> livingEntity.sendToolBreakStatus(user.getActiveHand()));
@@ -90,9 +100,11 @@ public class ImpaledTridentItem extends TridentItem {
 
                         world.playSoundFromEntity(null, player, soundEvent3, SoundCategory.PLAYERS, 1.0F, 1.0F);
                     }
+                    return true; // Successfully used the item
                 }
             }
         }
+        return false; // Item not used
     }
 
     protected boolean canRiptide(PlayerEntity playerEntity) {
