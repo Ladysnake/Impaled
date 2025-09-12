@@ -17,6 +17,7 @@
  */
 package ladysnake.sincereloyalty.mixin;
 
+import ladysnake.sincereloyalty.NetworkPayloads;
 import ladysnake.sincereloyalty.SincereLoyalty;
 import ladysnake.sincereloyalty.TridentRecaller;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -52,14 +53,11 @@ public abstract class PlayerEntityMixin extends LivingEntity implements TridentR
     public void updateRecallStatus(RecallStatus recallingTrident) {
         if (this.recallingTrident != recallingTrident) {
             this.recallingTrident = recallingTrident;
-            if (!this.world.isClient) {
-                PacketByteBuf res = PacketByteBufs.create();
-                res.writeInt(this.getId());
-                res.writeEnumConstant(recallingTrident);
-                Packet<?> packet = ServerPlayNetworking.createS2CPacket(SincereLoyalty.RECALLING_MESSAGE_ID, res);
-                ((ServerPlayerEntity) (Object) this).networkHandler.sendPacket(packet);
+            if (!this.getWorld().isClient) {
+                NetworkPayloads.RecallingStatusPayload payload = new NetworkPayloads.RecallingStatusPayload(this.getId(), recallingTrident);
+                ServerPlayNetworking.send(((ServerPlayerEntity) (Object) this), payload);
                 for (ServerPlayerEntity player : PlayerLookup.tracking(this)) {
-                    player.networkHandler.sendPacket(packet);
+                    ServerPlayNetworking.send(player, payload);
                 }
             }
         }

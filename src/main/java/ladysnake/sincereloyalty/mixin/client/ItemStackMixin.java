@@ -18,6 +18,7 @@
 package ladysnake.sincereloyalty.mixin.client;
 
 import ladysnake.sincereloyalty.LoyalTrident;
+import ladysnake.sincereloyalty.LoyalTridentComponents;
 import net.minecraft.item.Item.TooltipContext;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -68,14 +69,13 @@ public abstract class ItemStackMixin {
         }
     }
 
-    @Shadow
-    public abstract NbtCompound getSubNbt(String key);
+    // getSubNbt method is no longer available in 1.21
 
     @Inject(method = "getTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;appendEnchantments(Ljava/util/List;Lnet/minecraft/nbt/NbtList;)V"))
     private void captureThis(PlayerEntity player, TooltipContext context, CallbackInfoReturnable<List<Text>> cir) {
-        NbtCompound loyaltyNbt = this.getSubNbt(LoyalTrident.MOD_NBT_KEY);
-        if (loyaltyNbt != null && loyaltyNbt.contains(LoyalTrident.OWNER_NAME_NBT_KEY)) {
-            impaled$trueOwnerName = loyaltyNbt.getString(LoyalTrident.OWNER_NAME_NBT_KEY);
+        LoyalTridentComponents.LoyalTridentData loyaltyData = ((ItemStack) (Object) this).get(LoyalTridentComponents.LOYAL_TRIDENT_DATA);
+        if (loyaltyData != null) {
+            impaled$trueOwnerName = loyaltyData.ownerName();
             impaled$riptide = EnchantmentHelper.getRiptide((ItemStack) (Object) this) > 0;
         }
     }

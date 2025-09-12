@@ -37,7 +37,7 @@ public abstract class LivingEntityMixin extends EntityMixin {
 
         if (((Object) this) instanceof ElderGuardianEntity && (directSource instanceof PlayerEntity player && player.getMainHandStack().isIn(SincereLoyalty.TRIDENTS) || (directSource instanceof TridentEntity && EnchantmentHelper.getLoyalty(((TridentEntityAccessor) directSource).impaled$getTridentStack()) > 0))) {
             this.dropStack(new ItemStack(ImpaledItems.ELDER_GUARDIAN_EYE));
-            this.world.playSound(this.getX(), this.getY(), this.getZ(), SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.NEUTRAL, 1.0f, 1.0f, true);
+            this.getWorld().playSound(this.getX(), this.getY(), this.getZ(), SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.NEUTRAL, 1.0f, 1.0f, true);
         }
     }
 

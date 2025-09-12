@@ -30,6 +30,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.PersistentState;
@@ -41,7 +42,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public final class LoyalTridentStorage extends PersistentState {
-
+    
     final ServerWorld world;
     /**
      * Player UUID -> Trident UUID -> Trident Position
@@ -55,10 +56,15 @@ public final class LoyalTridentStorage extends PersistentState {
 
     public static LoyalTridentStorage get(ServerWorld world) {
         final String id = SincereLoyalty.MOD_ID + "_trident_storage";
-        return world.getPersistentStateManager().getOrCreate(tag -> fromNbt(world, tag), () -> new LoyalTridentStorage(world), id);
+        Type<LoyalTridentStorage> type = new Type<>(
+            () -> new LoyalTridentStorage(world),
+            (nbt, registryLookup) -> fromNbt(world, nbt, registryLookup),
+            null
+        );
+        return world.getPersistentStateManager().getOrCreate(type, id);
     }
 
-    public static LoyalTridentStorage fromNbt(ServerWorld world, NbtCompound tag) {
+    public static LoyalTridentStorage fromNbt(ServerWorld world, NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
         LoyalTridentStorage ret = new LoyalTridentStorage(world);
         NbtList ownersNbt = tag.getList("trident_owners", NbtType.COMPOUND);
         for (int i = 0; i < ownersNbt.size(); i++) {
@@ -126,7 +132,6 @@ public final class LoyalTridentStorage extends PersistentState {
 
             ((LoyalTrident) trident).loyaltrident_setReturnSlot(player.getInventory().selectedSlot);
             this.world.playSound(player, trident.getX(), trident.getY(), trident.getZ(), SoundEvents.ITEM_TRIDENT_RETURN, trident.getSoundCategory(), 2.0f, 0.7f);
-            ((ServerPlayerEntity) player).networkHandler.connection.send(new PlaySoundS2CPacket(Registries.SOUND_EVENT.getEntry(SoundEvents.ITEM_TRIDENT_RETURN), trident.getSoundCategory(), trident.getPos().getX(), trident.getPos().getY(), trident.getPos().getZ(), trident.distanceTo(player) / 8, 0.7f, trident.getId()));
             foundAny = true;
         }
         return foundAny;
@@ -134,7 +139,7 @@ public final class LoyalTridentStorage extends PersistentState {
 
     @NotNull
     @Override
-    public NbtCompound writeNbt(NbtCompound tag) {
+    public NbtCompound writeNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
         if (!this.tridents.isEmpty()) {
             NbtList ownersNbt = new NbtList();
             this.tridents.forEach((ownerUuid, tridents) -> {

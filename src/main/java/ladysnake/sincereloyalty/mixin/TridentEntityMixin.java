@@ -104,10 +104,10 @@ public abstract class TridentEntityMixin extends PersistentProjectileEntity impl
 
     @Inject(method = "tick", at = @At("RETURN"))
     private void tickTrident(CallbackInfo ci) {
-        if (!this.world.isClient) {
+        if (!this.getWorld().isClient) {
             this.getTrueTridentOwner().ifPresent(trueOwnerUuid -> {
                 // Keep track of this trident's position at all time, in case the chunk goes unloaded
-                LoyalTridentStorage.get((ServerWorld) this.world)
+                LoyalTridentStorage.get((ServerWorld) this.getWorld())
                         .memorizeTrident(trueOwnerUuid, ((TridentEntity) (Object) this));
             });
         }
@@ -129,9 +129,9 @@ public abstract class TridentEntityMixin extends PersistentProjectileEntity impl
     @Override
     public void remove(RemovalReason reason) {
         super.remove(reason);
-        if (!world.isClient && !reason.shouldSave()) {
+        if (!getWorld().isClient && !reason.shouldSave()) {
             this.getTrueTridentOwner().ifPresent(uuid ->
-                    LoyalTridentStorage.get(((ServerWorld) this.world)).forgetTrident(uuid, ((TridentEntity) (Object) this)));
+                    LoyalTridentStorage.get(((ServerWorld) this.getWorld())).forgetTrident(uuid, ((TridentEntity) (Object) this)));
         }
     }
 

@@ -45,40 +45,50 @@ public interface LoyalTrident {
 
     @Nullable
     static UUID getTridentUuid(ItemStack stack) {
-        NbtCompound loyaltyData = stack.getSubNbt(LoyalTrident.MOD_NBT_KEY);
-        if (loyaltyData == null || !loyaltyData.containsUuid(TRIDENT_OWNER_NBT_KEY)) {
+        LoyalTridentComponents.LoyalTridentData data = stack.get(LoyalTridentComponents.LOYAL_TRIDENT_DATA);
+        if (data == null) {
             return null;
         }
-        if (!loyaltyData.containsUuid(TRIDENT_UUID_NBT_KEY)) {
-            loyaltyData.putUuid(LoyalTrident.TRIDENT_UUID_NBT_KEY, UUID.randomUUID());
-        }
-        return loyaltyData.getUuid(TRIDENT_UUID_NBT_KEY);
+        return data.tridentUuid();
     }
 
     static void setPreferredSlot(ItemStack tridentStack, int slot) {
-        tridentStack.getOrCreateSubNbt(LoyalTrident.MOD_NBT_KEY).putInt(LoyalTrident.RETURN_SLOT_NBT_KEY, slot);
+        LoyalTridentComponents.LoyalTridentData currentData = tridentStack.get(LoyalTridentComponents.LOYAL_TRIDENT_DATA);
+        if (currentData != null) {
+            LoyalTridentComponents.LoyalTridentData newData = new LoyalTridentComponents.LoyalTridentData(
+                currentData.tridentUuid(),
+                currentData.ownerName(),
+                currentData.tridentOwner(),
+                java.util.Optional.of(slot)
+            );
+            tridentStack.set(LoyalTridentComponents.LOYAL_TRIDENT_DATA, newData);
+        }
     }
 
     static boolean hasTrueOwner(ItemStack tridentStack) {
         if (tridentStack.isIn(SincereLoyalty.TRIDENTS) && EnchantmentHelper.getLoyalty(tridentStack) > 0) {
-            NbtCompound loyaltyNbt = tridentStack.getSubNbt(MOD_NBT_KEY);
-            return loyaltyNbt != null && loyaltyNbt.containsUuid(TRIDENT_OWNER_NBT_KEY);
+            LoyalTridentComponents.LoyalTridentData data = tridentStack.get(LoyalTridentComponents.LOYAL_TRIDENT_DATA);
+            return data != null;
         }
         return false;
     }
 
     @Nullable
     static UUID getTrueOwner(ItemStack tridentStack) {
-        return hasTrueOwner(tridentStack) ? Objects.requireNonNull(tridentStack.getSubNbt(MOD_NBT_KEY)).getUuid(TRIDENT_OWNER_NBT_KEY) : null;
+        if (hasTrueOwner(tridentStack)) {
+            LoyalTridentComponents.LoyalTridentData data = tridentStack.get(LoyalTridentComponents.LOYAL_TRIDENT_DATA);
+            return data != null ? data.tridentOwner() : null;
+        }
+        return null;
     }
 
     @Nullable
     static TridentEntity spawnTridentForStack(Entity thrower, ItemStack tridentStack) {
-        NbtCompound loyaltyData = tridentStack.getSubNbt(MOD_NBT_KEY);
+        LoyalTridentComponents.LoyalTridentData loyaltyData = tridentStack.get(LoyalTridentComponents.LOYAL_TRIDENT_DATA);
         if (loyaltyData != null) {
-            UUID ownerUuid = loyaltyData.getUuid(TRIDENT_OWNER_NBT_KEY);
+            UUID ownerUuid = loyaltyData.tridentOwner();
             if (ownerUuid != null) {
-                PlayerEntity owner = thrower.world.getPlayerByUuid(ownerUuid);
+                PlayerEntity owner = thrower.getWorld().getPlayerByUuid(ownerUuid);
                 if (owner != null) {
                     TridentEntity trident;
 
@@ -93,7 +103,7 @@ public interface LoyalTrident {
                     trident.pickupType = PersistentProjectileEntity.PickupPermission.ALLOWED;
                     trident.setVelocity(thrower.getVelocity());
                     trident.copyPositionAndRotation(thrower);
-                    thrower.world.spawnEntity(trident);
+                    thrower.getWorld().spawnEntity(trident);
                     return trident;
                 }
             }
@@ -108,4 +118,22 @@ public interface LoyalTrident {
     void loyaltrident_wakeUp();
 
     void loyaltrident_setReturnSlot(int slot);
+
+    static void setTridentOwner(ItemStack tridentStack, UUID ownerUuid, String ownerName) {
+        UUID tridentUuid = UUID.randomUUID();
+        LoyalTridentComponents.LoyalTridentData data = new LoyalTridentComponents.LoyalTridentData(
+                tridentUuid, ownerName, ownerUuid, java.util.Optional.empty()
+        );
+        tridentStack.set(LoyalTridentComponents.LOYAL_TRIDENT_DATA, data);
+    }
+
+    static java.util.Optional<Integer> getPreferredSlot(ItemStack tridentStack) {
+        LoyalTridentComponents.LoyalTridentData data = tridentStack.get(LoyalTridentComponents.LOYAL_TRIDENT_DATA);
+        return data != null ? data.returnSlot() : java.util.Optional.empty();
+    }
+
+    static String getOwnerName(ItemStack tridentStack) {
+        LoyalTridentComponents.LoyalTridentData data = tridentStack.get(LoyalTridentComponents.LOYAL_TRIDENT_DATA);
+        return data != null ? data.ownerName() : null;
+    }
 }

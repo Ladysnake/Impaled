@@ -44,7 +44,7 @@ public final class WorldTridentEntry extends TridentEntry {
     public WorldTridentEntry(ServerWorld world, NbtCompound tag) {
         super(world, tag);
         this.tridentEntityUuid = tag.getUuid("trident_entity_uuid");
-        this.lastPos = NbtHelper.toBlockPos(tag.getCompound("last_pos"));
+        this.lastPos = NbtHelper.toBlockPos(tag, "last_pos");
     }
 
     @Override
