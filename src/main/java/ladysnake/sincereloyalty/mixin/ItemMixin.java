@@ -38,12 +38,12 @@ import java.util.UUID;
 public abstract class ItemMixin {
     @Inject(method = "inventoryTick", at = @At("RETURN"))
     private void updateTridentInInventory(ItemStack stack, World world, Entity entity, int slot, boolean selected, CallbackInfo ci) {
-        if (entity.age % 10 == 0 && !entity.world.isClient && entity instanceof PlayerEntity) {
+        if (entity.age % 10 == 0 && !entity.getWorld().isClient && entity instanceof PlayerEntity) {
             UUID trueOwner = LoyalTrident.getTrueOwner(stack);
             if (Objects.equals(trueOwner, entity.getUuid())) {
                 String currentOwnerName = LoyalTrident.getOwnerName(stack);
-                if (!Objects.equals(entity.getEntityName(), currentOwnerName)) {
-                    LoyalTrident.setTridentOwner(stack, entity.getUuid(), entity.getEntityName());
+                if (!Objects.equals(entity.getName().getString(), currentOwnerName)) {
+                    LoyalTrident.setTridentOwner(stack, entity.getUuid(), entity.getName().getString());
                 }
             } else if (trueOwner != null) {
                 LoyalTridentStorage.get((ServerWorld) world).memorizeTrident(trueOwner, LoyalTrident.getTridentUuid(stack), (PlayerEntity) entity);

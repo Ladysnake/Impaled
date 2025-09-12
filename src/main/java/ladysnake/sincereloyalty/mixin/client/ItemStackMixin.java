@@ -19,6 +19,8 @@ package ladysnake.sincereloyalty.mixin.client;
 
 import ladysnake.sincereloyalty.LoyalTrident;
 import ladysnake.sincereloyalty.LoyalTridentComponents;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.item.Item.TooltipContext;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -49,16 +51,20 @@ public abstract class ItemStackMixin {
     private static String impaled$trueOwnerName;
     @Unique
     private static boolean impaled$riptide;
+    @Unique
+    private static boolean impaled$isLoyalty;
 
     // inject into the lambda in appendEnchantments
     @Dynamic("Lambda method")
     @Inject(method = "method_17869", at = @At("RETURN"))
     private static void editTooltip(List<Text> lines, NbtCompound enchantmentNbt, Enchantment enchantment, CallbackInfo info) {
-        if (enchantment == Enchantments.LOYALTY && impaled$trueOwnerName != null) {
+        // Check if this is loyalty enchantment using our flag
+        if (impaled$isLoyalty && impaled$trueOwnerName != null) {
             if (!lines.isEmpty()) {
                 if (impaled$riptide) {
                     // If there is riptide, we present as if there was only one level possible
-                    lines.set(lines.size() - 1, Text.translatable(enchantment.getTranslationKey()).formatted(Formatting.GRAY));
+                    // Use a generic loyalty translation since we can't access the specific one
+                    lines.set(lines.size() - 1, Text.translatable("enchantment.minecraft.loyalty").formatted(Formatting.GRAY));
                 }
 
                 MutableText line = (MutableText) lines.get(lines.size() - 1);
@@ -66,6 +72,7 @@ public abstract class ItemStackMixin {
                 line.append(Text.literal(" ")).append(Text.translatable("impaled:tooltip.owned_by", impaled$trueOwnerName).formatted(Formatting.DARK_GRAY));
             }
             impaled$trueOwnerName = null;
+            impaled$isLoyalty = false;
         }
     }
 
@@ -76,9 +83,17 @@ public abstract class ItemStackMixin {
         LoyalTridentComponents.LoyalTridentData loyaltyData = ((ItemStack) (Object) this).get(LoyalTridentComponents.LOYAL_TRIDENT_DATA);
         if (loyaltyData != null) {
             impaled$trueOwnerName = loyaltyData.ownerName();
+            // Check if item has loyalty enchantment
+            ItemStack stack = (ItemStack) (Object) this;
+            RegistryEntry<Enchantment> loyaltyRef = player.getWorld().getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT).getEntry(Enchantments.LOYALTY.getValue()).orElse(null);
+            if (loyaltyRef != null) {
+                impaled$isLoyalty = EnchantmentHelper.getLevel(loyaltyRef, stack) > 0;
+            }
             // Check for riptide enchantment - simplified check for now
-            // TODO: Properly check riptide enchantment level when registry access is available
-            impaled$riptide = EnchantmentHelper.hasEnchantments((ItemStack) (Object) this);
+            RegistryEntry<Enchantment> riptideRef = player.getWorld().getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT).getEntry(Enchantments.RIPTIDE.getValue()).orElse(null);
+            if (riptideRef != null) {
+                impaled$riptide = EnchantmentHelper.getLevel(riptideRef, stack) > 0;
+            }
         }
     }
 }

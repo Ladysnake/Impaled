@@ -19,7 +19,7 @@ public class ImpaledTridentEntity extends TridentEntity {
         // Get loyalty level using the new enchantment system
         byte loyaltyLevel = 0;
         if (!this.getWorld().isClient()) {
-            var loyaltyEnchantment = this.getWorld().getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntry(Enchantments.LOYALTY);
+            var loyaltyEnchantment = this.getWorld().getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT).getEntry(Enchantments.LOYALTY.getValue());
             if (loyaltyEnchantment.isPresent()) {
                 loyaltyLevel = (byte) EnchantmentHelper.getLevel(loyaltyEnchantment.get(), stack);
             }

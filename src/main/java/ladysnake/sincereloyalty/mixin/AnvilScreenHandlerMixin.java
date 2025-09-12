@@ -3,11 +3,14 @@ package ladysnake.sincereloyalty.mixin;
 import ladysnake.sincereloyalty.LoyalTrident;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.Enchantments;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.AnvilScreenHandler;
 import net.minecraft.screen.ForgingScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.ScreenHandlerType;
+import net.minecraft.screen.slot.ForgingSlotsManager;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -17,10 +20,14 @@ import org.spongepowered.asm.mixin.injection.Slice;
 @Mixin(AnvilScreenHandler.class)
 public abstract class AnvilScreenHandlerMixin extends ForgingScreenHandler {
     private boolean impaled$checkingRiptideCompat;
+    private Enchantment impaled$currentEnchantment;
 
-    public AnvilScreenHandlerMixin(@Nullable ScreenHandlerType<?> type, int syncId, PlayerInventory playerInventory, ScreenHandlerContext context) {
-        super(type, syncId, playerInventory, context);
+    public AnvilScreenHandlerMixin(@Nullable ScreenHandlerType<?> type, int syncId, PlayerInventory playerInventory, ScreenHandlerContext context, ForgingSlotsManager forgingSlotsManager) {
+        super(type, syncId, playerInventory, context, forgingSlotsManager);
     }
+
+    // This method should be implemented by the actual AnvilScreenHandler, but we need to declare it for compilation
+    protected abstract ForgingSlotsManager getForgingSlotsManager();
 
     @ModifyVariable(
             method = "updateResult",
@@ -32,7 +39,12 @@ public abstract class AnvilScreenHandlerMixin extends ForgingScreenHandler {
             ordinal = 0
     )
     private Enchantment captureSecondStackEnchant(Enchantment checkedEnchantment) {
-        impaled$checkingRiptideCompat = checkedEnchantment == Enchantments.RIPTIDE;
+        // Check if this is riptide enchantment using registry comparison
+        impaled$currentEnchantment = checkedEnchantment;
+        RegistryEntry<Enchantment> riptideRef = this.player.getWorld().getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT).getEntry(Enchantments.RIPTIDE.getValue()).orElse(null);
+        if (riptideRef != null) {
+            impaled$checkingRiptideCompat = riptideRef.value().equals(checkedEnchantment);
+        }
         return checkedEnchantment;
     }
 
@@ -46,10 +58,17 @@ public abstract class AnvilScreenHandlerMixin extends ForgingScreenHandler {
             ordinal = 1
     )
     private Enchantment allowRiptideLoyalty(Enchantment baseEnchant) {
-        if (baseEnchant == Enchantments.LOYALTY && impaled$checkingRiptideCompat) {
+        // Check if this is loyalty enchantment using registry comparison
+        RegistryEntry<Enchantment> loyaltyRef = this.player.getWorld().getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT).getEntry(Enchantments.LOYALTY.getValue()).orElse(null);
+        boolean isLoyalty = loyaltyRef != null && loyaltyRef.value().equals(baseEnchant);
+        
+        if (isLoyalty && impaled$checkingRiptideCompat) {
             if (LoyalTrident.hasTrueOwner(this.input.getStack(0))) {
-                // If enchantment1 == enchantment2, they are automatically considered compatible
-                return Enchantments.RIPTIDE;
+                // Return the actual riptide enchantment, not the registry key
+                RegistryEntry<Enchantment> riptideRef = this.player.getWorld().getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT).getEntry(Enchantments.RIPTIDE.getValue()).orElse(null);
+                if (riptideRef != null) {
+                    return riptideRef.value();
+                }
             }
         }
         return baseEnchant;

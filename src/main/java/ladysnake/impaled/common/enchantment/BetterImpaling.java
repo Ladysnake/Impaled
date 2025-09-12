@@ -13,7 +13,7 @@ import net.minecraft.item.ItemStack;
 public final class BetterImpaling {
     public static float getAttackDamage(ItemStack stack, Entity target, RegistryWrapper.WrapperLookup registryLookup) {
         // Get impaling enchantment from registry
-        var impalingEnchantment = registryLookup.getWrapperOrThrow(RegistryKeys.ENCHANTMENT).getOptional(Enchantments.IMPALING);
+        var impalingEnchantment = registryLookup.getOrThrow(RegistryKeys.ENCHANTMENT).getEntry(Enchantments.IMPALING.getValue());
         int impalingLevel = 0;
         if (impalingEnchantment.isPresent()) {
             impalingLevel = EnchantmentHelper.getLevel(impalingEnchantment.get(), stack);

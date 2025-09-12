@@ -96,9 +96,9 @@ public interface LoyalTrident {
                     // Yes it is fine to call Set<TridentItem>#contains(Item)
                     //noinspection SuspiciousMethodCalls
                     if (ImpaledItems.ALL_TRIDENTS.contains(tridentStack.getItem())) {
-                        trident = ((ImpaledTridentItem) tridentStack.getItem()).createTrident(thrower.world, owner, tridentStack);
+                        trident = ((ImpaledTridentItem) tridentStack.getItem()).createTrident(thrower.getWorld(), owner, tridentStack);
                     } else {
-                        trident = new TridentEntity(thrower.world, owner, tridentStack);
+                        trident = new TridentEntity(thrower.getWorld(), owner, tridentStack);
                     }
 
                     trident.pickupType = PersistentProjectileEntity.PickupPermission.ALLOWED;

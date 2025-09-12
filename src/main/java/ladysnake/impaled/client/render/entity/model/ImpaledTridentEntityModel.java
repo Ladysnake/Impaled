@@ -12,7 +12,7 @@ public class ImpaledTridentEntityModel extends Model {
     private final ModelPart root;
 
     public ImpaledTridentEntityModel(ModelPart root) {
-        super(RenderLayer::getEntitySolid);
+        super(root, RenderLayer::getEntitySolid);
         this.root = root;
     }
 
@@ -40,7 +40,8 @@ public class ImpaledTridentEntityModel extends Model {
         return TexturedModelData.of(modelData, 32, 32);
     }
 
-    public void render(MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float alpha) {
-        this.root.render(matrices, vertices, light, overlay, red, green, blue, alpha);
+    // Note: render method is now final in Model class, using base implementation
+    public ModelPart getRoot() {
+        return this.root;
     }
 }

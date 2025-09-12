@@ -57,7 +57,7 @@ public abstract class TridentEntityMixin extends PersistentProjectileEntity impl
 
     @Inject(method = "initDataTracker", at = @At("RETURN"))
     private void initDataTracker(CallbackInfo ci) {
-        this.getDataTracker().startTracking(sincereLoyalty$SITTING, false);
+        this.getDataTracker().set(sincereLoyalty$SITTING, false);
     }
 
     @Override
