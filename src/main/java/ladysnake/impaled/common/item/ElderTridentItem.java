@@ -1,6 +1,7 @@
 package ladysnake.impaled.common.item;
 
 import ladysnake.impaled.common.entity.ImpaledTridentEntity;
+import net.minecraft.item.Item;
 import ladysnake.impaled.common.init.ImpaledEntityTypes;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
@@ -14,7 +15,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.world.World;
 
 public class ElderTridentItem extends ImpaledTridentItem {
-    public ElderTridentItem(Settings settings, EntityType<? extends ImpaledTridentEntity> entityType) {
+    public ElderTridentItem(Item.Settings settings, EntityType<? extends ImpaledTridentEntity> entityType) {
         super(settings, entityType);
     }
 

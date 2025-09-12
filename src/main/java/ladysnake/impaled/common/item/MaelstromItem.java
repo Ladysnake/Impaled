@@ -6,29 +6,31 @@ import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
+import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.entity.projectile.TridentEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.*;
+import net.minecraft.item.consume.UseAction;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
 import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.UseAction;
+import net.minecraft.util.ActionResult;
 import net.minecraft.world.World;
 
 import java.util.function.Predicate;
 
-public class MaelstromItem extends RangedWeaponItem implements Vanishable {
+public class MaelstromItem extends RangedWeaponItem {
     public MaelstromItem(Item.Settings settings) {
         super(settings);
     }
 
-    public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
+    public boolean onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
         if (user instanceof PlayerEntity) {
             ((PlayerEntity) user).getItemCooldownManager().set(this, 20 - (3 * EnchantmentHelper.getLevel(Enchantments.EFFICIENCY, stack)));
         }
+        return true;
     }
 
     public int getMaxUseTime(ItemStack stack) {
@@ -39,10 +41,16 @@ public class MaelstromItem extends RangedWeaponItem implements Vanishable {
         return UseAction.BLOCK;
     }
 
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+    @Override
+    public void shoot(LivingEntity shooter, ProjectileEntity projectile, int index, float speed, float divergence, float yaw, LivingEntity target) {
+        // MaelstromItem doesn't shoot projectiles in the traditional sense, so this is left empty
+    }
+
+    @Override
+    public ActionResult use(World world, PlayerEntity user, Hand hand) {
         ItemStack itemStack = user.getStackInHand(hand);
         user.setCurrentHand(hand);
-        return TypedActionResult.consume(itemStack);
+        return ActionResult.CONSUME;
     }
 
     @Override

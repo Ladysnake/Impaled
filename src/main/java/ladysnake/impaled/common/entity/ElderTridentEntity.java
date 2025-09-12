@@ -19,7 +19,8 @@ import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import xyz.amymialee.mialeemisc.entities.IPlayerTargeting;
+// TODO: Re-enable when mialeemisc dependency is available
+// import xyz.amymialee.mialeemisc.entities.IPlayerTargeting;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,9 +46,11 @@ public class ElderTridentEntity extends ImpaledTridentEntity {
         }
         if (!this.hasSearchedTarget) {
             if (this.getOwner() != null) {
-                if (this.getOwner() instanceof IPlayerTargeting targeting) {
-                    this.tridentTarget = targeting.mialeeMisc$getLastTarget();
-                } else if (this.getOwner() instanceof MobEntity mob) {
+                // TODO: Re-enable when mialeemisc dependency is available
+                // if (this.getOwner() instanceof IPlayerTargeting targeting) {
+                //     this.tridentTarget = targeting.mialeeMisc$getLastTarget();
+                // } else 
+                if (this.getOwner() instanceof MobEntity mob) {
                     this.tridentTarget = mob.getTarget();
                 }
                 this.hasSearchedTarget = true;

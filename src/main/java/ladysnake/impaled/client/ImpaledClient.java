@@ -7,7 +7,7 @@ import ladysnake.impaled.common.init.ImpaledEntityTypes;
 import ladysnake.impaled.common.init.ImpaledItems;
 import ladysnake.impaled.common.item.ImpaledTridentItem;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
+import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
@@ -23,9 +23,9 @@ import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
 
 public class ImpaledClient implements ClientModInitializer {
-    public static final Identifier HELLFORK_RIPTIDE_TEXTURE = new Identifier(Impaled.MODID, "textures/entity/hellfork_riptide.png");
-    public static final Identifier SOULFORK_RIPTIDE_TEXTURE = new Identifier(Impaled.MODID, "textures/entity/soulfork_riptide.png");
-    public static final EntityModelLayer ATLAN = new EntityModelLayer(new Identifier(Impaled.MODID, "atlan"), "main");
+    public static final Identifier HELLFORK_RIPTIDE_TEXTURE = Identifier.of(Impaled.MODID, "textures/entity/hellfork_riptide.png");
+    public static final Identifier SOULFORK_RIPTIDE_TEXTURE = Identifier.of(Impaled.MODID, "textures/entity/soulfork_riptide.png");
+    public static final EntityModelLayer ATLAN = new EntityModelLayer(Identifier.of(Impaled.MODID, "atlan"), "main");
 
     @Override
     public void onInitializeClient() {
@@ -33,7 +33,7 @@ public class ImpaledClient implements ClientModInitializer {
 
         for (ImpaledTridentItem item : ImpaledItems.ALL_TRIDENTS) {
             Identifier tridentId = Registries.ITEM.getId(item);
-            Identifier texture = new Identifier(tridentId.getNamespace(), "textures/entity/" + tridentId.getPath() + ".png");
+            Identifier texture = Identifier.of(tridentId.getNamespace(), "textures/entity/" + tridentId.getPath() + ".png");
 
             EntityModelLayer modelLayer = item == ImpaledItems.ATLAN ? ATLAN : EntityModelLayers.TRIDENT;
             ImpaledTridentItemRenderer tridentItemRenderer = new ImpaledTridentItemRenderer(tridentId, texture, modelLayer);
@@ -41,8 +41,10 @@ public class ImpaledClient implements ClientModInitializer {
             BuiltinItemRendererRegistry.INSTANCE.register(item, tridentItemRenderer);
             EntityRendererRegistry.register(item.getEntityType(), ctx -> new ImpaledTridentEntityRenderer(ctx, texture, modelLayer));
 
-            FabricModelPredicateProviderRegistry.register(item, new Identifier("throwing"), (stack, world, entity, seed) -> entity != null && entity.isUsingItem() && entity.getActiveItem() == stack ? 1.0F : 0.0F);
-            ModelLoadingRegistry.INSTANCE.registerModelProvider((manager, out) -> out.accept(new ModelIdentifier(tridentId.getNamespace(), tridentId.getPath() + "_in_inventory", "inventory")));
+            FabricModelPredicateProviderRegistry.register(item, Identifier.of("throwing"), (stack, world, entity, seed) -> entity != null && entity.isUsingItem() && entity.getActiveItem() == stack ? 1.0F : 0.0F);
+            ModelLoadingPlugin.register(pluginContext -> {
+                pluginContext.addModels(new ModelIdentifier(tridentId.getNamespace(), tridentId.getPath() + "_in_inventory", "inventory"));
+            });
         }
 
         // Add items to groups
@@ -59,6 +61,6 @@ public class ImpaledClient implements ClientModInitializer {
             content.add(ImpaledItems.MAELSTROM);
         });
 
-        EntityRendererRegistry.register(ImpaledEntityTypes.GUARDIAN_TRIDENT, ctx -> new ImpaledTridentEntityRenderer(ctx, new Identifier(Impaled.MODID, "textures/entity/guardian_trident.png"), EntityModelLayers.TRIDENT));
+        EntityRendererRegistry.register(ImpaledEntityTypes.GUARDIAN_TRIDENT, ctx -> new ImpaledTridentEntityRenderer(ctx, Identifier.of(Impaled.MODID, "textures/entity/guardian_trident.png"), EntityModelLayers.TRIDENT));
     }
 }

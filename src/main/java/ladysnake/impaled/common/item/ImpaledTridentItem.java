@@ -5,6 +5,7 @@ import ladysnake.sincereloyalty.LoyalTrident;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.Item;
 import net.minecraft.entity.MovementType;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
@@ -26,7 +27,7 @@ import java.util.Objects;
 public class ImpaledTridentItem extends TridentItem {
     EntityType<? extends ImpaledTridentEntity> type;
 
-    public ImpaledTridentItem(Settings settings, EntityType<? extends ImpaledTridentEntity> entityType) {
+    public ImpaledTridentItem(Item.Settings settings, EntityType<? extends ImpaledTridentEntity> entityType) {
         super(settings);
         this.type = entityType;
     }

@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import ladysnake.impaled.common.entity.ImpaledTridentEntity;
 import net.minecraft.block.Block;
+import net.minecraft.item.Item;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
@@ -26,7 +27,7 @@ public class PitchforkItem extends ImpaledTridentItem {
         TILLED_BLOCKS = Maps.newHashMap(ImmutableMap.of(Blocks.GRASS_BLOCK, Blocks.FARMLAND.getDefaultState(), Blocks.DIRT_PATH, Blocks.FARMLAND.getDefaultState(), Blocks.DIRT, Blocks.FARMLAND.getDefaultState(), Blocks.COARSE_DIRT, Blocks.DIRT.getDefaultState()));
     }
 
-    public PitchforkItem(Settings settings, EntityType<? extends ImpaledTridentEntity> entityType) {
+    public PitchforkItem(Item.Settings settings, EntityType<? extends ImpaledTridentEntity> entityType) {
         super(settings, entityType);
     }
 

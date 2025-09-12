@@ -10,6 +10,7 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
+import net.minecraft.client.render.entity.state.ProjectileEntityRenderState;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
@@ -17,7 +18,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
 
 @Environment(EnvType.CLIENT)
-public class ImpaledTridentEntityRenderer extends EntityRenderer<ImpaledTridentEntity> {
+public class ImpaledTridentEntityRenderer extends EntityRenderer<ImpaledTridentEntity, ProjectileEntityRenderState> {
     private final ImpaledTridentEntityModel model;
     private final Identifier texture;
 
@@ -27,17 +28,28 @@ public class ImpaledTridentEntityRenderer extends EntityRenderer<ImpaledTridentE
         this.texture = texture;
     }
 
-    public void render(ImpaledTridentEntity impaledTridentEntity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
-        matrixStack.push();
-        matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(MathHelper.lerp(g, impaledTridentEntity.prevYaw, impaledTridentEntity.getYaw()) - 90.0F));
-        matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(MathHelper.lerp(g, impaledTridentEntity.prevPitch, impaledTridentEntity.getPitch()) + 90.0F));
-        VertexConsumer vertexConsumer = ItemRenderer.getDirectItemGlintConsumer(vertexConsumerProvider, this.model.getLayer(this.getTexture(impaledTridentEntity)), false, impaledTridentEntity.isEnchanted());
-        this.model.render(matrixStack, vertexConsumer, i, OverlayTexture.DEFAULT_UV, 1.0F, 1.0F, 1.0F, 1.0F);
-        matrixStack.pop();
-        super.render(impaledTridentEntity, f, g, matrixStack, vertexConsumerProvider, i);
+    @Override
+    public ProjectileEntityRenderState createRenderState() {
+        return new ProjectileEntityRenderState();
     }
 
-    public Identifier getTexture(ImpaledTridentEntity impaledTridentEntity) {
+    @Override
+    public void updateRenderState(ImpaledTridentEntity entity, ProjectileEntityRenderState renderState, float tickDelta) {
+        super.updateRenderState(entity, renderState, tickDelta);
+    }
+
+    @Override
+    public void render(ProjectileEntityRenderState renderState, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
+        matrixStack.push();
+        matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(renderState.yaw - 90.0F));
+        matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(renderState.pitch + 90.0F));
+        VertexConsumer vertexConsumer = ItemRenderer.getDirectItemGlintConsumer(vertexConsumerProvider, this.model.getLayer(this.getTexture(renderState)), false, renderState.hasGlint);
+        this.model.render(matrixStack, vertexConsumer, i, OverlayTexture.DEFAULT_UV);
+        matrixStack.pop();
+        super.render(renderState, matrixStack, vertexConsumerProvider, i);
+    }
+
+    public Identifier getTexture(ProjectileEntityRenderState renderState) {
         return this.texture;
     }
 }

@@ -14,7 +14,7 @@ import net.minecraft.util.Identifier;
 public class Impaled implements ModInitializer {
     public static final String MODID = "impaled";
 
-    private static final Identifier BASTION_TREASURE_CHEST_LOOT_TABLE_ID = new Identifier("minecraft", "chests/bastion_treasure");
+    private static final Identifier BASTION_TREASURE_CHEST_LOOT_TABLE_ID = Identifier.of("minecraft", "chests/bastion_treasure");
 
     @Override
     public void onInitialize() {

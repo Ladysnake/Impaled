@@ -18,7 +18,7 @@
 package ladysnake.sincereloyalty.mixin.client;
 
 import ladysnake.sincereloyalty.LoyalTrident;
-import net.minecraft.client.item.TooltipContext;
+import net.minecraft.item.Item.TooltipContext;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;

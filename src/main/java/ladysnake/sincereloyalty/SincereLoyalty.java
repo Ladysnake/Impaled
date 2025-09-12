@@ -48,7 +48,7 @@ public final class SincereLoyalty implements ModInitializer {
     public static final Identifier RECALLING_MESSAGE_ID = id("recalling_tridents");
 
     public static Identifier id(String path) {
-        return new Identifier(MOD_ID, path);
+        return Identifier.of(MOD_ID, path);
     }
 
     @Override

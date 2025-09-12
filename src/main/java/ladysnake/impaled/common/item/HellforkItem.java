@@ -8,6 +8,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.Item;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
@@ -18,11 +19,11 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Property;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
+import net.minecraft.util.ActionResult;
 import net.minecraft.world.World;
 
 public class HellforkItem extends ImpaledTridentItem {
-    public HellforkItem(Settings settings, EntityType<? extends ImpaledTridentEntity> entityType) {
+    public HellforkItem(Item.Settings settings, EntityType<? extends ImpaledTridentEntity> entityType) {
         super(settings, entityType);
     }
 
@@ -56,7 +57,7 @@ public class HellforkItem extends ImpaledTridentItem {
     }
 
     @Override
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+    public ActionResult use(World world, PlayerEntity user, Hand hand) {
         ItemStack itemStack = user.getStackInHand(hand);
         if (itemStack.getDamage() >= itemStack.getMaxDamage() - 1) {
             return TypedActionResult.fail(itemStack);
