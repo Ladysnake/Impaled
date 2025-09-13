@@ -9,6 +9,9 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.util.Identifier;
 
 public class ImpaledEntityTypes {
     public static EntityType<PitchforkEntity> PITCHFORK;
@@ -32,10 +35,10 @@ public class ImpaledEntityTypes {
     }
 
     private static <T extends Entity> EntityType<T> createEntityType(EntityType.EntityFactory<T> factory) {
-        return FabricEntityTypeBuilder.create(SpawnGroup.MISC, factory).dimensions(EntityDimensions.changing(0.5f, 0.5f)).trackRangeBlocks(4).trackedUpdateRate(20).build();
+        return FabricEntityTypeBuilder.create(SpawnGroup.MISC, factory).dimensions(EntityDimensions.changing(0.5f, 0.5f)).trackRangeBlocks(4).trackedUpdateRate(20).build(RegistryKey.of(RegistryKeys.ENTITY_TYPE, Identifier.of(Impaled.MODID, "trident")));
     }
 
     private static <T extends Entity> EntityType<T> createDynamicEntityType(EntityType.EntityFactory<T> factory) {
-        return FabricEntityTypeBuilder.create(SpawnGroup.MISC, factory).dimensions(EntityDimensions.changing(0.5f, 0.5f)).trackRangeBlocks(4).build();
+        return FabricEntityTypeBuilder.create(SpawnGroup.MISC, factory).dimensions(EntityDimensions.changing(0.5f, 0.5f)).trackRangeBlocks(4).build(RegistryKey.of(RegistryKeys.ENTITY_TYPE, Identifier.of(Impaled.MODID, "dynamic_trident")));
     }
 }

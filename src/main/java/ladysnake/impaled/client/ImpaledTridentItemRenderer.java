@@ -64,8 +64,8 @@ public class ImpaledTridentItemRenderer implements BuiltinItemRendererRegistry.D
         } else {
             matrices.push();
             matrices.scale(1.0F, -1.0F, -1.0F);
-            VertexConsumer vertexConsumer = ItemRenderer.getDirectItemGlintConsumer(vertexConsumers, this.tridentModel.getLayer(this.texture), false, stack.hasGlint());
-            this.tridentModel.render(matrices, vertexConsumer, light, overlay, 1.0F, 1.0F, 1.0F, 1.0F);
+            VertexConsumer vertexConsumer = ItemRenderer.getItemGlintConsumer(vertexConsumers, this.tridentModel.getLayer(this.texture), false, stack.hasGlint());
+            this.tridentModel.render(matrices, vertexConsumer, light, overlay, -1);
             matrices.pop();
         }
     }

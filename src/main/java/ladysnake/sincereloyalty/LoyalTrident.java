@@ -45,6 +45,9 @@ public interface LoyalTrident {
 
     @Nullable
     static UUID getTridentUuid(ItemStack stack) {
+        if (stack == null || stack.isEmpty()) {
+            return null;
+        }
         LoyalTridentComponents.LoyalTridentData data = stack.get(LoyalTridentComponents.LOYAL_TRIDENT_DATA);
         if (data == null) {
             return null;
@@ -53,6 +56,9 @@ public interface LoyalTrident {
     }
 
     static void setPreferredSlot(ItemStack tridentStack, int slot) {
+        if (tridentStack == null || tridentStack.isEmpty()) {
+            return;
+        }
         LoyalTridentComponents.LoyalTridentData currentData = tridentStack.get(LoyalTridentComponents.LOYAL_TRIDENT_DATA);
         if (currentData != null) {
             LoyalTridentComponents.LoyalTridentData newData = new LoyalTridentComponents.LoyalTridentData(
@@ -66,6 +72,9 @@ public interface LoyalTrident {
     }
 
     static boolean hasTrueOwner(ItemStack tridentStack) {
+        if (tridentStack == null || tridentStack.isEmpty()) {
+            return false;
+        }
         if (tridentStack.isIn(SincereLoyalty.TRIDENTS) && EnchantmentHelper.hasEnchantments(tridentStack)) {
             // TODO: Check specifically for loyalty enchantment when registry access is available
             LoyalTridentComponents.LoyalTridentData data = tridentStack.get(LoyalTridentComponents.LOYAL_TRIDENT_DATA);

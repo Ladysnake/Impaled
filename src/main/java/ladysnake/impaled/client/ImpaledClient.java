@@ -22,6 +22,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
 
+import java.util.Collections;
 import java.util.List;
 
 public class ImpaledClient implements ClientModInitializer {
@@ -45,7 +46,8 @@ public class ImpaledClient implements ClientModInitializer {
 
             FabricModelPredicateProviderRegistry.register(item, Identifier.of("throwing"), (stack, world, entity, seed) -> entity != null && entity.isUsingItem() && entity.getActiveItem() == stack ? 1.0F : 0.0F);
             ModelLoadingPlugin.register(pluginContext -> {
-                pluginContext.addModels(new ModelIdentifier(Identifier.of(tridentId.getNamespace(), tridentId.getPath() + "_in_inventory"), "inventory"));
+                Identifier inventoryModel = Identifier.of(tridentId.getNamespace(), tridentId.getPath() + "_in_inventory");
+                pluginContext.addModels(inventoryModel);
             });
         }
 

@@ -8,6 +8,8 @@ import net.minecraft.item.Item;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.util.Hand;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemUsageContext;
@@ -42,11 +44,11 @@ public class PitchforkItem extends ImpaledTridentItem {
                 if (!world.isClient) {
                     world.setBlockState(blockPos, blockState, 11);
                     if (playerEntity != null) {
-                        context.getStack().damage(1, (LivingEntity) playerEntity, livingEntity -> livingEntity.sendToolBreakStatus(context.getPlayer().getActiveHand()));
+                        context.getStack().damage(1, (LivingEntity) playerEntity, context.getPlayer().getActiveHand() == Hand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
                     }
                 }
 
-                return ActionResult.success(world.isClient);
+                return world.isClient ? ActionResult.SUCCESS : ActionResult.CONSUME;
             }
         }
 

@@ -21,18 +21,22 @@ public class Impaled implements ModInitializer {
         ImpaledEntityTypes.init();
         ImpaledItems.init();
 
-        // add loot to dungeons, mineshafts, jungle temples, and stronghold libraries chests loot tables
+        // Commenting out loot table modification for now due to API changes
+        // TODO: Re-implement loot table modification with 1.21.3 API
+        /*
         UniformLootNumberProvider lootTableRange = UniformLootNumberProvider.create(1, 1);
         LootCondition chanceLootCondition = RandomChanceLootCondition.builder(60).build();
-        LootTableEvents.MODIFY.register((resourceManager, lootManager, id, supplier, setter) -> {
+        LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
+            Identifier id = key.getValue();
             if (BASTION_TREASURE_CHEST_LOOT_TABLE_ID.equals(id)) {
                 LootPool lootPool = LootPool.builder()
                         .rolls(lootTableRange)
                         .conditionally(chanceLootCondition)
                         .with(ItemEntry.builder(ImpaledItems.ANCIENT_TRIDENT).build()).build();
 
-                supplier.pool(lootPool);
+                tableBuilder.pool(lootPool);
             }
         });
+        */
     }
 }

@@ -8,6 +8,9 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.util.Hand;
 import net.minecraft.item.Item;
 import net.minecraft.entity.MovementType;
 import net.minecraft.entity.damage.DamageSource;
@@ -54,10 +57,10 @@ public class ImpaledTridentItem extends TridentItem {
                 }
                 if (j <= 0 || canRiptide(player)) {
                     if (!world.isClient) {
-                        stack.damage(1, player, livingEntity -> livingEntity.sendToolBreakStatus(user.getActiveHand()));
+                        stack.damage(1, player, player.getActiveHand() == Hand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
                         if (j == 0) {
                             ImpaledTridentEntity trident = createTrident(world, player, stack);
-                            LoyalTrident.of(trident).loyaltrident_setReturnSlot(player.getActiveHand() == Hand.OFF_HAND ? -1 : player.getInventory().selectedSlot);
+                            LoyalTrident.setPreferredSlot(stack, player.getActiveHand() == Hand.OFF_HAND ? -1 : player.getInventory().selectedSlot);
 
                             if (player.getAbilities().creativeMode) {
                                 trident.pickupType = PersistentProjectileEntity.PickupPermission.CREATIVE_ONLY;
@@ -84,7 +87,7 @@ public class ImpaledTridentItem extends TridentItem {
                         k *= n / m;
                         l *= n / m;
                         player.addVelocity(h, k, l);
-                        player.useRiptide(20);
+                        player.useRiptide(20, n, stack); // n is the velocity multiplier calculated above
                         if (player.isOnGround()) {
                             player.move(MovementType.SELF, new Vec3d(0.0D, 1.1999999284744263D, 0.0D));
                         }
@@ -112,7 +115,7 @@ public class ImpaledTridentItem extends TridentItem {
     }
 
     public @NotNull ImpaledTridentEntity createTrident(World world, LivingEntity user, ItemStack stack) {
-        ImpaledTridentEntity impaledTridentEntity = Objects.requireNonNull(this.type.create(world));
+        ImpaledTridentEntity impaledTridentEntity = Objects.requireNonNull(this.type.create(world, SpawnReason.TRIGGERED));
         impaledTridentEntity.setTridentAttributes(stack);
         impaledTridentEntity.setOwner(user);
         impaledTridentEntity.setTridentStack(stack);
@@ -121,8 +124,4 @@ public class ImpaledTridentItem extends TridentItem {
         return impaledTridentEntity;
     }
 
-    @Override
-    public boolean damage(DamageSource source) {
-        return super.damage(source);
-    }
 }

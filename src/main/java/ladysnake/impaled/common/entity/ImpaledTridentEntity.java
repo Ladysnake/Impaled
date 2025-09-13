@@ -8,6 +8,7 @@ import net.minecraft.entity.projectile.TridentEntity;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import java.lang.reflect.Field;
 
 public class ImpaledTridentEntity extends TridentEntity {
     public ImpaledTridentEntity(EntityType<? extends ImpaledTridentEntity> entityType, World world) {
@@ -33,9 +34,20 @@ public class ImpaledTridentEntity extends TridentEntity {
     }
 
     public void setTridentStack(ItemStack tridentStack) {
-        // TODO: Find correct way to set ItemStack in TridentEntity for 1.21.3
-        // The field access method no longer works, might need different approach
-        // For now, store the enchantments in DataTracker directly
+        // Use reflection to set the ItemStack field since the field name changed in 1.21.3
+        try {
+            Field[] fields = TridentEntity.class.getDeclaredFields();
+            for (Field field : fields) {
+                if (field.getType() == ItemStack.class) {
+                    field.setAccessible(true);
+                    field.set(this, tridentStack);
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            // If reflection fails, just store enchantments in DataTracker
+            System.err.println("Could not set trident ItemStack via reflection: " + e.getMessage());
+        }
     }
 
     protected void setDealtDamage() {

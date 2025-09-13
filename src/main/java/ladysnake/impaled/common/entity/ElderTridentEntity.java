@@ -4,6 +4,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.Enchantments;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.MobEntity;
@@ -41,7 +44,7 @@ public class ElderTridentEntity extends ImpaledTridentEntity {
 
     @Override
     public void tick() {
-        if (this.inGround) {
+        if (this.isInGround()) {
             this.setDealtDamage();
         }
         if (!this.hasSearchedTarget) {
@@ -87,10 +90,14 @@ public class ElderTridentEntity extends ImpaledTridentEntity {
     @Override
     protected void onEntityHit(EntityHitResult entityHitResult) {
         super.onEntityHit(entityHitResult);
-        if (this.getWorld() instanceof ServerWorld && this.hasChanneling() && entityHitResult.getEntity() instanceof LivingEntity livingEntity) {
-            if (livingEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.MINING_FATIGUE, 200, 2))) {
-                if (livingEntity instanceof ServerPlayerEntity serverPlayerEntity) {
-                    serverPlayerEntity.networkHandler.sendPacket(new GameStateChangeS2CPacket(GameStateChangeS2CPacket.ELDER_GUARDIAN_EFFECT, this.isSilent() ? 0.0F : 1.0F));
+        if (this.getWorld() instanceof ServerWorld serverWorld && entityHitResult.getEntity() instanceof LivingEntity livingEntity) {
+            var channelingRef = serverWorld.getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT).getEntry(Enchantments.CHANNELING.getValue()).orElse(null);
+            boolean hasChanneling = channelingRef != null && EnchantmentHelper.getLevel(channelingRef, this.getItemStack()) > 0;
+            if (hasChanneling) {
+                if (livingEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.MINING_FATIGUE, 200, 2))) {
+                    if (livingEntity instanceof ServerPlayerEntity serverPlayerEntity) {
+                        serverPlayerEntity.networkHandler.sendPacket(new GameStateChangeS2CPacket(GameStateChangeS2CPacket.ELDER_GUARDIAN_EFFECT, this.isSilent() ? 0.0F : 1.0F));
+                    }
                 }
             }
         }
@@ -103,7 +110,9 @@ public class ElderTridentEntity extends ImpaledTridentEntity {
         if (entity == null || entity.getUuid() == player.getUuid()) {
             for (ItemStack stack : this.fetchedStacks) {
                 if (!player.getInventory().insertStack(stack)) {
-                    this.dropStack(stack);
+                    if (this.getWorld() instanceof ServerWorld serverWorld) {
+                        this.dropStack(serverWorld, stack);
+                    }
                 }
             }
             this.fetchedStacks.clear();
@@ -119,7 +128,9 @@ public class ElderTridentEntity extends ImpaledTridentEntity {
     public void remove(RemovalReason reason) {
         if (reason.shouldDestroy()) {
             for (ItemStack fetchedStack : this.fetchedStacks) {
-                this.dropStack(fetchedStack);
+                if (this.getWorld() instanceof ServerWorld serverWorld) {
+                    this.dropStack(serverWorld, fetchedStack);
+                }
             }
         }
         super.remove(reason);
@@ -132,7 +143,9 @@ public class ElderTridentEntity extends ImpaledTridentEntity {
             NbtList fetchedItems = tag.getList("fetched_items", NbtElement.COMPOUND_TYPE);
             for (int i = 0; i < fetchedItems.size(); i++) {
                 NbtCompound fetchedItem = fetchedItems.getCompound(i);
-                this.fetchedStacks.add(ItemStack.fromNbt(fetchedItem));
+                if (this.getWorld() instanceof ServerWorld serverWorld) {
+                    ItemStack.fromNbt(serverWorld.getRegistryManager(), fetchedItem).ifPresent(this.fetchedStacks::add);
+                }
             }
         }
     }
@@ -140,10 +153,12 @@ public class ElderTridentEntity extends ImpaledTridentEntity {
     @Override
     public void writeCustomDataToNbt(NbtCompound tag) {
         super.writeCustomDataToNbt(tag);
-        NbtList NbtList = new NbtList();
+        NbtList nbtList = new NbtList();
         for (ItemStack fetchedStack : this.fetchedStacks) {
-            NbtList.add(fetchedStack.writeNbt(new NbtCompound()));
+            if (this.getWorld() instanceof ServerWorld serverWorld) {
+                nbtList.add(fetchedStack.toNbt(serverWorld.getRegistryManager()));
+            }
         }
-        tag.put("fetched_stacks", NbtList);
+        tag.put("fetched_stacks", nbtList);
     }
 }

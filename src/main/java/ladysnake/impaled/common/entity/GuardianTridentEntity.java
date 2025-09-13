@@ -5,6 +5,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundEvents;
@@ -31,10 +32,14 @@ public class GuardianTridentEntity extends ElderTridentEntity {
             return stack -> {
                 if (owner.isAlive()) {
                     if (!(owner instanceof PlayerEntity) || !((PlayerEntity) owner).getInventory().insertStack(stack)) {
-                        owner.dropStack(stack);
+                        if (owner.getWorld() instanceof ServerWorld serverWorld) {
+                            owner.dropStack(serverWorld, stack);
+                        }
                     }
                 } else {
-                    this.dropStack(stack);
+                    if (this.getWorld() instanceof ServerWorld serverWorld) {
+                        this.dropStack(serverWorld, stack);
+                    }
                 }
             };
         }

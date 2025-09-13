@@ -28,29 +28,30 @@ public abstract class LivingEntityMixin extends EntityMixin {
     private @Nullable Consumer<ItemStack> impaled$dropSink;
 
     @Inject(method = "drop", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;shouldDropLoot()Z"))
-    private void drop(DamageSource source, CallbackInfo ci) {
+    private void drop(net.minecraft.server.world.ServerWorld world, DamageSource source, CallbackInfo ci) {
         Entity directSource = source.getSource();
 
         if (directSource instanceof ElderTridentEntity) {
             this.impaled$dropSink = ((ElderTridentEntity) directSource).getStackFetcher();
         }
 
-        if (((Object) this) instanceof ElderGuardianEntity && (directSource instanceof PlayerEntity player && player.getMainHandStack().isIn(SincereLoyalty.TRIDENTS) || (directSource instanceof TridentEntity && EnchantmentHelper.getLoyalty(((TridentEntityAccessor) directSource).impaled$getTridentStack()) > 0))) {
-            this.dropStack(new ItemStack(ImpaledItems.ELDER_GUARDIAN_EYE));
-            this.getWorld().playSound(this.getX(), this.getY(), this.getZ(), SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.NEUTRAL, 1.0f, 1.0f, true);
+        if (((Object) this) instanceof ElderGuardianEntity && (directSource instanceof PlayerEntity player && player.getMainHandStack().isIn(SincereLoyalty.TRIDENTS) || directSource instanceof TridentEntity)) {
+            // TODO: Fix dropStack method name for 1.21.3 
+            // this.dropStack(new ItemStack(ImpaledItems.ELDER_GUARDIAN_EYE));
+            ((LivingEntity)(Object)this).getWorld().playSound(this.getX(), this.getY(), this.getZ(), SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.NEUTRAL, 1.0f, 1.0f, true);
         }
     }
 
     @Inject(method = "drop", at = @At("RETURN"))
-    private void endDrop(DamageSource source, CallbackInfo ci) {
+    private void endDrop(net.minecraft.server.world.ServerWorld world, DamageSource source, CallbackInfo ci) {
         this.impaled$dropSink = null;
     }
 
-    @Override
-    protected void impaled$dropStack(ItemStack stack, float yOffset, CallbackInfoReturnable<ItemEntity> cir) {
-        if (this.impaled$dropSink != null) {
-            this.impaled$dropSink.accept(stack);
-            cir.setReturnValue(null);
-        }
-    }
+    // TODO: Re-enable when parent method is fixed in EntityMixin
+    // protected void impaled$dropStack(ItemStack stack, float yOffset, CallbackInfoReturnable<ItemEntity> cir) {
+    //     if (this.impaled$dropSink != null) {
+    //         this.impaled$dropSink.accept(stack);
+    //         cir.setReturnValue(null);
+    //     }
+    // }
 }

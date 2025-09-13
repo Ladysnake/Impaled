@@ -12,6 +12,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Rarity;
+import net.minecraft.util.Identifier;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
+
+import java.util.function.Function;
 import net.minecraft.util.math.Position;
 import net.minecraft.world.World;
 
@@ -30,25 +35,34 @@ public class ImpaledItems {
     public static Item MAELSTROM;
 
     public static void init() {
-        ELDER_GUARDIAN_EYE = registerItem(new Item((new Item.Settings()).rarity(Rarity.UNCOMMON)), "elder_guardian_eye");
-        ANCIENT_TRIDENT = registerItem(new Item((new Item.Settings()).rarity(Rarity.UNCOMMON).fireproof()), "ancient_trident");
+        ELDER_GUARDIAN_EYE = registerItem("elder_guardian_eye", Item::new, new Item.Settings().rarity(Rarity.UNCOMMON));
+        ANCIENT_TRIDENT = registerItem("ancient_trident", Item::new, new Item.Settings().rarity(Rarity.UNCOMMON).fireproof());
 
-        PITCHFORK = registerTrident(new PitchforkItem((new Item.Settings()).maxDamage(150), ImpaledEntityTypes.PITCHFORK), "pitchfork", true);
-        HELLFORK = registerTrident(new HellforkItem((new Item.Settings()).maxDamage(325).fireproof().fireproof(), ImpaledEntityTypes.HELLFORK), "hellfork", true);
-        SOULFORK = registerTrident(new HellforkItem((new Item.Settings()).maxDamage(325).fireproof().fireproof(), ImpaledEntityTypes.SOULFORK), "soulfork", true);
-        ELDER_TRIDENT = registerTrident(new ElderTridentItem((new Item.Settings()).maxDamage(250), ImpaledEntityTypes.ELDER_TRIDENT), "elder_trident", true);
-        ATLAN = registerTrident(new AtlanItem((new Item.Settings()).maxDamage(250), ImpaledEntityTypes.ATLAN), "atlan", true);
-        MAELSTROM = registerItem(new MaelstromItem((new Item.Settings()).maxDamage(80)), "maelstrom");
+        PITCHFORK = registerTrident("pitchfork", settings -> new PitchforkItem(settings, ImpaledEntityTypes.PITCHFORK), new Item.Settings().maxDamage(150), true);
+        HELLFORK = registerTrident("hellfork", settings -> new HellforkItem(settings, ImpaledEntityTypes.HELLFORK), new Item.Settings().maxDamage(325).fireproof(), true);
+        SOULFORK = registerTrident("soulfork", settings -> new HellforkItem(settings, ImpaledEntityTypes.SOULFORK), new Item.Settings().maxDamage(325).fireproof(), true);
+        ELDER_TRIDENT = registerTrident("elder_trident", settings -> new ElderTridentItem(settings, ImpaledEntityTypes.ELDER_TRIDENT), new Item.Settings().maxDamage(250), true);
+        ATLAN = registerTrident("atlan", settings -> new AtlanItem(settings, ImpaledEntityTypes.ATLAN), new Item.Settings().maxDamage(250), true);
+        MAELSTROM = registerItem("maelstrom", settings -> new MaelstromItem(settings), new Item.Settings().maxDamage(80));
     }
 
-    public static ImpaledTridentItem registerTrident(ImpaledTridentItem item, String name, boolean registerDispenserBehavior) {
-        Registry.register(Registries.ITEM, Impaled.MODID + ":" + name, item);
+    public static <T extends Item> T registerItem(String name, Function<Item.Settings, T> itemFactory, Item.Settings settings) {
+        RegistryKey<Item> itemKey = RegistryKey.of(RegistryKeys.ITEM, Identifier.of(Impaled.MODID, name));
+        T item = itemFactory.apply(settings.registryKey(itemKey));
+        Registry.register(Registries.ITEM, itemKey, item);
+        return item;
+    }
+
+    public static <T extends ImpaledTridentItem> T registerTrident(String name, Function<Item.Settings, T> itemFactory, Item.Settings settings, boolean registerDispenserBehavior) {
+        RegistryKey<Item> itemKey = RegistryKey.of(RegistryKeys.ITEM, Identifier.of(Impaled.MODID, name));
+        T item = itemFactory.apply(settings.registryKey(itemKey));
+        Registry.register(Registries.ITEM, itemKey, item);
         ALL_TRIDENTS.add(item);
+        
         if (registerDispenserBehavior) {
-            DispenserBlock.registerBehavior(item, new ProjectileDispenserBehavior() {
-                @Override
+            DispenserBlock.registerBehavior(item, new ProjectileDispenserBehavior(item) {
                 protected ProjectileEntity createProjectile(World world, Position position, ItemStack itemStack) {
-                    ImpaledTridentEntity tridentEntity = Objects.requireNonNull(item.getEntityType().create(world));
+                    ImpaledTridentEntity tridentEntity = Objects.requireNonNull(item.getEntityType().create(world, net.minecraft.entity.SpawnReason.DISPENSER));
                     tridentEntity.setPos(position.getX(), position.getY(), position.getZ());
                     itemStack.decrement(1);
                     return tridentEntity;
@@ -59,8 +73,4 @@ public class ImpaledItems {
         return item;
     }
 
-    public static Item registerItem(Item item, String name) {
-        Registry.register(Registries.ITEM, Impaled.MODID + ":" + name, item);
-        return item;
-    }
 }

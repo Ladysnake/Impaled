@@ -18,9 +18,9 @@ public interface TridentEntityAccessor {
         return null;
     }
 
-    // TODO: TridentEntity no longer has direct ItemStack field in 1.21.3
-    // Need to use getItemStack() and setItemStack() methods instead
-    // @Accessor("item") 
+    // TODO: Find correct field name for ItemStack in 1.21.3 TridentEntity
+    // For now, disable these accessors and use reflection or different approach
+    // @Accessor("item")
     // ItemStack impaled$getTridentStack();
 
     // @Accessor("item")

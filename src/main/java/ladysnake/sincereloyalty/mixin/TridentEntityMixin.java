@@ -17,6 +17,7 @@
  */
 package ladysnake.sincereloyalty.mixin;
 
+import ladysnake.sincereloyalty.LoyalTridentComponents;
 import ladysnake.sincereloyalty.LoyalTrident;
 import ladysnake.sincereloyalty.storage.LoyalTridentStorage;
 import net.minecraft.entity.EntityType;
@@ -45,10 +46,8 @@ import java.util.UUID;
 @Mixin(TridentEntity.class)
 public abstract class TridentEntityMixin extends PersistentProjectileEntity implements LoyalTrident {
     @Unique
-    private static final TrackedData<Boolean> sincereLoyalty$SITTING = DataTracker.registerData(TridentEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+    private static TrackedData<Boolean> sincereLoyalty$SITTING;
 
-    @Shadow
-    private ItemStack tridentStack;
     private @Nullable Optional<UUID> sincereLoyalty_trueOwner;
 
     protected TridentEntityMixin(EntityType<? extends PersistentProjectileEntity> entityType, World world) {
@@ -57,27 +56,36 @@ public abstract class TridentEntityMixin extends PersistentProjectileEntity impl
 
     @Inject(method = "initDataTracker", at = @At("RETURN"))
     private void initDataTracker(CallbackInfo ci) {
-        this.getDataTracker().set(sincereLoyalty$SITTING, false);
+        if (sincereLoyalty$SITTING == null) {
+            sincereLoyalty$SITTING = DataTracker.registerData(TridentEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+        }
+        if (this.getDataTracker() != null) {
+            this.getDataTracker().set(sincereLoyalty$SITTING, false);
+        }
     }
 
     @Override
     public UUID loyaltrident_getTridentUuid() {
-        return LoyalTrident.getTridentUuid(this.tridentStack);
+        return LoyalTrident.getTridentUuid(this.getItemStack());
     }
 
     @Override
     public void loyaltrident_sit() {
-        this.getDataTracker().set(sincereLoyalty$SITTING, true);
+        if (this.getDataTracker() != null) {
+            this.getDataTracker().set(sincereLoyalty$SITTING, true);
+        }
     }
 
     @Override
     public void loyaltrident_wakeUp() {
-        this.getDataTracker().set(sincereLoyalty$SITTING, false);
+        if (this.getDataTracker() != null) {
+            this.getDataTracker().set(sincereLoyalty$SITTING, false);
+        }
     }
 
     @Override
     public void loyaltrident_setReturnSlot(int slot) {
-        LoyalTrident.setPreferredSlot(this.tridentStack, slot);
+        LoyalTrident.setPreferredSlot(this.getItemStack(), slot);
     }
 
     /**
@@ -96,7 +104,7 @@ public abstract class TridentEntityMixin extends PersistentProjectileEntity impl
     )
     private int sit(int loyaltyLevel) {
         // If your owner told you to sit, you sit (fake no loyalty)
-        if (this.getDataTracker().get(sincereLoyalty$SITTING)) {
+        if (this.getDataTracker() != null && this.getDataTracker().get(sincereLoyalty$SITTING)) {
             return 0;
         }
         return loyaltyLevel;
@@ -117,10 +125,16 @@ public abstract class TridentEntityMixin extends PersistentProjectileEntity impl
     private Optional<UUID> getTrueTridentOwner() {
         //noinspection OptionalAssignedToNull
         if (this.sincereLoyalty_trueOwner == null) {
-            this.sincereLoyalty_trueOwner = Optional.ofNullable(LoyalTrident.getTrueOwner(this.tridentStack));
-            // Not the owner == no loyalty
-            if (this.sincereLoyalty_trueOwner.isPresent() && !sincereLoyalty_trueOwner.get().equals(((ProjectileAccessor) this).getOwnerUuid())) {
-                this.loyaltrident_sit();
+            // Only apply loyalty logic to tridents that actually have our mod's data component
+            if (this.getItemStack().contains(LoyalTridentComponents.LOYAL_TRIDENT_DATA)) {
+                this.sincereLoyalty_trueOwner = Optional.ofNullable(LoyalTrident.getTrueOwner(this.getItemStack()));
+                // Not the owner == no loyalty
+                if (this.sincereLoyalty_trueOwner.isPresent() && !sincereLoyalty_trueOwner.get().equals(((ProjectileAccessor) this).getOwnerUuid())) {
+                    this.loyaltrident_sit();
+                }
+            } else {
+                // For vanilla tridents or tridents without our data, set empty optional to avoid further processing
+                this.sincereLoyalty_trueOwner = Optional.empty();
             }
         }
         return this.sincereLoyalty_trueOwner;
@@ -137,14 +151,14 @@ public abstract class TridentEntityMixin extends PersistentProjectileEntity impl
 
     @Inject(method = "writeCustomDataToNbt", at = @At("RETURN"))
     private void writeCustomDataToNbt(NbtCompound tag, CallbackInfo ci) {
-        if (this.getDataTracker().get(sincereLoyalty$SITTING)) {
+        if (this.getDataTracker() != null && this.getDataTracker().get(sincereLoyalty$SITTING)) {
             tag.putBoolean(LoyalTrident.TRIDENT_SIT_NBT_KEY, true);
         }
     }
 
     @Inject(method = "readCustomDataFromNbt", at = @At("RETURN"))
     private void readCustomDataFromNbt(NbtCompound tag, CallbackInfo ci) {
-        if (tag.contains(TRIDENT_SIT_NBT_KEY)) {
+        if (tag.contains(TRIDENT_SIT_NBT_KEY) && this.getDataTracker() != null) {
             this.getDataTracker().set(sincereLoyalty$SITTING, tag.getBoolean(TRIDENT_SIT_NBT_KEY));
         }
     }
