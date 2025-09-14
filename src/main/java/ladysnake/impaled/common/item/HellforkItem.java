@@ -107,9 +107,9 @@ public class HellforkItem extends ImpaledTridentItem {
             } else if (context.getWorld().getBlockState(context.getBlockPos()).getBlock() == Blocks.SOUL_WALL_TORCH) {
                 replacedBlockState = Blocks.WALL_TORCH.getDefaultState();
             }
-            for (Property property : context.getWorld().getBlockState(context.getBlockPos()).getProperties()) {
+            for (Property<?> property : context.getWorld().getBlockState(context.getBlockPos()).getProperties()) {
                 if (replacedBlockState.getProperties().contains(property)) {
-                    replacedBlockState = replacedBlockState.with(property, blockState.get(property));
+                    replacedBlockState = copyProperty(replacedBlockState, blockState, property);
                 }
             }
             context.getWorld().setBlockState(context.getBlockPos(), replacedBlockState);
@@ -138,9 +138,9 @@ public class HellforkItem extends ImpaledTridentItem {
             } else if (context.getWorld().getBlockState(context.getBlockPos()).getBlock() == Blocks.WALL_TORCH) {
                 replacedBlockState = Blocks.SOUL_WALL_TORCH.getDefaultState();
             }
-            for (Property property : context.getWorld().getBlockState(context.getBlockPos()).getProperties()) {
+            for (Property<?> property : context.getWorld().getBlockState(context.getBlockPos()).getProperties()) {
                 if (replacedBlockState.getProperties().contains(property)) {
-                    replacedBlockState = replacedBlockState.with(property, blockState.get(property));
+                    replacedBlockState = copyProperty(replacedBlockState, blockState, property);
                 }
             }
             context.getWorld().setBlockState(context.getBlockPos(), replacedBlockState);
@@ -152,5 +152,10 @@ public class HellforkItem extends ImpaledTridentItem {
         }
 
         return super.useOnBlock(context);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T extends Comparable<T>> BlockState copyProperty(BlockState target, BlockState source, Property<T> property) {
+        return target.with(property, source.get(property));
     }
 }
