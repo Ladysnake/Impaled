@@ -38,12 +38,12 @@ public class ImpaledItems {
         ELDER_GUARDIAN_EYE = registerItem("elder_guardian_eye", Item::new, new Item.Settings().rarity(Rarity.UNCOMMON));
         ANCIENT_TRIDENT = registerItem("ancient_trident", Item::new, new Item.Settings().rarity(Rarity.UNCOMMON).fireproof());
 
-        PITCHFORK = registerTrident("pitchfork", settings -> new PitchforkItem(settings, ImpaledEntityTypes.PITCHFORK), new Item.Settings().maxDamage(150), true);
-        HELLFORK = registerTrident("hellfork", settings -> new HellforkItem(settings, ImpaledEntityTypes.HELLFORK), new Item.Settings().maxDamage(325).fireproof(), true);
-        SOULFORK = registerTrident("soulfork", settings -> new HellforkItem(settings, ImpaledEntityTypes.SOULFORK), new Item.Settings().maxDamage(325).fireproof(), true);
-        ELDER_TRIDENT = registerTrident("elder_trident", settings -> new ElderTridentItem(settings, ImpaledEntityTypes.ELDER_TRIDENT), new Item.Settings().maxDamage(250), true);
-        ATLAN = registerTrident("atlan", settings -> new AtlanItem(settings, ImpaledEntityTypes.ATLAN), new Item.Settings().maxDamage(250), true);
-        MAELSTROM = registerItem("maelstrom", settings -> new MaelstromItem(settings), new Item.Settings().maxDamage(80));
+        PITCHFORK = registerTrident("pitchfork", settings -> new PitchforkItem(settings, ImpaledEntityTypes.PITCHFORK), new Item.Settings().maxDamage(150).rarity(Rarity.COMMON), true);
+        HELLFORK = registerTrident("hellfork", settings -> new HellforkItem(settings, ImpaledEntityTypes.HELLFORK), new Item.Settings().maxDamage(325).fireproof().rarity(Rarity.UNCOMMON), true);
+        SOULFORK = registerTrident("soulfork", settings -> new HellforkItem(settings, ImpaledEntityTypes.SOULFORK), new Item.Settings().maxDamage(325).fireproof().rarity(Rarity.RARE), true);
+        ELDER_TRIDENT = registerTrident("elder_trident", settings -> new ElderTridentItem(settings, ImpaledEntityTypes.ELDER_TRIDENT), new Item.Settings().maxDamage(250).rarity(Rarity.RARE), true);
+        ATLAN = registerTrident("atlan", settings -> new AtlanItem(settings, ImpaledEntityTypes.ATLAN), new Item.Settings().maxDamage(250).rarity(Rarity.EPIC), true);
+        MAELSTROM = registerItem("maelstrom", settings -> new MaelstromItem(settings), new Item.Settings().maxDamage(80).rarity(Rarity.EPIC));
     }
 
     public static <T extends Item> T registerItem(String name, Function<Item.Settings, T> itemFactory, Item.Settings settings) {
