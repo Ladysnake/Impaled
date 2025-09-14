@@ -18,9 +18,6 @@ public abstract class EntityMixin {
     @Shadow
     public World world;
 
-    @Shadow
-    @Nullable
-    public abstract ItemEntity dropStack(ItemStack stack);
 
     @Shadow
     public abstract double getX();
@@ -38,10 +35,11 @@ public abstract class EntityMixin {
         }
     }
 
-    @Inject(method = "dropStack(Lnet/minecraft/item/ItemStack;F)Lnet/minecraft/entity/ItemEntity;", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/ItemEntity;<init>(Lnet/minecraft/world/World;DDDLnet/minecraft/item/ItemStack;)V"), cancellable = true)
-    protected void impaled$dropStack(ItemStack stack, float yOffset, CallbackInfoReturnable<ItemEntity> cir) {
-        // overridden in LivingEntityMixin
-    }
+    // TODO: Fix method signature for 1.21.3 - dropStack method name changed
+    // @Inject(method = "dropStack(Lnet/minecraft/item/ItemStack;F)Lnet/minecraft/entity/ItemEntity;", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/ItemEntity;<init>(Lnet/minecraft/world/World;DDDLnet/minecraft/item/ItemStack;)V"), cancellable = true)
+    // protected void impaled$dropStack(ItemStack stack, float yOffset, CallbackInfoReturnable<ItemEntity> cir) {
+    //     // overridden in LivingEntityMixin
+    // }
 
     @Inject(method = "isOnFire", at = @At(value = "RETURN"), cancellable = true)
     public void isOnFire(CallbackInfoReturnable<Boolean> cir) {

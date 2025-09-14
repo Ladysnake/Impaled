@@ -5,6 +5,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundEvents;
@@ -31,10 +32,14 @@ public class GuardianTridentEntity extends ElderTridentEntity {
             return stack -> {
                 if (owner.isAlive()) {
                     if (!(owner instanceof PlayerEntity) || !((PlayerEntity) owner).getInventory().insertStack(stack)) {
-                        owner.dropStack(stack);
+                        if (owner.getWorld() instanceof ServerWorld serverWorld) {
+                            owner.dropStack(serverWorld, stack);
+                        }
                     }
                 } else {
-                    this.dropStack(stack);
+                    if (this.getWorld() instanceof ServerWorld serverWorld) {
+                        this.dropStack(serverWorld, stack);
+                    }
                 }
             };
         }
@@ -51,7 +56,7 @@ public class GuardianTridentEntity extends ElderTridentEntity {
             }
 
             for (int i = 0; i < 20; i++) {
-                this.world.addParticle(ParticleTypes.BUBBLE_POP, this.getX() + this.random.nextGaussian() / 10, this.getY() + this.random.nextGaussian() / 10, this.getZ() + this.random.nextGaussian() / 10, this.random.nextGaussian() / 10, Math.abs(this.random.nextGaussian() / 10), this.random.nextGaussian() / 10);
+                this.getWorld().addParticle(ParticleTypes.BUBBLE_POP, this.getX() + this.random.nextGaussian() / 10, this.getY() + this.random.nextGaussian() / 10, this.getZ() + this.random.nextGaussian() / 10, this.random.nextGaussian() / 10, Math.abs(this.random.nextGaussian() / 10), this.random.nextGaussian() / 10);
             }
 
             this.setNoGravity(false);
@@ -65,7 +70,7 @@ public class GuardianTridentEntity extends ElderTridentEntity {
         if (timeSinceTracking >= 40) {
             Vec3d rotationVec = this.getVelocity().normalize();
             Box box = new Box(this.getX() - 1, this.getY() - 1, this.getZ() - 1, this.getX() + 1, this.getY() + 1, this.getZ() + 1).expand(96 * rotationVec.getX(), 96 * rotationVec.getY(), 96 * rotationVec.getZ());
-            List<LivingEntity> possibleTargets = world.getEntitiesByClass(LivingEntity.class, box, (entity) -> entity.canHit() && entity != this.getOwner() && !(entity instanceof TameableEntity && ((TameableEntity) entity).isTamed()));
+            List<LivingEntity> possibleTargets = getWorld().getEntitiesByClass(LivingEntity.class, box, (entity) -> entity.canHit() && entity != this.getOwner() && !(entity instanceof TameableEntity && ((TameableEntity) entity).isTamed()));
             List<LivingEntity> validTargets = new ArrayList<>();
 
             double max = 0.3;

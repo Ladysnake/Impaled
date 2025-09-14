@@ -22,6 +22,9 @@ import ladysnake.sincereloyalty.SincereLoyalty;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
@@ -29,6 +32,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.ForgingScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.ScreenHandlerType;
+import net.minecraft.screen.slot.ForgingSlotsManager;
 import net.minecraft.screen.SmithingScreenHandler;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -42,9 +46,12 @@ import java.util.Map;
 
 @Mixin(SmithingScreenHandler.class)
 public abstract class SmithingScreenHandlerMixin extends ForgingScreenHandler {
-    public SmithingScreenHandlerMixin(@Nullable ScreenHandlerType<?> type, int syncId, PlayerInventory playerInventory, ScreenHandlerContext context) {
-        super(type, syncId, playerInventory, context);
+    public SmithingScreenHandlerMixin(@Nullable ScreenHandlerType<?> type, int syncId, PlayerInventory playerInventory, ScreenHandlerContext context, ForgingSlotsManager forgingSlotsManager) {
+        super(type, syncId, playerInventory, context, forgingSlotsManager);
     }
+
+    // This method should be implemented by the actual SmithingScreenHandler, but we need to declare it for compilation
+    protected abstract ForgingSlotsManager getForgingSlotsManager();
 
     @Inject(method = "canTakeOutput", at = @At("RETURN"), cancellable = true)
     private void canTakeResult(PlayerEntity playerEntity, boolean resultNonEmpty, CallbackInfoReturnable<Boolean> cir) {
@@ -68,16 +75,25 @@ public abstract class SmithingScreenHandlerMixin extends ForgingScreenHandler {
             ItemStack item = this.input.getStack(0);
             ItemStack upgradeItem = this.input.getStack(1);
             if (item.isIn(SincereLoyalty.TRIDENTS) && upgradeItem.isIn(SincereLoyalty.LOYALTY_CATALYSTS)) {
-                Map<Enchantment, Integer> enchantments = EnchantmentHelper.get(item);
-                if (enchantments.getOrDefault(Enchantments.LOYALTY, 0) == Enchantments.LOYALTY.getMaxLevel()) {
-                    ItemStack result = item.copy();
-                    // we can mutate the map as it is recreated with every call to getEnchantments
-                    enchantments.put(Enchantments.LOYALTY, Enchantments.LOYALTY.getMaxLevel() + 1);
-                    EnchantmentHelper.set(enchantments, result);
-                    NbtCompound loyaltyData = result.getOrCreateSubNbt(LoyalTrident.MOD_NBT_KEY);
-                    loyaltyData.putUuid(LoyalTrident.TRIDENT_OWNER_NBT_KEY, this.player.getUuid());
-                    loyaltyData.putString(LoyalTrident.OWNER_NAME_NBT_KEY, this.player.getEntityName());
-                    return result;
+                // Get current loyalty level
+                // Access registry through context world instead of player.getServerWorld()
+                if (this.player.getWorld() instanceof ServerWorld serverWorld) {
+                    // Get the registry entry using the key's ID
+                    final RegistryEntry<Enchantment> loyaltyEnchantment = serverWorld.getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT).getEntry(Enchantments.LOYALTY.getValue()).orElse(null);
+                    if (loyaltyEnchantment != null) {
+                        int currentLevel = EnchantmentHelper.getLevel(loyaltyEnchantment, item);
+                        // Check if at max level (3)
+                        if (currentLevel == 3) {
+                            ItemStack result = item.copy();
+                            // Apply level 4 loyalty
+                            EnchantmentHelper.apply(result, builder -> {
+                                builder.set(loyaltyEnchantment, 4);
+                            });
+                            // Set trident owner using component system
+                            LoyalTrident.setTridentOwner(result, this.player.getUuid(), this.player.getName().getString());
+                            return result;
+                        }
+                    }
                 }
             }
         }

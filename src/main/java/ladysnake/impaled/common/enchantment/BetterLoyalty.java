@@ -1,6 +1,7 @@
 package ladysnake.impaled.common.enchantment;
 
 import ladysnake.sincereloyalty.LoyalTrident;
+import ladysnake.sincereloyalty.LoyalTridentComponents;
 import ladysnake.sincereloyalty.TridentRecaller;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
@@ -10,19 +11,24 @@ import net.minecraft.sound.SoundEvents;
 
 public final class BetterLoyalty {
     public static boolean tryInsertTrident(ItemStack stack, PlayerEntity player) {
-        NbtCompound tag = stack.getSubNbt(LoyalTrident.MOD_NBT_KEY);
-        if (tag != null) {
+        LoyalTridentComponents.LoyalTridentData data = stack.get(LoyalTridentComponents.LOYAL_TRIDENT_DATA);
+        if (data != null) {
             TridentRecaller caller = (TridentRecaller) player;
 
             if (caller.getCurrentRecallStatus() == TridentRecaller.RecallStatus.RECALLING) {
-                player.world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ITEM_TRIDENT_RETURN, player.getSoundCategory(), 0.7f, 0.5f);
+                player.getWorld().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ITEM_TRIDENT_RETURN, player.getSoundCategory(), 0.7f, 0.5f);
             }
 
             caller.updateRecallStatus(TridentRecaller.RecallStatus.NONE);
 
-            if (tag.contains(LoyalTrident.RETURN_SLOT_NBT_KEY)) {
-                int preferredSlot = tag.getInt(LoyalTrident.RETURN_SLOT_NBT_KEY);
-                tag.remove(LoyalTrident.RETURN_SLOT_NBT_KEY);
+            if (data.returnSlot().isPresent()) {
+                int preferredSlot = data.returnSlot().get();
+                // Remove the return slot by updating the component
+                LoyalTridentComponents.LoyalTridentData newData = new LoyalTridentComponents.LoyalTridentData(
+                    data.tridentUuid(), data.ownerName(), data.tridentOwner(), java.util.Optional.empty()
+                );
+                stack.set(LoyalTridentComponents.LOYAL_TRIDENT_DATA, newData);
+                
                 if (preferredSlot == -1) {
                     if (player.getOffHandStack().isEmpty()) {
                         player.equipStack(EquipmentSlot.OFFHAND, stack.copy());

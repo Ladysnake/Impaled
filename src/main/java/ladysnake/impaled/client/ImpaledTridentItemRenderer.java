@@ -10,8 +10,8 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.ModelIdentifier;
+import net.minecraft.item.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.resource.ResourceManager;
@@ -30,7 +30,7 @@ public class ImpaledTridentItemRenderer implements BuiltinItemRendererRegistry.D
     private BakedModel inventoryTridentModel;
 
     public ImpaledTridentItemRenderer(Identifier tridentId, Identifier texture, EntityModelLayer modelLayer) {
-        this.id = new Identifier(tridentId.getNamespace(), tridentId.getPath() + "_renderer");
+        this.id = Identifier.of(tridentId.getNamespace(), tridentId.getPath() + "_renderer");
         this.tridentId = tridentId;
         this.texture = texture;
         this.modelLayer = modelLayer;
@@ -51,21 +51,22 @@ public class ImpaledTridentItemRenderer implements BuiltinItemRendererRegistry.D
         MinecraftClient mc = MinecraftClient.getInstance();
         this.itemRenderer = mc.getItemRenderer();
         this.tridentModel = new ImpaledTridentEntityModel(mc.getEntityModelLoader().getModelPart(this.modelLayer));
-        this.inventoryTridentModel = mc.getBakedModelManager().getModel(new ModelIdentifier(this.tridentId.getNamespace(), this.tridentId.getPath() + "_in_inventory", "inventory"));
+        // Use the item model directly from the item registry
+        this.inventoryTridentModel = mc.getBakedModelManager().getModel(Identifier.of(this.tridentId.getNamespace(), "item/" + this.tridentId.getPath() + "_in_inventory"));
     }
 
     @Override
-    public void render(ItemStack stack, ModelTransformation.Mode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+    public void render(ItemStack stack, ModelTransformationMode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         assert this.tridentModel != null;
-        if (renderMode == ModelTransformation.Mode.GUI || renderMode == ModelTransformation.Mode.GROUND || renderMode == ModelTransformation.Mode.FIXED) {
+        if (renderMode == ModelTransformationMode.GUI || renderMode == ModelTransformationMode.GROUND || renderMode == ModelTransformationMode.FIXED) {
             matrices.pop(); // cancel the previous transformation and pray that we are not breaking the state
             matrices.push();
             itemRenderer.renderItem(stack, renderMode, false, matrices, vertexConsumers, light, overlay, this.inventoryTridentModel);
         } else {
             matrices.push();
             matrices.scale(1.0F, -1.0F, -1.0F);
-            VertexConsumer vertexConsumer = ItemRenderer.getDirectItemGlintConsumer(vertexConsumers, this.tridentModel.getLayer(this.texture), false, stack.hasGlint());
-            this.tridentModel.render(matrices, vertexConsumer, light, overlay, 1.0F, 1.0F, 1.0F, 1.0F);
+            VertexConsumer vertexConsumer = ItemRenderer.getItemGlintConsumer(vertexConsumers, this.tridentModel.getLayer(this.texture), false, stack.hasGlint());
+            this.tridentModel.render(matrices, vertexConsumer, light, overlay, -1);
             matrices.pop();
         }
     }

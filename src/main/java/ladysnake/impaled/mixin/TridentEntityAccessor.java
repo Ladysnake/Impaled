@@ -18,11 +18,13 @@ public interface TridentEntityAccessor {
         return null;
     }
 
-    @Accessor("tridentStack")
-    ItemStack impaled$getTridentStack();
+    // TODO: Find correct field name for ItemStack in 1.21.3 TridentEntity
+    // For now, disable these accessors and use reflection or different approach
+    // @Accessor("item")
+    // ItemStack impaled$getTridentStack();
 
-    @Accessor("tridentStack")
-    void impaled$setTridentStack(ItemStack stack);
+    // @Accessor("item")
+    // void impaled$setTridentStack(ItemStack stack);
 
     @Accessor("dealtDamage")
     boolean impaled$hasDealtDamage();

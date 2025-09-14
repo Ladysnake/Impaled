@@ -3,32 +3,45 @@ package ladysnake.impaled.common.item;
 import ladysnake.sincereloyalty.SincereLoyalty;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.Hand;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
+import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.entity.projectile.TridentEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.*;
+import net.minecraft.item.consume.UseAction;
+import net.minecraft.registry.Registries;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
 import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.UseAction;
+import net.minecraft.util.ActionResult;
 import net.minecraft.world.World;
+import net.minecraft.item.Item.TooltipContext;
+import net.minecraft.item.tooltip.TooltipType;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 
 import java.util.function.Predicate;
+import java.util.List;
 
-public class MaelstromItem extends RangedWeaponItem implements Vanishable {
+public class MaelstromItem extends RangedWeaponItem {
     public MaelstromItem(Item.Settings settings) {
         super(settings);
     }
 
-    public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
-        if (user instanceof PlayerEntity) {
-            ((PlayerEntity) user).getItemCooldownManager().set(this, 20 - (3 * EnchantmentHelper.getLevel(Enchantments.EFFICIENCY, stack)));
+    public boolean onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
+        if (user instanceof PlayerEntity && world instanceof ServerWorld serverWorld) {
+            var efficiencyRef = serverWorld.getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT).getEntry(Enchantments.EFFICIENCY.getValue()).orElse(null);
+            int efficiencyLevel = efficiencyRef != null ? EnchantmentHelper.getLevel(efficiencyRef, stack) : 0;
+            ((PlayerEntity) user).getItemCooldownManager().set(Registries.ITEM.getId(this), 20 - (3 * efficiencyLevel));
         }
+        return true;
     }
 
     public int getMaxUseTime(ItemStack stack) {
@@ -39,25 +52,38 @@ public class MaelstromItem extends RangedWeaponItem implements Vanishable {
         return UseAction.BLOCK;
     }
 
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+    @Override
+    public void shoot(LivingEntity shooter, ProjectileEntity projectile, int index, float speed, float divergence, float yaw, LivingEntity target) {
+        // MaelstromItem doesn't shoot projectiles in the traditional sense, so this is left empty
+    }
+
+    @Override
+    public ActionResult use(World world, PlayerEntity user, Hand hand) {
         ItemStack itemStack = user.getStackInHand(hand);
         user.setCurrentHand(hand);
-        return TypedActionResult.consume(itemStack);
+        return ActionResult.CONSUME;
     }
 
     @Override
     public void usageTick(World world, LivingEntity user, ItemStack maelstromStack, int remainingUseTicks) {
         super.usageTick(world, user, maelstromStack, remainingUseTicks);
-        if (remainingUseTicks % (20 - (3 * EnchantmentHelper.getLevel(Enchantments.EFFICIENCY, maelstromStack))) == 0 && world instanceof ServerWorld) {
+        int efficiencyLevel = 0;
+        if (world instanceof ServerWorld serverWorld) {
+            var efficiencyRef = serverWorld.getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT).getEntry(Enchantments.EFFICIENCY.getValue()).orElse(null);
+            efficiencyLevel = efficiencyRef != null ? EnchantmentHelper.getLevel(efficiencyRef, maelstromStack) : 0;
+        }
+        if (remainingUseTicks % (20 - (3 * efficiencyLevel)) == 0 && world instanceof ServerWorld serverWorld) {
             if (user instanceof PlayerEntity) {
                 Inventory inventory = ((PlayerEntity) user).getInventory();
                 for (int i = 0; i < inventory.size(); i++) {
                     ItemStack stackToThrow = ((PlayerEntity) user).getInventory().getStack(i);
-                    if (!stackToThrow.isEmpty() && EnchantmentHelper.getRiptide(stackToThrow) == 0 && stackToThrow.isIn(SincereLoyalty.TRIDENTS)) {
+                    var riptideRef = serverWorld.getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT).getEntry(Enchantments.RIPTIDE.getValue()).orElse(null);
+                    int riptideLevel = riptideRef != null ? EnchantmentHelper.getLevel(riptideRef, stackToThrow) : 0;
+                    if (!stackToThrow.isEmpty() && riptideLevel == 0 && stackToThrow.isIn(SincereLoyalty.TRIDENTS)) {
                         TridentEntity trident = null;
                         PlayerEntity playerEntity = (PlayerEntity) user;
-                        stackToThrow.damage(1, (LivingEntity) playerEntity, livingEntity -> livingEntity.sendToolBreakStatus(user.getActiveHand()));
-                        maelstromStack.damage(1, (LivingEntity) playerEntity, livingEntity -> livingEntity.sendToolBreakStatus(user.getActiveHand()));
+                        stackToThrow.damage(1, (LivingEntity) playerEntity, user.getActiveHand() == Hand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
+                        maelstromStack.damage(1, (LivingEntity) playerEntity, user.getActiveHand() == Hand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
 
                         if (stackToThrow.getItem() instanceof ImpaledTridentItem) {
                             trident = ((ImpaledTridentItem) stackToThrow.getItem()).createTrident(world, user, stackToThrow);
@@ -92,5 +118,14 @@ public class MaelstromItem extends RangedWeaponItem implements Vanishable {
 
     public int getRange() {
         return 15;
+    }
+
+    @Override
+    public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
+        super.appendTooltip(stack, context, tooltip, type);
+
+        // Add description tooltip using the item's translation key + ".tooltip"
+        String tooltipKey = this.getTranslationKey() + ".tooltip";
+        tooltip.add(Text.translatable(tooltipKey).formatted(Formatting.GRAY));
     }
 }

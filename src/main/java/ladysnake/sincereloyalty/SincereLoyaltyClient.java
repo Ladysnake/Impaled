@@ -46,16 +46,15 @@ public final class SincereLoyaltyClient implements ClientModInitializer {
         ClientTickEvents.END_CLIENT_TICK.register(mc -> {
             TridentRecaller.RecallStatus recalling = tickTridentRecalling(mc);
             if (recalling != null) {
-                PacketByteBuf buf = PacketByteBufs.create();
-                buf.writeEnumConstant(recalling);
-                ClientPlayNetworking.send(SincereLoyalty.RECALL_TRIDENTS_MESSAGE_ID, buf);
+                NetworkPayloads.RecallTridentsPayload payload = new NetworkPayloads.RecallTridentsPayload(recalling);
+                ClientPlayNetworking.send(payload);
             }
         });
-        ClientPlayNetworking.registerGlobalReceiver(SincereLoyalty.RECALLING_MESSAGE_ID, (MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) -> {
-            int playerId = buf.readInt();
-            TridentRecaller.RecallStatus recalling = buf.readEnumConstant(TridentRecaller.RecallStatus.class);
-            client.execute(() -> {
-                Entity player = client.world.getEntityById(playerId);
+        ClientPlayNetworking.registerGlobalReceiver(NetworkPayloads.RecallingStatusPayload.ID, (payload, context) -> {
+            int playerId = payload.playerId();
+            TridentRecaller.RecallStatus recalling = payload.status();
+            context.client().execute(() -> {
+                Entity player = context.client().world.getEntityById(playerId);
                 if (player instanceof TridentRecaller) {
                     ((TridentRecaller) player).updateRecallStatus(recalling);
                 }

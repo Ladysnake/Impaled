@@ -17,6 +17,7 @@
  */
 package ladysnake.sincereloyalty;
 
+import com.mojang.serialization.Codec;
 import org.jetbrains.annotations.Contract;
 
 public interface TridentRecaller {
@@ -30,6 +31,8 @@ public interface TridentRecaller {
     RecallStatus getCurrentRecallStatus();
 
     enum RecallStatus {
-        CHARGING, NONE, RECALLING
+        CHARGING, NONE, RECALLING;
+        
+        public static final Codec<RecallStatus> CODEC = Codec.stringResolver(RecallStatus::name, RecallStatus::valueOf);
     }
 }

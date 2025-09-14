@@ -16,9 +16,9 @@ public abstract class PlayerEntityMixin extends LivingEntity {
         super(entityType, world);
     }
 
-    @ModifyVariable(method = "attack", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/enchantment/EnchantmentHelper;getAttackDamage(Lnet/minecraft/item/ItemStack;Lnet/minecraft/entity/EntityGroup;)F"), ordinal = 1)
-    private float getAttackDamage(float baseDamage, Entity target) {
-        return baseDamage + BetterImpaling.getAttackDamage(this.getMainHandStack(), target);
+    @ModifyVariable(method = "attack", at = @At(value = "STORE", ordinal = 0), ordinal = 1)
+    private float enhanceAttackDamage(float baseDamage, Entity target) {
+        return baseDamage + BetterImpaling.getAttackDamage(this.getMainHandStack(), target, this.getRegistryManager());
     }
 
 }
