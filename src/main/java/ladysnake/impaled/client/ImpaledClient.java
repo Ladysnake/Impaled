@@ -34,6 +34,9 @@ public class ImpaledClient implements ClientModInitializer {
     public void onInitializeClient() {
         EntityModelLayerRegistry.registerModelLayer(ATLAN, ImpaledTridentEntityModel::getAtlanTexturedModelData);
 
+        // Register model loading plugin to handle trident models
+        ModelLoadingPlugin.register(new ImpaledModelLoadingPlugin());
+
         for (ImpaledTridentItem item : ImpaledItems.ALL_TRIDENTS) {
             Identifier tridentId = Registries.ITEM.getId(item);
             Identifier texture = Identifier.of(tridentId.getNamespace(), "textures/entity/" + tridentId.getPath() + ".png");
@@ -45,10 +48,6 @@ public class ImpaledClient implements ClientModInitializer {
             EntityRendererRegistry.register(item.getEntityType(), ctx -> new ImpaledTridentEntityRenderer(ctx, texture, modelLayer));
 
             FabricModelPredicateProviderRegistry.register(item, Identifier.of("throwing"), (stack, world, entity, seed) -> entity != null && entity.isUsingItem() && entity.getActiveItem() == stack ? 1.0F : 0.0F);
-            ModelLoadingPlugin.register(pluginContext -> {
-                Identifier inventoryModel = Identifier.of(tridentId.getNamespace(), tridentId.getPath() + "_in_inventory");
-                pluginContext.addModels(inventoryModel);
-            });
         }
 
         // Add items to groups
