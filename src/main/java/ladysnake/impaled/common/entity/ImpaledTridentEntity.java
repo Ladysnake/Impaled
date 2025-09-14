@@ -4,6 +4,7 @@ import ladysnake.impaled.mixin.TridentEntityAccessor;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.TridentEntity;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.item.ItemStack;
@@ -13,6 +14,20 @@ import java.lang.reflect.Field;
 public class ImpaledTridentEntity extends TridentEntity {
     public ImpaledTridentEntity(EntityType<? extends ImpaledTridentEntity> entityType, World world) {
         super(entityType, world);
+    }
+
+    public ImpaledTridentEntity(EntityType<? extends ImpaledTridentEntity> entityType, World world, LivingEntity owner, ItemStack stack) {
+        super(entityType, world);
+        this.setOwner(owner);
+
+        // Set position like vanilla TridentEntity
+        this.setPosition(owner.getX(), owner.getEyeY() - 0.1, owner.getZ());
+
+        // Set rotation to match thrower's orientation - THIS IS KEY FOR PROPER PHYSICS
+        this.setRotation(owner.getYaw(), owner.getPitch());
+
+        // Set the trident attributes after basic initialization
+        this.setTridentAttributes(stack);
     }
 
     public void setTridentAttributes(ItemStack stack) {

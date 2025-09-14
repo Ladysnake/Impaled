@@ -22,8 +22,13 @@ import net.minecraft.stat.Stats;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ActionResult;
 import net.minecraft.world.World;
+import net.minecraft.item.Item.TooltipContext;
+import net.minecraft.item.tooltip.TooltipType;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 
 import java.util.function.Predicate;
+import java.util.List;
 
 public class MaelstromItem extends RangedWeaponItem {
     public MaelstromItem(Item.Settings settings) {
@@ -113,5 +118,14 @@ public class MaelstromItem extends RangedWeaponItem {
 
     public int getRange() {
         return 15;
+    }
+
+    @Override
+    public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
+        super.appendTooltip(stack, context, tooltip, type);
+
+        // Add description tooltip using the item's translation key + ".tooltip"
+        String tooltipKey = this.getTranslationKey() + ".tooltip";
+        tooltip.add(Text.translatable(tooltipKey).formatted(Formatting.GRAY));
     }
 }

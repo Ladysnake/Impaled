@@ -6,6 +6,7 @@
   "client": [
     "InGameOverlayRendererMixin",
     "TridentRiptideFeatureRendererMixin",
+    "PlayerEntityRenderStateAccessor",
     "impaling.EntityRendererMixin"
   ],
   "mixins": [

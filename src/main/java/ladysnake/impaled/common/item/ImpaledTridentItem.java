@@ -26,7 +26,13 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraft.item.Item.TooltipContext;
+import net.minecraft.item.tooltip.TooltipType;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 import java.util.Objects;
 
@@ -87,6 +93,7 @@ public class ImpaledTridentItem extends TridentItem {
                         k *= n / m;
                         l *= n / m;
                         player.addVelocity(h, k, l);
+                        player.velocityModified = true; // Ensure velocity change is synced to client
                         player.useRiptide(20, n, stack); // n is the velocity multiplier calculated above
                         if (player.isOnGround()) {
                             player.move(MovementType.SELF, new Vec3d(0.0D, 1.1999999284744263D, 0.0D));
@@ -115,13 +122,22 @@ public class ImpaledTridentItem extends TridentItem {
     }
 
     public @NotNull ImpaledTridentEntity createTrident(World world, LivingEntity user, ItemStack stack) {
-        ImpaledTridentEntity impaledTridentEntity = Objects.requireNonNull(this.type.create(world, SpawnReason.TRIGGERED));
-        impaledTridentEntity.setTridentAttributes(stack);
-        impaledTridentEntity.setOwner(user);
-        impaledTridentEntity.setTridentStack(stack);
+        // Use direct constructor like vanilla TridentEntity instead of EntityType factory
+        ImpaledTridentEntity impaledTridentEntity = new ImpaledTridentEntity(this.type, world, user, stack);
+
+        // Set velocity using the same pattern as vanilla
         impaledTridentEntity.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, 2.5F, 1.0F);
-        impaledTridentEntity.updatePosition(user.getX(), user.getEyeY() - 0.1, user.getZ());
+
         return impaledTridentEntity;
+    }
+
+    @Override
+    public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
+        super.appendTooltip(stack, context, tooltip, type);
+
+        // Add description tooltip using the item's translation key + ".tooltip"
+        String tooltipKey = this.getTranslationKey() + ".tooltip";
+        tooltip.add(Text.translatable(tooltipKey).formatted(Formatting.GRAY));
     }
 
 }

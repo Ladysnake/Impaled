@@ -36,6 +36,27 @@ public class ImpaledTridentEntityRenderer extends EntityRenderer<ImpaledTridentE
     @Override
     public void updateRenderState(ImpaledTridentEntity entity, ProjectileEntityRenderState renderState, float tickDelta) {
         super.updateRenderState(entity, renderState, tickDelta);
+
+        // Calculate rotation based on velocity for proper flight orientation
+        float velocityX = (float) entity.getVelocity().x;
+        float velocityY = (float) entity.getVelocity().y;
+        float velocityZ = (float) entity.getVelocity().z;
+
+        // Check if trident is still moving
+        boolean hasVelocity = velocityX * velocityX + velocityY * velocityY + velocityZ * velocityZ > 0.001f;
+
+        if (hasVelocity) {
+            // Calculate yaw from horizontal velocity
+            renderState.yaw = (float)(MathHelper.atan2(velocityX, velocityZ) * (180.0 / Math.PI));
+
+            // Calculate pitch from vertical velocity
+            float horizontalVelocity = MathHelper.sqrt(velocityX * velocityX + velocityZ * velocityZ);
+            renderState.pitch = (float)(MathHelper.atan2(velocityY, horizontalVelocity) * (180.0 / Math.PI));
+        } else {
+            // When landed, use entity's stored rotation (from when it hit)
+            renderState.yaw = entity.getYaw();
+            renderState.pitch = entity.getPitch();
+        }
     }
 
     @Override
